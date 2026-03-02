@@ -2,6 +2,8 @@
 requires = ["setuptools>=64", "setuptools-scm[toml]>=8"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools_scm]
+
 [project]
 name = "Tapeouts"
 dynamic = ["version"]
@@ -20,7 +22,6 @@ where = ["src"]
 
 [tool.ruff]
 src = ["iPronics-PRL"]
-version = "0.9.9"
 # Enable isort (`I`) rules too.
 select = [
     "E",  # pycodestyle errors
