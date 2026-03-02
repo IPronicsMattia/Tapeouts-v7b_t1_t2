@@ -20,6 +20,7 @@ where = ["src"]
 
 [tool.ruff]
 src = ["iPronics-PRL"]
+version = "0.9.9"
 # Enable isort (`I`) rules too.
 select = [
     "E",  # pycodestyle errors
