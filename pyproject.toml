@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=64", "setuptools-scm[toml]>=8"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "Tapeouts"
+dynamic = ["version"]
+authors = [{name="iPronics", email="support@ipronics.com"}]
+requires-python = ">=3.12"
+dependencies = [
+    'iprlayout-tower',
+    #'iprlayout-tower @ git+ssh://git@github.com/iPronics/IPRLAYOUT_Tower.git@develop',
+    #'topolux @ git+ssh://git@github.com/iPronics/topolux.git',
+    'gdsfactory[cad]==9.12.0',
+    'openpyxl>=3.0.7'
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+src = ["iPronics-PRL"]
+# Enable isort (`I`) rules too.
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "C",  # flake8-comprehensions
+    "B",  # flake8-bugbear
+    "UP"
+]
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+    "B905",  # `zip()` without an explicit `strict=` parameter
+    "C408",  # C408 Unnecessary `dict` call (rewrite as a literal)
+]
+
+[tool.uv]
+required-version = "==0.7.10"
+dev-dependencies = [
+    "ruff==0.9.9",
+]
+
+[tool.uv.workspace]
+members = ["Tapeouts"]
+
+[tool.uv.sources]
+iprlayout-tower = { path = "../IPRLAYOUT_Tower", editable = true }
