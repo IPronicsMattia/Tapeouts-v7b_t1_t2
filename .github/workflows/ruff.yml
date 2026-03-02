@@ -6,7 +6,13 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.7.10"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
       - uses: astral-sh/ruff-action@v3
         with:
           args: "format --check --diff"
