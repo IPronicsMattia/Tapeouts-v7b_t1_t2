@@ -6,6 +6,12 @@
 1. Clone the IPRLAYOUT_* repos
 2. Clone this repo and change to its root dir (Both this repostiory and IPRLAYOUT_* should share the same parent directory)
 3. [Install uv](https://docs.astral.sh/uv/getting-started/installation/)
+   
+   Windows:
+    ```
+   powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+    ```
+   Linux:
    ```
    curl -LsSf https://astral.sh/uv/install.sh | sh
    ```
