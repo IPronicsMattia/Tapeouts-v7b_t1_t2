@@ -1,13 +1,31 @@
 {
 
-
-    "bend_euler_custom_width_a5f814d8":{
+    "bend_euler_custom_width_0f3aac44":{
         "design_id": "swg_custom_bend_euler_r5",
         "dut_type": "bend",
         "function": "bend_euler_custom_width",
         "settings":{
             "radius": null,
             "angle": 90.0,
+            "p": 0.466,
+            "m": 1.767,
+            "width_in": 0.41,
+            "width_out": 0.41,
+            "width_center": 0.5,
+            "with_arc_floorplan": true,
+            "npoints": 100,
+            "direction": "ccw",
+            "cross_section": "strip",
+            "loss": 0.0001
+        }
+    },
+    "bend_euler_custom_width_a5f814d8":{
+        "design_id": "swg_custom_bend_euler_r5",
+        "dut_type": "bend",
+        "function": "bend_euler_custom_width",
+        "settings":{
+            "radius": null,
+            "angle": -90,
             "p": 0.466,
             "m": 1.767,
             "width_in": 0.41,
@@ -38,6 +56,45 @@
             "cross_section": "strip",
             "loss": 0.0001
         }
+    },
+    "bend_euler_custom_width_027ec569":{
+        "design_id": "swg_custom_bend_euler_r5_a45",
+        "dut_type": "bend",
+        "function": "bend_euler_custom_width",
+        "settings":{
+            "radius": null,
+            "angle": -45,
+            "p": 0.466,
+            "m": 1.767,
+            "width_in": 0.41,
+            "width_out": 0.41,
+            "width_center": 0.5,
+            "with_arc_floorplan": true,
+            "npoints": 100,
+            "direction": "ccw",
+            "cross_section": "strip",
+            "loss": 0.0001
+        }
+    },
+    "bend_euler_R50_Am45_P0p_ddc40a61": {
+    "design_id": "anwg_custom_bend_euler_r50_a45", 
+    "dut_type": "bend", 
+    "function": "bend_euler", 
+    "settings": {
+        "radius": 50, 
+        "angle": -45, 
+        "p": 0.2, 
+        "cross_section": "xs_26c47562"}
+    },
+    "bend_euler_R57p604_Am45_ea58460a": {
+    "design_id": "anwg_custom_bend_euler_r50_a45", 
+    "dut_type": "bend", 
+    "function": "bend_euler", 
+    "settings": {
+        "radius": 57.604, 
+        "angle": -45, 
+        "p": 0.2, 
+        "cross_section": "xs_26c47562"}
     },
     "bend_variant_Vbloss_R50_cd6a1f6a": {
     "design_id": "anwg_variant_bend_bloss_r50", 
@@ -1779,6 +1836,7 @@
 
 
 
+    
     "pd_rib_d1":{
         "design_id": "pd_rib_d1",
         "dut_type": "pd",
@@ -1812,6 +1870,7 @@
             "metal2": true, 
             "metal2_via_n": 3,
             "reverse_pins": true, 
+            "forward_pin": false,
             "cross_section": "strip",
             "custom_name": "pd_rib_d1"
         }
@@ -1849,6 +1908,7 @@
             "metal2": true, 
             "metal2_via_n": 3,
             "reverse_pins": true, 
+            "forward_pin": false,
             "cross_section": "strip",
             "custom_name": "pd_rib_d5"
         }
@@ -1886,6 +1946,7 @@
             "metal2": true, 
             "metal2_via_n": 3,
             "reverse_pins": true, 
+            "forward_pin": false,
             "cross_section": "strip",
             "custom_name": "pd_rib_d6"
         }
@@ -1923,6 +1984,7 @@
             "metal2": true, 
             "metal2_via_n": 3,
             "reverse_pins": true, 
+            "forward_pin": false,
             "cross_section": "strip",
             "custom_name": "pd_rib_d7"
         }
@@ -1960,6 +2022,7 @@
             "metal2": true, 
             "metal2_via_n": 3,
             "reverse_pins": true, 
+            "forward_pin": false,
             "cross_section": "strip",
             "custom_name": "pd_rib_d10"
         }
@@ -2949,6 +3012,24 @@
             "loss": null
         }
     },
+    "rib_taper_MR1p95_WRI0p4_60535fa6":{
+        "design_id": "swg_taper_410_460", 
+        "dut_type": "taper", 
+        "function": "rib_taper", 
+        "settings":{
+            "m_RIB": 1.95,
+            "width_RIB_in": 0.41,
+            "width_RIB_out": 0.46,
+            "width1": null,
+            "width2": null,
+            "length": 5,
+            "access": false,
+            "length_access": 10.0,
+            "npoints": 100,
+            "cross_section": "strip",
+            "loss": null
+        }
+    },
     "rib_taper_MR1p3_WRI0p41_2f4bda11": {
     "design_id": "anwg_taper_1280_2000", 
     "dut_type": "taper", 
@@ -2984,6 +3065,23 @@
         "cross_section": "nitride2",
         "loss": null
         }
+    },
+    "rib_taper_MR1p95_WRI1p2_11df5cd2":{
+    "design_id": "anwg_taper_1284_2000", 
+    "dut_type": "taper", 
+    "function": "rib_taper", 
+    "settings": {
+        "m_RIB": 1.95, 
+        "width_RIB_in": 1.28, 
+        "width_RIB_out": 2.0, 
+        "width1": null, 
+        "width2": null, 
+        "length": 12.72, 
+        "access": false, 
+        "length_access": 10.0, 
+        "npoints": 100, 
+        "cross_section": "nitride2", 
+        "loss": null}
     },
     "pol_rot_tw_nom": {
         "design_id": "pol_rot_tw_nom",
@@ -3027,6 +3125,18 @@
             "length": 1,
             "width_in": null,
             "width_out": 2.0
+        }
+    },
+    "si_anwg_transition_NSNT_1924cc9d":{
+        "design_id": "VT_1_2_w1.5",
+        "dut_type": "vertical_transition",
+        "function": "si_anwg_transition",
+        "settings":{
+            "name_si_nwg_transition": "VT_1_TE",
+            "name_nwg_anwg_transition" : "VT_2_TE",
+            "length": 1,
+            "width_in": null,
+            "width_out": 1.5
         }
     },
 
