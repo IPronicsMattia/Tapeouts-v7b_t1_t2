@@ -1049,7 +1049,7 @@ def component_placement(die: gf.Component) -> gf.Component:
                 )
 
         # 3D crossing_swg_930_anwg_2000 -> ABOVE
-        for idx, angle in enumerate([90, 30]):
+        for idx, angle in enumerate([90]):
             # Passing signal above the nitride
             cross_straight, cross_kwargs, cross_3d = straigth_with_3d_cross_strip(
                 angle=angle, separation=3.0 / np.sin(angle / 180 * np.pi), below=False
@@ -1095,170 +1095,11 @@ def component_placement(die: gf.Component) -> gf.Component:
                     structure=t.cell,
                 )
 
-        # 3D crossing_gwg_410_anwg_1500 -> ABOVE
-        for idx, angle in enumerate([90, 45, 30, 15]):
-            # Passing signal below the nitride
-            cross_straight, cross_kwargs, cross_3d = straigth_with_3d_cross_shallow(
-                angle=angle,
-                separation=(1.41 + 0.141 / 2) / np.sin(angle / 180 * np.pi),
-                below=False,
-            )
-            nbb_diff = int(4000 * np.sin(angle / 180 * np.pi))
-
-            # Function to generate dummy
-            dummy_adder = gf.partial(
-                T1_dummy_adder, distance_metal=5, distane_wvg=10, delta_hor_ver_wvg=-5
-            )
-
-            # Create test structure
-            ts = f"9.{idx + 4}"
-            t = die << ipr.test_serpentines_from_calculation(
-                bend=routing_bend_Si,
-                blocks_distance=(85, 10),
-                block_gc_distance=20,
-                dummy_adder=dummy_adder,
-                gc_array=gc_array,
-                straight=cross_straight,
-                separations=10.2,
-                lengths=cross_kwargs,
-                n_bbs=[nbb_diff, nbb_diff * 2, nbb_diff * 3, nbb_diff * 4],
-                structure_4_blocks="2x2",
-                max_height=1120,
-                n_rows_pitch=11,
-                separations_pitch=45,
-                straight_route=routing_strt,
-            )
-
-            # Assign to the dictionary
-            name = f"CROSS_3D_ANGLE_SHALLOW_{angle}_ABOVE"
-            structures[ts] = t
-            structures_text[ts] = f"{ts} {name}"
-
-            # Add the structures to the json file
-            if create_json:
-                json_writer.structure_json(
-                    component=cross_3d,
-                    component_IO=gc_array,
-                    structure_title=f"TS0{ts}",
-                    structure=t.cell,
-                )
-
-    # ############
-    # # 10.0 MMI #
-    # ############
+    # #################
+    # # 10.0 CROSSING #
+    # #################
     if len(structure_only) == 0 or 10 in structure_only:
-        print("\nCreation of N.10 MMI Test Structure")
-
-        ts_base = "10"
-        for idx in range(len(doe_json_dict[f"{ts_base}.0"]["comp"])):
-            ts = f"{ts_base}.{1 + idx}"
-
-            # Select the clothoide bend from the DoE file
-            comp = sim_filename_json[doe_json_dict[f"{ts_base}.0"]["comp"][idx]]
-            name = comp["function"].split(".")[-1].rstrip("()")
-            func = getattr(ipr, name)
-
-            mmi = func(**comp["settings"])
-            design_id = comp["design_id"]
-
-            # Create test structure
-            ts = f"{ts_base}.{2 * idx + 1}"
-            t = die << ipr.test_splitter(
-                bb=mmi,
-                bend=routing_bend_Si,
-                gc_array=gc_array_long,
-                sep_variation=0.141,
-                straight=straight_410_swg,
-                state="bar",
-                absorber=absorber,
-                bb_safe_distance=45 - mmi.xsize,
-            )
-
-            # Assign to the dictionary
-            structures[ts] = t
-            structures_text[ts] = f"{ts} {design_id}_BAR"
-
-            # Add the structures to the json file
-            if create_json:
-                json_writer.structure_json(
-                    component=mmi,
-                    component_IO=gc_array_long,
-                    structure_title=f"TS{ts}",
-                    structure=t.cell,
-                )
-
-            # Create test structure
-            ts = f"{ts_base}.{2 * idx + 2}"
-            t = die << ipr.test_splitter(
-                bb=mmi,
-                bend=routing_bend_Si,
-                gc_array=gc_array_long,
-                sep_variation=0.141,
-                straight=straight_410_swg,
-                state="cross",
-                absorber=absorber,
-                bb_safe_distance=45 - mmi.xsize,
-            )
-
-            # Assign to the dictionary
-            structures[ts] = t
-            structures_text[ts] = f"{ts} {design_id}_CROSS"
-
-            # Add the structures to the json file
-            if create_json:
-                json_writer.structure_json(
-                    component=mmi,
-                    component_IO=gc_array_long,
-                    structure_title=f"TS{ts}",
-                    structure=t.cell,
-                )
-
-    # ############################
-    # # 11.0 MMI - NEW STRUCTURE #
-    # ############################
-    if len(structure_only) == 0 or 11 in structure_only:
-        print("\nCreation of N.11 MMI New Test Structure")
-
-        ts_base = "11"
-        for idx in range(len(doe_json_dict[f"{ts_base}.0"]["comp"])):
-            ts = f"{ts_base}.{1 + idx}"
-
-            # Select the clothoide bend from the DoE file
-            comp = sim_filename_json[doe_json_dict[f"{ts_base}.0"]["comp"][idx]]
-            name = comp["function"].split(".")[-1].rstrip("()")
-            func = getattr(ipr, name)
-            mmi = func(**comp["settings"])
-            design_id = comp["design_id"]
-
-            # Create test structure
-            ts = f"{ts_base}.{idx + 1}"
-            t = die << mmi_splitter_il_extractor(
-                absorber=absorber,
-                bend=routing_bend_Si,
-                gc_array=gc_array,
-                mmi_component=mmi,
-                straight=straight_410_swg,
-            )
-
-            # Assign to the dictionary
-            structures[ts] = t
-            structures_text[ts] = f"{ts}\nMMI {idx + 1}\nIL - SR"
-
-            # Add the structures to the json file
-            if create_json:
-                json_writer.structure_json(
-                    component=mmi,
-                    component_IO=gc_array,
-                    structure_title=f"TS{ts}",
-                    structure=t.cell,
-                    extra_dict={"analysis": "il_sr_te"},
-                )
-
-    # #################
-    # # 12.0 CROSSING #
-    # #################
-    if len(structure_only) == 0 or 12 in structure_only:
-        print("\nCreation of N.12 Crossing XT Test Structure")
+        print("\nCreation of N.10 Crossing XT Test Structure")
         cross_kwargs = {
             "bbmul": crossing_2D,
             "bbadd": taper_1560_410,
@@ -1284,7 +1125,7 @@ def component_placement(die: gf.Component) -> gf.Component:
         cross_with_abs = ipr.bb_mul_bb(**cross_kwargs)
 
         # Create test structure
-        ts = "12.1"
+        ts = "10.1"
         t = die << ipr.test_crossing_xt(
             bb=cross_with_abs,
             bend=routing_bend_Si,
@@ -1309,14 +1150,14 @@ def component_placement(die: gf.Component) -> gf.Component:
             )
 
     # ##################
-    # # 13.0 ALIGNMENT #
+    # # 11.0 ALIGNMENT #
     # ##################
-    if len(structure_only) == 0 or 13 in structure_only:
-        print("\nCreation of N.13 Alignment Test Structure")
+    if len(structure_only) == 0 or 11 in structure_only:
+        print("\nCreation of N.11 Alignment Test Structure")
 
         for idx in range(4):
             # Create the test structure name
-            ts = f"13.{idx + 1}"
+            ts = f"11.{idx + 1}"
 
             t = die << grating_array_test_structure(
                 components_grating_coupler=[ipr.tower_gc] * 10,
@@ -1338,13 +1179,13 @@ def component_placement(die: gf.Component) -> gf.Component:
                 )
 
     # ##################
-    # # 14.0 CUSTOM GC #
+    # # 12.0 CUSTOM GC #
     # ##################
-    if len(structure_only) == 0 or 14 in structure_only:
-        print("\nCreation of N.14 Custom GC Test Structure")
+    if len(structure_only) == 0 or 12 in structure_only:
+        print("\nCreation of N.12 Custom GC Test Structure")
 
         # Create the test structure name
-        ts = "14.1"
+        ts = "12.1"
 
         # Build the single gc composed
         kwargs = {"bbmul": rotator, "bbadd": ipr.tower_gc(), "bbmul_list": ["o2"]}
@@ -1405,7 +1246,7 @@ def component_placement(die: gf.Component) -> gf.Component:
     #########################################################
     #########################################################
     left_top_structure = [
-        "13.1",
+        "11.1",
         "1.1",
         "1.2",
         "4.1",
@@ -1416,25 +1257,25 @@ def component_placement(die: gf.Component) -> gf.Component:
         "8.4",
         "8.5",
         "9.1",
-        "13.3",
+        "9.2",
+        "11.3",
     ]
-    left_cen_structure = ["2.1", "2.2", "5.1", "9.2", "9.3", "9.4", "9.5", "9.6", "9.7"]
+    left_cen_structure = [
+        "2.1",
+        "2.2",
+        "5.1"]
     left_bot_structure = [
-        "13.2",
+        "11.2",
         "3.1",
         "3.2",
         "5.2",
         "7.1",
         "7.2",
         "7.3",
-        "11.1",
-        "11.2",
-        "11.3",
         "11.4",
-        "13.4",
-        "14.1",
+        "12.1",
     ]
-    right_structure = [f"10.{idx + 1}" for idx in range(14)] + ["12.1"]
+    right_structure = ["10.1"]
 
     # Place only structure complain with structure_only
     if len(structure_only) != 0:

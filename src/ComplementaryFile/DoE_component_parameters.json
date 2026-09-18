@@ -1,21 +1,5 @@
 {   
     "T1": {
-        "10.0":{
-            "comp": ["mmi_inv_d1_30",
-                    "mmi_inv_d1_m30",
-                    "mmi_inv_d1_38",
-                    "mmi_inv_d3_30",
-                    "mmi_inv_d3_m30",
-                    "mmi_inv_d3_38",
-                    "mmi_inv_d2"]
-        },
-
-        "11.0":{
-            "comp": ["mmi_inv_d1_30",
-                     "mmi_inv_d1_38",
-                     "mmi_inv_d3_30",
-                     "mmi_inv_d3_38"]
-        }
     },
     
     "T2": {
