@@ -1,0 +1,3431 @@
+{
+
+
+    "bend_euler_custom_width_a5f814d8":{
+        "design_id": "swg_custom_bend_euler_r5",
+        "dut_type": "bend",
+        "function": "bend_euler_custom_width",
+        "settings":{
+            "radius": null,
+            "angle": 90.0,
+            "p": 0.466,
+            "m": 1.767,
+            "width_in": 0.41,
+            "width_out": 0.41,
+            "width_center": 0.5,
+            "with_arc_floorplan": true,
+            "npoints": 100,
+            "direction": "ccw",
+            "cross_section": "strip",
+            "loss": 0.0001
+        }
+    },
+    "bend_euler_custom_width_e0ece210":{
+        "design_id": "swg_custom_bend_euler_r10",
+        "dut_type": "bend",
+        "function": "bend_euler_custom_width",
+        "settings":{
+            "radius": 10,
+            "angle": 90.0,
+            "p": 0.466,
+            "m": 1.767,
+            "width_in": 0.41,
+            "width_out": 0.41,
+            "width_center": 0.5,
+            "with_arc_floorplan": true,
+            "npoints": 100,
+            "direction": "ccw",
+            "cross_section": "strip",
+            "loss": 0.0001
+        }
+    },
+    "bend_variant_Vbloss_R50_cd6a1f6a": {
+    "design_id": "anwg_variant_bend_bloss_r50", 
+    "dut_type": "bend", 
+    "function": "bend_variant", 
+    "settings": {
+        "variant": "bloss", 
+        "radius": 50, 
+        "angle": 90, 
+        "a1": null, 
+        "a2": null, 
+        "pe_p": null, 
+        "na_n": null, 
+        "bloss_rho":  1.038, 
+        "dw_over_w": 0.556, 
+        "width": 1.28, 
+        "npoints": 100, 
+        "cross_section": "nitride2", 
+        "length_access": 0}
+    },
+    "bend_variant_Vna_R57p60_d2ebac82": {
+    "design_id": "anwg_variant_bend_na_r57p604", 
+    "dut_type": "bend", 
+    "function": "bend_variant", 
+    "settings": {
+        "variant": "na", 
+        "radius": 57.604, 
+        "angle": 90, 
+        "a1": null, 
+        "a2": null, 
+        "pe_p": null, 
+        "na_n": 0.548, 
+        "bloss_rho":  null, 
+        "dw_over_w": 0.735, 
+        "width": 1.784, 
+        "npoints": 100, 
+        "cross_section": "nitride2", 
+        "length_access": 0}
+    },
+    "bend_variant_Vbloss_R3__916af51a": {
+    "design_id": "swg_variant_bend_bloss_r3", 
+    "dut_type": "bend", 
+    "function": "bend_variant", 
+    "settings": {
+        "variant": "bloss", 
+        "radius": 3, 
+        "angle": 90, 
+        "a1": null, 
+        "a2": null, 
+        "pe_p": null, 
+        "na_n": null, 
+        "bloss_rho":  9.957, 
+        "dw_over_w": 0.322, 
+        "width": 0.41, 
+        "npoints": 100, 
+        "cross_section": "strip", 
+        "length_access": 0}
+    },
+    "bend_variant_Vbloss_R5__7465d1e4": {
+    "design_id": "swg_variant_bend_bloss_r5", 
+    "dut_type": "bend", 
+    "function": "bend_variant", 
+    "settings": {
+        "variant": "bloss", 
+        "radius": 5, 
+        "angle": 90, 
+        "a1": null, 
+        "a2": null, 
+        "pe_p": null, 
+        "na_n": null, 
+        "bloss_rho": 3.271, 
+        "dw_over_w": 0.418, 
+        "width": 0.41, 
+        "npoints": 100, 
+        "cross_section": "strip", 
+        "length_access": 0}
+    },
+    "bend_variant_Vbloss_R5__6fb16ea8": {
+    "design_id": "swg_variant_bend_bloss_r5_a180", 
+    "dut_type": "bend", 
+    "function": "bend_variant", 
+    "settings": {
+        "variant": "bloss", 
+        "radius": 5, 
+        "angle": 180, 
+        "a1": null, 
+        "a2": null, 
+        "pe_p": null, 
+        "na_n": null, 
+        "bloss_rho": 0.224, 
+        "dw_over_w": 1.291, 
+        "width": 0.41, 
+        "npoints": 100, 
+        "cross_section": "strip", 
+        "length_access": 0}
+    },
+    "clothoid_Vbloss_H3p995__1bf93c48": {
+    "design_id": "swg_clothoid_vbloss_bend_410_460", 
+    "dut_type": "bend", 
+    "function": "clothoid", 
+    "settings": {
+        "variant": "bloss", 
+        "H": 3.995, 
+        "angle": 105.118,
+        "na_n": null, 
+        "pe_p": null,         
+        "bloss_rho":  8.846, 
+        "g": 0.75,
+        "wg_a": 0.41,
+        "wg_b": 0.46,
+        "Lt": 1,
+        "w_center": 0.756,
+        "m": 1.809,
+        "length_access": 0,
+        "cross_section": "strip",
+        "npoints": 200}
+    },
+    "clothoid_Vbloss_H3p995__6cb323a1": {
+    "design_id": "swg_clothoid_vbloss_bend_460_410", 
+    "dut_type": "bend", 
+    "function": "clothoid", 
+    "settings": {
+        "variant": "bloss", 
+        "H": 3.995, 
+        "angle": 103.4,
+        "na_n": null, 
+        "pe_p": null,         
+        "bloss_rho":  8.846, 
+        "g": 0.75,
+        "wg_a": 0.46,
+        "wg_b": 0.41,
+        "Lt": 1,
+        "w_center": 0.756,
+        "m": 1.809,
+        "length_access": 0,
+        "cross_section": "strip",
+        "npoints": 200}
+    },
+
+
+    "diode_linear_LC5_LD0p5__38e623cc":{
+        "design_id": "DIODE_1",
+        "dut_type": "diode",
+        "function": "diode_linear",
+        "settings":{
+            "length_contact": 5.00,
+            "length_dop1": 0.50,
+            "length_dop1_overlap": 0.00,
+            "length_dop2": 1.00,
+            "length_dop2_overlap": 0.00,
+            "margin_swg": 0.18,
+            "margin_silicide": 0.50,
+            "margin_silicide_doped": 0.15,
+            "width_contact": 20
+        }
+    },
+    "diode_linear_LC10_LD0p5_baf596bc":{
+        "design_id": "DIODE_2",
+        "dut_type": "diode",
+        "function": "diode_linear",
+        "settings":{
+            "length_contact": 10.00,
+            "length_dop1": 0.50,
+            "length_dop1_overlap": 0.00,
+            "length_dop2": 1.00,
+            "length_dop2_overlap": 0.00,
+            "margin_swg": 0.18,
+            "margin_silicide": 0.50,
+            "margin_silicide_doped": 0.15,
+            "width_contact": 20
+        }
+    },
+    "diode_linear_LC15_LD0p5_2ab1833b":{
+        "design_id": "DIODE_3",
+        "dut_type": "diode",
+        "function": "diode_linear",
+        "settings":{
+            "length_contact": 15.00,
+            "length_dop1": 0.50,
+            "length_dop1_overlap": 0.00,
+            "length_dop2": 1.00,
+            "length_dop2_overlap": 0.00,
+            "margin_swg": 0.18,
+            "margin_silicide": 0.50,
+            "margin_silicide_doped": 0.15,
+            "width_contact": 20
+        }
+    },
+    "diode_linear_LC5_LD0p5__e1754908":{
+        "design_id": "DIODE_4",
+        "dut_type": "diode",
+        "function": "diode_linear",
+        "settings":{
+            "length_contact": 5.00,
+            "length_dop1": 0.50,
+            "length_dop1_overlap": 0.00,
+            "length_dop2": 1.00,
+            "length_dop2_overlap": 0.00,
+            "margin_swg": 0.18,
+            "margin_silicide": 0.50,
+            "margin_silicide_doped": 0.15,
+            "width_contact": 30
+        }
+    },
+    "diode_linear_LC5_LD0p5__ad37b249":{
+        "design_id": "DIODE_5",
+        "dut_type": "diode",
+        "function": "diode_linear",
+        "settings":{
+            "length_contact": 5.00,
+            "length_dop1": 0.50,
+            "length_dop1_overlap": 0.00,
+            "length_dop2": 1.00,
+            "length_dop2_overlap": 0.00,
+            "margin_swg": 0.18,
+            "margin_silicide": 0.50,
+            "margin_silicide_doped": 0.15,
+            "width_contact": 40
+        }
+    },
+    "diode_linear_LC5_LD0p5__7404c1dd":{
+        "design_id": "DIODE_6",
+        "dut_type": "diode",
+        "function": "diode_linear",
+        "settings":{
+            "length_contact": 5.00,
+            "length_dop1": 0.50,
+            "length_dop1_overlap": 0.00,
+            "length_dop2": 1.00,
+            "length_dop2_overlap": 0.00,
+            "margin_swg": 0.18,
+            "margin_silicide": 0.50,
+            "margin_silicide_doped": 0.15,
+            "width_contact": 50
+        }
+    },
+    "diode_linear_LC5_LD5p15_fed94d24":{
+        "design_id": "DIODE_7",
+        "dut_type": "diode",
+        "function": "diode_linear",
+        "settings":{
+            "length_contact": 5.00,
+            "length_dop1": 5.15,
+            "length_dop1_overlap": 5.00,
+            "length_dop2": 1.00,
+            "length_dop2_overlap": 0.15,
+            "margin_swg": 0.18,
+            "margin_silicide": 0.50,
+            "margin_silicide_doped": 0.15,
+            "width_contact": 20
+        }
+    },
+    "diode_linear_LC5_LD5p15_10ac6cc5":{
+        "design_id": "DIODE_8",
+        "dut_type": "diode",
+        "function": "diode_linear",
+        "settings":{
+            "length_contact": 5.00,
+            "length_dop1": 5.15,
+            "length_dop1_overlap": 5.00,
+            "length_dop2": 1.00,
+            "length_dop2_overlap": 0.076,
+            "margin_swg": 0.18,
+            "margin_silicide": 0.50,
+            "margin_silicide_doped": 0.15,
+            "width_contact": 20
+        }
+    },
+    "diode_linear_LC5_LD5p25_5ff7b499":{
+        "design_id": "DIODE_9",
+        "dut_type": "diode",
+        "function": "diode_linear",
+        "settings":{
+            "length_contact": 5.00,
+            "length_dop1": 5.25,
+            "length_dop1_overlap": 5.00,
+            "length_dop2": 1.00,
+            "length_dop2_overlap": 0.25,
+            "margin_swg": 0.18,
+            "margin_silicide": 0.50,
+            "margin_silicide_doped": 0.15,
+            "width_contact": 20
+        }
+    },
+    "diode_linear_LC5_LD5p1__95894f70":{
+        "design_id": "DIODE_10",
+        "dut_type": "diode",
+        "function": "diode_linear",
+        "settings":{
+            "length_contact": 5.00,
+            "length_dop1": 5.10,
+            "length_dop1_overlap": 5.00,
+            "length_dop2": 1.00,
+            "length_dop2_overlap": 0.05,
+            "margin_swg": 0.18,
+            "margin_silicide": 0.50,
+            "margin_silicide_doped": 0.15,
+            "width_contact": 30
+        }
+    },
+    "diode_guard_ring_Cdiode_ddb055e5":{
+        "design_id": "DIODE_11",
+        "dut_type": "diode",
+        "function": "diode_guard_ring",
+        "settings":{
+            "component": "diode_linear_LC5_LD0p5__38e623cc", 
+             "layers": [{"distance_x": 1.82, 
+                         "distance_y": 1.82, 
+                         "layer": [178, 0], 
+                         "thickness_x": 2.5, 
+                         "thickness_y": 2.5},
+                        {"distance_x": 1.6400000000000001, 
+                         "distance_y": 1.6400000000000001, 
+                         "layer": [171, 0], 
+                         "thickness_x": 2.86, 
+                         "thickness_y": 2.86}, 
+                         {"distance_x": 1.6400000000000001, 
+                         "distance_y": 1.6400000000000001, 
+                         "layer": [118, 162], 
+                         "thickness_x": 2.86, 
+                         "thickness_y": 2.86}]
+        }
+    },
+    "diode_guard_ring_Cdiode_42601802":{
+        "design_id": "DIODE_12",
+        "dut_type": "diode",
+        "function": "diode_guard_ring",
+        "settings":{
+            "component": "diode_linear_LC5_LD0p5__38e623cc", 
+             "layers": [{"distance_x": 1.82, 
+                         "distance_y": 1.82, 
+                         "layer": [176, 0], 
+                         "thickness_x": 2.5, 
+                         "thickness_y": 2.5},
+                        {"distance_x": 1.6400000000000001, 
+                         "distance_y": 1.6400000000000001, 
+                         "layer": [171, 0], 
+                         "thickness_x": 2.86, 
+                         "thickness_y": 2.86}, 
+                         {"distance_x": 1.6400000000000001, 
+                         "distance_y": 1.6400000000000001, 
+                         "layer": [118, 162], 
+                         "thickness_x": 2.86, 
+                         "thickness_y": 2.86}]
+        }
+    },
+    "diode_guard_ring_Cdiode_3d7f2868":{
+        "design_id": "DIODE_13",
+        "dut_type": "diode",
+        "function": "diode_guard_ring",
+        "settings":{
+            "component": "diode_linear_LC5_LD0p5__38e623cc", 
+             "layers": [{"distance_x": 1.82, 
+                         "distance_y": 1.82, 
+                         "layer": [177, 0], 
+                         "thickness_x": 2.5, 
+                         "thickness_y": 2.5},
+                        {"distance_x": 1.6400000000000001, 
+                         "distance_y": 1.6400000000000001, 
+                         "layer": [171, 0], 
+                         "thickness_x": 2.86, 
+                         "thickness_y": 2.86}, 
+                         {"distance_x": 1.6400000000000001, 
+                         "distance_y": 1.6400000000000001, 
+                         "layer": [118, 162], 
+                         "thickness_x": 2.86, 
+                         "thickness_y": 2.86}]
+        }
+    },
+    "diode_guard_ring_Cdiode_4abd448c":{
+        "design_id": "DIODE_14",
+        "dut_type": "diode",
+        "function": "diode_guard_ring",
+        "settings":{
+            "component": "diode_linear_LC5_LD0p5__38e623cc", 
+             "layers": [{"distance_x": 1.82, 
+                         "distance_y": 1.82, 
+                         "layer": [175, 0], 
+                         "thickness_x": 2.5, 
+                         "thickness_y": 2.5},
+                        {"distance_x": 1.6400000000000001, 
+                         "distance_y": 1.6400000000000001, 
+                         "layer": [171, 0], 
+                         "thickness_x": 2.86, 
+                         "thickness_y": 2.86}, 
+                         {"distance_x": 1.6400000000000001, 
+                         "distance_y": 1.6400000000000001, 
+                         "layer": [118, 162], 
+                         "thickness_x": 2.86, 
+                         "thickness_y": 2.86}]
+        }
+    },
+    "diode_linear_LC5_LD5p15_b0c6a261":{
+        "design_id": "DIODE_15",
+        "dut_type": "diode",
+        "function": "diode_linear",
+        "settings":{
+            "length_contact": 5.00,
+            "length_dop1": 5.15,
+            "length_dop1_overlap": 5.00,
+            "length_dop2": 1.15,
+            "length_dop2_overlap": 0.15,
+            "margin_swg": 0.18,
+            "margin_silicide": 0.50,
+            "margin_silicide_doped": 0.15,
+            "width_contact": 20
+        }
+    },
+    "diode_linear_LC5p15_LD0_d4b2ee29":{
+        "design_id": "DIODE_16",
+        "dut_type": "diode",
+        "function": "diode_linear",
+        "settings":{
+            "length_contact": 5.15,
+            "length_dop1": 0.00,
+            "length_dop1_overlap": 0.00,
+            "length_dop2": 1.15,
+            "length_dop2_overlap": 0.15,
+            "margin_swg": 0.18,
+            "margin_silicide": 0.50,
+            "margin_silicide_doped": 0.30,
+            "width_contact": 20
+        }
+    },
+   
+
+
+    "3d_crossing_swg_930_anwg_2000_below":{
+        "design_id": "3d_crossing_swg_930_anwg_2000_below",
+        "dut_type": "crossing",
+        "function": "crossing_3D",
+        "settings":{
+            "cross_section1": "xs_eb275a15",
+            "cross_section2": "xs_26c47562",
+            "length1": 0,
+            "length2": 5.0,
+            "angle": 90
+        }
+    },
+    "3d_crossing_swg_930_anwg_2000_above":{
+        "design_id": "3d_crossing_swg_930_anwg_2000_above",
+        "dut_type": "crossing",
+        "function": "crossing_3D",
+        "settings": {
+            "cross_section1": "xs_26c47562",
+            "cross_section2": "xs_eb275a15",
+            "length1": 0,
+            "length2": 9.8,
+            "angle": 90
+        }
+    },
+    "3d_crossing_swg_930_anwg_2000_above_30":{
+        "design_id": "3d_crossing_swg_930_anwg_2000_above_30",
+        "dut_type": "crossing",
+        "function": "crossing_3D",
+        "settings": {
+            "cross_section1": "xs_26c47562",
+            "cross_section2": "xs_eb275a15",
+            "length1": 0,
+            "length2": 19.8,
+            "angle": 30
+        }
+    },
+    "3d_crossing_gwg_410_anwg_1500_above":{
+        "design_id": "3d_crossing_gwg_410_anwg_1500_above",
+        "dut_type": "crossing",
+        "function": "crossing_3D",
+        "settings": {
+            "cross_section1": "xs_f622ab4f",
+            "cross_section2": "xs_7dd44111",
+            "length1": 0,
+            "length2": 9.8,
+            "angle": 90
+        }
+    },
+    "3d_crossing_gwg_410_anwg_1500_above_45":{
+        "design_id": "3d_crossing_gwg_410_anwg_1500_above_45",
+        "dut_type": "crossing",
+        "function": "crossing_3D",
+        "settings": {
+            "cross_section1": "xs_fd876430",
+            "cross_section2": "xs_7dd44111",
+            "length1": 0,
+            "length2": 13.942,
+            "angle": 45
+        }
+    },
+    "3d_crossing_gwg_410_anwg_1500_above_30":{
+        "design_id": "3d_crossing_gwg_410_anwg_1500_above_30",
+        "dut_type": "crossing",
+        "function": "crossing_3D",
+        "settings": {
+            "cross_section1": "xs_139fce46",
+            "cross_section2": "xs_7dd44111",
+            "length1": 0,
+            "length2": 19.8,
+            "angle": 30
+        }
+    },
+    "3d_crossing_gwg_410_anwg_1500_above_15":{
+        "design_id": "3d_crossing_gwg_410_anwg_1500_above_15",
+        "dut_type": "crossing",
+        "function": "crossing_3D",
+        "settings": {
+            "cross_section1": "xs_026dda89",
+            "cross_section2": "xs_7dd44111",
+            "length1": 0,
+            "length2": 38.437,
+            "angle": 15
+        }
+    },
+
+
+
+
+    "ec_main":{
+        "design_id": "ec_main",
+        "dut_type": "ec",
+        "function": "anwg_ec_oband",
+        "settings":{
+            "model": "main",
+            "version": ""
+        }
+    }, 
+    "ec_sin2_strip_single_TW_ab5407d1": {
+        "design_id": "sin2_ec_single1",
+        "dut_type": "ec", 
+        "function": "ec_sin2_strip_single",
+        "settings": {
+            "trench_width": 20,
+            "trench_gap": 10,
+            "length_input": 1,
+            "width_in": 0.184,
+            "dwidth_in": 0.028,
+            "width_out": 0.694,
+            "length_total": 249.824,
+            "length_1": 31.729,
+            "length_access": 1,
+            "m_1": 0.098,
+            "m_2": 0.847,
+            "n_points": 1000,
+            "length_taper_out": 20,
+            "width_out_taper_out": 1.492,
+            "m_taper_out": 0.569565,
+            "n_points_taper_out": 100,
+            "cross_sections": [
+                "strip",
+                "nitride",
+                "nitride2",
+                "hat_nitride",
+                "hat_nitride2"
+            ],
+            "cross_section": "nitride2",
+            "layers": [
+                120,
+                93,
+                126
+            ],
+            "sim": false,
+            "access": true
+        }
+    },
+    "ec_sin2_strip_single_TW_b97aafb6": {
+        "design_id": "sin2_ec_single2",
+        "dut_type": "ec",
+        "function": "ec_sin2_strip_single",
+        "settings": {
+            "trench_width": 20,
+            "trench_gap": 10,
+            "length_input": 1,
+            "width_in": 0.194,
+            "dwidth_in": 0.016,
+            "width_out": 0.788,
+            "length_total": 238.603,
+            "length_1": 27.177,
+            "length_access": 1,
+            "m_1": 0.122,
+            "m_2": 0.714,
+            "n_points": 1000,
+            "length_taper_out": 20,
+            "width_out_taper_out": 1.492,
+            "m_taper_out": 0.569565,
+            "n_points_taper_out": 100,
+            "cross_sections": [
+                "strip",
+                "nitride",
+                "nitride2",
+                "hat_nitride",
+                "hat_nitride2"
+            ],
+            "cross_section": "nitride2",
+            "layers": [
+                120,
+                93,
+                126
+            ],
+            "sim": false,
+            "access": true
+        }
+    },
+    "ec_sin2_strip_single_TW_e1e47b66": {
+        "design_id": "sin2_ec_single3",
+        "dut_type": "ec",
+        "function": "ec_sin2_strip_single",
+        "settings": {
+            "trench_width": 20,
+            "trench_gap": 10,
+            "length_input": 1,
+            "width_in": 0.198,
+            "dwidth_in": 0,
+            "width_out": 0.726,
+            "length_total": 290,
+            "length_1": 27.604,
+            "length_access": 1,
+            "m_1": 1,
+            "m_2": 1,
+            "n_points": 1000,
+            "length_taper_out": 20,
+            "width_out_taper_out": 1.492,
+            "m_taper_out": 0.569565,
+            "n_points_taper_out": 100,
+            "cross_sections": [
+                "strip",
+                "nitride",
+                "nitride2",
+                "hat_nitride",
+                "hat_nitride2"
+            ],
+            "cross_section": "nitride2",
+            "layers": [
+                120,
+                93,
+                126
+            ],
+            "sim": false,
+            "access": true
+        }
+    },
+    "ec_sin2_strip_single_TW_025e1bdb": {
+        "design_id": "sin2_ec_single4",
+        "dut_type": "ec",
+        "function": "ec_sin2_strip_single",
+        "settings": {
+            "trench_width": 20,
+            "trench_gap": 10,
+            "length_input": 1,
+            "width_in": 0.178,
+            "dwidth_in": 0.028,
+            "width_out": 0.8,
+            "length_total": 275,
+            "length_1": 32.487,
+            "length_access": 1,
+            "m_1": 0.086,
+            "m_2": 0.65,
+            "n_points": 1000,
+            "length_taper_out": 20,
+            "width_out_taper_out": 1.492,
+            "m_taper_out": 0.569565,
+            "n_points_taper_out": 100,
+            "cross_sections": [
+                "strip",
+                "nitride",
+                "nitride2",
+                "hat_nitride",
+                "hat_nitride2"
+            ],
+            "cross_section": "nitride2",
+            "layers": [
+                120,
+                93,
+                126
+            ],
+            "sim": false,
+            "access": true
+        }
+    },
+    "ec_sin2_strip_single_TW_2713c5a1": {
+        "design_id": "sin2_ec_single5",
+        "dut_type": "ec",
+        "function": "ec_sin2_strip_single",
+        "settings": {
+            "trench_width": 20,
+            "trench_gap": 10,
+            "length_input": 1,
+            "width_in": 0.192,
+            "dwidth_in": 0.024,
+            "width_out": 0.8,
+            "length_total": 275,
+            "length_1": 32.346,
+            "length_access": 1,
+            "m_1": 0.087,
+            "m_2": 0.903,
+            "n_points": 1000,
+            "length_taper_out": 20,
+            "width_out_taper_out": 1.492,
+            "m_taper_out": 0.569565,
+            "n_points_taper_out": 100,
+            "cross_sections": [
+                "strip",
+                "nitride",
+                "nitride2",
+                "hat_nitride",
+                "hat_nitride2"
+            ],
+            "cross_section": "nitride2",
+            "layers": [
+                120,
+                93,
+                126
+            ],
+            "sim": false,
+            "access": true
+        }
+    },
+    "ec_sin2_strip_MAIN_TW20_0936c6c6": {
+        "design_id": "sin2_ec_MAIN_str",
+        "dut_type": "ec",
+        "function": "ec_sin2_strip_MAIN",
+        "settings": {
+            "trench_width": 20,
+            "trench_gap_in": 24,
+            "trench_gap_out": 20,
+            "length_input": 1,
+            "width_in": 0.15,
+            "dwidth_in": 0.1,
+            "width_out": 0.7,
+            "length_total": 400,
+            "length_1": 30,
+            "length_access": 1,
+            "m_1": 0.4,
+            "m_2": 0.9,
+            "n_points": 350,
+            "length_taper_out": 20,
+            "width_out_taper_out": 1.492,
+            "m_taper_out": 0.569565,
+            "n_points_taper_out": 100,
+            "cross_sections": [
+                "strip",
+                "nitride",
+                "nitride2",
+                "hat_nitride",
+                "hat_nitride2"
+            ],
+            "cross_section": "nitride2",
+            "layers": [
+                120,
+                93,
+                126
+            ],
+            "sim": false,
+            "access": true
+        }
+    },
+    "ec_sin2_strip_single_TW_60434a34": {
+        "design_id": "sin2_ec_single1_L11",
+        "dut_type": "ec",
+        "function": "ec_sin2_strip_single",
+        "settings": {
+            "trench_width": 20,
+            "trench_gap": 10,
+            "length_input": 1,
+            "width_in": 0.184,
+            "dwidth_in": 0.028,
+            "width_out": 0.694,
+            "length_total": 249.824,
+            "length_1": 26.729,
+            "length_access": 1,
+            "m_1": 0.098,
+            "m_2": 0.847,
+            "n_points": 1000,
+            "length_taper_out": 20,
+            "width_out_taper_out": 1.492,
+            "m_taper_out": 0.569565,
+            "n_points_taper_out": 100,
+            "cross_sections": [
+                "strip",
+                "nitride",
+                "nitride2",
+                "hat_nitride",
+                "hat_nitride2"
+            ],
+            "cross_section": "nitride2",
+            "layers": [
+                120,
+                93,
+                126
+            ],
+            "sim": false,
+            "access": true
+        }
+    },
+    "ec_sin2_strip_single_TW_e2da12e6": {
+        "design_id": "sin2_ec_single1_L12",
+        "dut_type": "ec",
+        "function": "ec_sin2_strip_single",
+        "settings": {
+            "trench_width": 20,
+            "trench_gap": 10,
+            "length_input": 1,
+            "width_in": 0.184,
+            "dwidth_in": 0.028,
+            "width_out": 0.694,
+            "length_total": 249.824,
+            "length_1": 36.729,
+            "length_access": 1,
+            "m_1": 0.098,
+            "m_2": 0.847,
+            "n_points": 1000,
+            "length_taper_out": 20,
+            "width_out_taper_out": 1.492,
+            "m_taper_out": 0.569565,
+            "n_points_taper_out": 100,
+            "cross_sections": [
+                "strip",
+                "nitride",
+                "nitride2",
+                "hat_nitride",
+                "hat_nitride2"
+            ],
+            "cross_section": "nitride2",
+            "layers": [
+                120,
+                93,
+                126
+            ],
+            "sim": false,
+            "access": true
+        }
+    },
+    "ec_sin2_strip_single_TW_538df7b6": {
+        "design_id": "sin2_ec_single1_L13",
+        "dut_type": "ec",
+        "function": "ec_sin2_strip_single",
+        "settings": {
+            "trench_width": 20,
+            "trench_gap": 10,
+            "length_input": 1,
+            "width_in": 0.184,
+            "dwidth_in": 0.028,
+            "width_out": 0.694,
+            "length_total": 249.824,
+            "length_1": 41.729,
+            "length_access": 1,
+            "m_1": 0.098,
+            "m_2": 0.847,
+            "n_points": 1000,
+            "length_taper_out": 20,
+            "width_out_taper_out": 1.492,
+            "m_taper_out": 0.569565,
+            "n_points_taper_out": 100,
+            "cross_sections": [
+                "strip",
+                "nitride",
+                "nitride2",
+                "hat_nitride",
+                "hat_nitride2"
+            ],
+            "cross_section": "nitride2",
+            "layers": [
+                120,
+                93,
+                126
+            ],
+            "sim": false,
+            "access": true
+        }
+    },
+    "ec_sin2_strip_single_TW_cbcde265": {
+        "design_id": "sin2_ec_single1_L1",
+        "dut_type": "ec",
+        "function": "ec_sin2_strip_single",
+        "settings": {
+            "trench_width": 20,
+            "trench_gap": 10,
+            "length_input": 1,
+            "width_in": 0.184,
+            "dwidth_in": 0.028,
+            "width_out": 0.694,
+            "length_total": 299.824,
+            "length_1": 31.729,
+            "length_access": 1,
+            "m_1": 0.098,
+            "m_2": 0.847,
+            "n_points": 1000,
+            "length_taper_out": 20,
+            "width_out_taper_out": 1.492,
+            "m_taper_out": 0.569565,
+            "n_points_taper_out": 100,
+            "cross_sections": [
+                "strip",
+                "nitride",
+                "nitride2",
+                "hat_nitride",
+                "hat_nitride2"
+            ],
+            "cross_section": "nitride2",
+            "layers": [
+                120,
+                93,
+                126
+            ],
+            "sim": false,
+            "access": true
+        }
+    },
+    "ec_sin2_strip_single_TW_3dbfa792": {
+        "design_id": "sin2_ec_single1_L2",
+        "dut_type": "ec",
+        "function": "ec_sin2_strip_single",
+        "settings": {
+            "trench_width": 20,
+            "trench_gap": 10,
+            "length_input": 1,
+            "width_in": 0.184,
+            "dwidth_in": 0.028,
+            "width_out": 0.694,
+            "length_total": 349.824,
+            "length_1": 31.729,
+            "length_access": 1,
+            "m_1": 0.098,
+            "m_2": 0.847,
+            "n_points": 1000,
+            "length_taper_out": 20,
+            "width_out_taper_out": 1.492,
+            "m_taper_out": 0.569565,
+            "n_points_taper_out": 100,
+            "cross_sections": [
+                "strip",
+                "nitride",
+                "nitride2",
+                "hat_nitride",
+                "hat_nitride2"
+            ],
+            "cross_section": "nitride2",
+            "layers": [
+                120,
+                93,
+                126
+            ],
+            "sim": false,
+            "access": true
+        }
+    },
+    "ec_sin2_strip_trident_T_e584de09": {
+        "design_id": "sin2_ec_trident1",
+        "dut_type": "ec",
+        "function": "ec_sin2_strip_trident",
+        "settings": {
+            "trench_width": 20,
+            "trench_gap": 10,
+            "length_input": 1,
+            "width_in": 0.15,
+            "dwidth_in": 0,
+            "width_out": 0.688,
+            "length_total": 148.755,
+            "length_1_rat": 0.151,
+            "m_1": 1,
+            "m_2": 0.472,
+            "n_points": 1000,
+            "length_taper_out": 20,
+            "width_out_taper_out": 1.492,
+            "m_taper_out": 0.569565,
+            "n_points_taper_out": 100,
+            "width_in_side": 0.15,
+            "dwidth_in_side": 0,
+            "width_out_side": 0.306,
+            "length_1_side_rat": 0.591,
+            "m_1_side": 1,
+            "m_2_side": 0.34,
+            "n_points_side": 1000,
+            "wg_spacing": 1.252,
+            "length_access_side": 5,
+            "length_access": 1,
+            "cross_sections": [
+                "strip",
+                "nitride",
+                "nitride2",
+                "hat_nitride",
+                "hat_nitride2"
+            ],
+            "cross_section": "nitride2",
+            "layers": [
+                120,
+                93,
+                126
+            ],
+            "sim": false,
+            "access": true
+        }
+    },
+    "ec_sin2_strip_trident_T_b7389297": {
+        "design_id": "sin2_ec_trident2",
+        "dut_type": "ec",
+        "function": "ec_sin2_strip_trident",
+        "settings": {
+            "trench_width": 20,
+            "trench_gap": 10,
+            "length_input": 1,
+            "width_in": 0.154,
+            "dwidth_in": 0.004,
+            "width_out": 0.608,
+            "length_total": 111.765,
+            "length_1_rat": 0.351,
+            "m_1": 1.583,
+            "m_2": 0.636,
+            "n_points": 1000,
+            "length_taper_out": 20,
+            "width_out_taper_out": 1.492,
+            "m_taper_out": 0.569565,
+            "n_points_taper_out": 100,
+            "width_in_side": 0.158,
+            "dwidth_in_side": 0.058,
+            "width_out_side": 0.388,
+            "length_1_side_rat": 0.68,
+            "m_1_side": 1.958,
+            "m_2_side": 0.607,
+            "n_points_side": 1000,
+            "wg_spacing": 1.423,
+            "length_access_side": 5,
+            "length_access": 1,
+            "cross_sections": [
+                "strip",
+                "nitride",
+                "nitride2",
+                "hat_nitride",
+                "hat_nitride2"
+            ],
+            "cross_section": "nitride2",
+            "layers": [
+                120,
+                93,
+                126
+            ],
+            "sim": false,
+            "access": true
+        }
+    },
+    "ec_sin2_strip_trident_T_82e1086f": {
+        "design_id": "sin2_ec_trident3",
+        "dut_type": "ec",
+        "function": "ec_sin2_strip_trident",
+        "settings": {
+            "trench_width": 20,
+            "trench_gap": 10,
+            "length_input": 1,
+            "width_in": 0.162,
+            "dwidth_in": 0.06,
+            "width_out": 0.624,
+            "length_total": 120.588,
+            "length_1_rat": 0.381,
+            "m_1": 1.858,
+            "m_2": 0.68,
+            "n_points": 1000,
+            "length_taper_out": 20,
+            "width_out_taper_out": 1.492,
+            "m_taper_out": 0.569565,
+            "n_points_taper_out": 100,
+            "width_in_side": 0.158,
+            "dwidth_in_side": 0.07,
+            "width_out_side": 0.392,
+            "length_1_side_rat": 0.621,
+            "m_1_side": 1.572,
+            "m_2_side": 0.805,
+            "n_points_side": 1000,
+            "wg_spacing": 2.19,
+            "length_access_side": 5,
+            "length_access": 1,
+            "cross_sections": [
+                "strip",
+                "nitride",
+                "nitride2",
+                "hat_nitride",
+                "hat_nitride2"
+            ],
+            "cross_section": "nitride2",
+            "layers": [
+                120,
+                93,
+                126
+            ],
+            "sim": false,
+            "access": true
+        }
+    },
+    "ec_sin2_strip_trident_T_9ac0954d": {
+        "design_id": "sin2_ec_trident4",
+        "dut_type": "ec",
+        "function": "ec_sin2_strip_trident",
+        "settings": {
+            "trench_width": 20,
+            "trench_gap": 10,
+            "length_input": 1,
+            "width_in": 0.15,
+            "dwidth_in": 0,
+            "width_out": 0.738,
+            "length_total": 130.008,
+            "length_1_rat": 0.289,
+            "m_1": 1,
+            "m_2": 0.477,
+            "n_points": 1000,
+            "length_taper_out": 20,
+            "width_out_taper_out": 1.492,
+            "m_taper_out": 0.569565,
+            "n_points_taper_out": 100,
+            "width_in_side": 0.15,
+            "dwidth_in_side": 0,
+            "width_out_side": 0.324,
+            "length_1_side_rat": 0.578,
+            "m_1_side": 1,
+            "m_2_side": 0.297,
+            "n_points_side": 1000,
+            "wg_spacing": 1.25,
+            "length_access_side": 5,
+            "length_access": 1,
+            "cross_sections": [
+                "strip",
+                "nitride",
+                "nitride2",
+                "hat_nitride",
+                "hat_nitride2"
+            ],
+            "cross_section": "nitride2",
+            "layers": [
+                120,
+                93,
+                126
+            ],
+            "sim": false,
+            "access": true
+        }
+    },
+    "ec_sin2_strip_trident_T_71d41d99": {
+        "design_id": "sin2_ec_trident5",
+        "dut_type": "ec",
+        "function": "ec_sin2_strip_trident",
+        "settings": {
+            "trench_width": 20,
+            "trench_gap": 10,
+            "length_input": 1,
+            "width_in": 0.15,
+            "dwidth_in": 0,
+            "width_out": 0.69,
+            "length_total": 148.755,
+            "length_1_rat": 0.151,
+            "m_1": 1,
+            "m_2": 0.472,
+            "n_points": 1000,
+            "length_taper_out": 20,
+            "width_out_taper_out": 1.492,
+            "m_taper_out": 0.569565,
+            "n_points_taper_out": 100,
+            "width_in_side": 0.15,
+            "dwidth_in_side": 0,
+            "width_out_side": 0.306,
+            "length_1_side_rat": 0.591,
+            "m_1_side": 1,
+            "m_2_side": 0.334,
+            "n_points_side": 1000,
+            "wg_spacing": 1.082,
+            "length_access_side": 5,
+            "length_access": 1,
+            "cross_sections": [
+                "strip",
+                "nitride",
+                "nitride2",
+                "hat_nitride",
+                "hat_nitride2"
+            ],
+            "cross_section": "nitride2",
+            "layers": [
+                120,
+                93,
+                126
+            ],
+            "sim": false,
+            "access": true
+        }
+    },
+    "ec_sin2_strip_trident_T_80605a50": {
+        "design_id": "sin2_ec_trident6",
+        "dut_type": "ec",
+        "function": "ec_sin2_strip_trident",
+        "settings": {
+            "trench_width": 20,
+            "trench_gap": 10,
+            "length_input": 1,
+            "width_in": 0.15,
+            "dwidth_in": 0,
+            "width_out": 0.702,
+            "length_total": 148.368,
+            "length_1_rat": 0.209,
+            "m_1": 1,
+            "m_2": 0.472,
+            "n_points": 1000,
+            "length_taper_out": 20,
+            "width_out_taper_out": 1.492,
+            "m_taper_out": 0.569565,
+            "n_points_taper_out": 100,
+            "width_in_side": 0.15,
+            "dwidth_in_side": 0,
+            "width_out_side": 0.318,
+            "length_1_side_rat": 0.588,
+            "m_1_side": 1,
+            "m_2_side": 0.326,
+            "n_points_side": 1000,
+            "wg_spacing": 1.217,
+            "length_access_side": 5,
+            "length_access": 1,
+            "cross_sections": [
+                "strip",
+                "nitride",
+                "nitride2",
+                "hat_nitride",
+                "hat_nitride2"
+            ],
+            "cross_section": "nitride2",
+            "layers": [
+                120,
+                93,
+                126
+            ],
+            "sim": false,
+            "access": true
+        }
+    },
+    "ec_sin2_strip_trident_T_5f5205a1": {
+        "design_id": "sin2_ec_trident7",
+        "dut_type": "ec",
+        "function": "ec_sin2_strip_trident",
+        "settings": {
+            "trench_width": 20,
+            "trench_gap": 10,
+            "length_input": 1,
+            "width_in": 0.15,
+            "dwidth_in": 0,
+            "width_out": 0.596,
+            "length_total": 159.012,
+            "length_1_rat": 0.152,
+            "m_1": 1,
+            "m_2": 0.592,
+            "n_points": 1000,
+            "length_taper_out": 20,
+            "width_out_taper_out": 1.492,
+            "m_taper_out": 0.569565,
+            "n_points_taper_out": 100,
+            "width_in_side": 0.15,
+            "dwidth_in_side": 0,
+            "width_out_side": 0.242,
+            "length_1_side_rat": 0.719,
+            "m_1_side": 1,
+            "m_2_side": 0.401,
+            "n_points_side": 1000,
+            "wg_spacing": 1.256,
+            "length_access_side": 5,
+            "length_access": 1,
+            "cross_sections": [
+                "strip",
+                "nitride",
+                "nitride2",
+                "hat_nitride",
+                "hat_nitride2"
+            ],
+            "cross_section": "nitride2",
+            "layers": [
+                120,
+                93,
+                126
+            ],
+            "sim": false,
+            "access": true
+        }
+    },
+    "ec_sin2_strip_trident_T_4acadf3f": {
+        "design_id": "sin2_ec_trident8",
+        "dut_type": "ec",
+        "function": "ec_sin2_strip_trident",
+        "settings": {
+            "trench_width": 20,
+            "trench_gap": 10,
+            "length_input": 1,
+            "width_in": 0.166,
+            "dwidth_in": 0.126,
+            "width_out": 0.7,
+            "length_total": 118.75,
+            "length_1_rat": 0.35,
+            "m_1": 1.779,
+            "m_2": 0.718,
+            "n_points": 1000,
+            "length_taper_out": 20,
+            "width_out_taper_out": 1.492,
+            "m_taper_out": 0.569565,
+            "n_points_taper_out": 100,
+            "width_in_side": 0.188,
+            "dwidth_in_side": 0.066,
+            "width_out_side": 0.214,
+            "length_1_side_rat": 0.55,
+            "m_1_side": 1.779,
+            "m_2_side": 0.665,
+            "n_points_side": 1000,
+            "wg_spacing": 1.759,
+            "length_access_side": 5,
+            "length_access": 1,
+            "cross_sections": [
+                "strip",
+                "nitride",
+                "nitride2",
+                "hat_nitride",
+                "hat_nitride2"
+            ],
+            "cross_section": "nitride2",
+            "layers": [
+                120,
+                93,
+                126
+            ],
+            "sim": false,
+            "access": true
+        }
+    },
+    "ec_sin2_strip_trident_T_8f9abc8c": {
+        "design_id": "sin2_ec_trident9",
+        "dut_type": "ec",
+        "function": "ec_sin2_strip_trident",
+        "settings": {
+            "trench_width": 20,
+            "trench_gap": 10,
+            "length_input": 1,
+            "width_in": 0.15,
+            "dwidth_in": 0,
+            "width_out": 0.642,
+            "length_total": 145,
+            "length_1_rat": 0.25,
+            "m_1": 1.54,
+            "m_2": 0.51,
+            "n_points": 1000,
+            "length_taper_out": 20,
+            "width_out_taper_out": 1.492,
+            "m_taper_out": 0.569565,
+            "n_points_taper_out": 100,
+            "width_in_side": 0.15,
+            "dwidth_in_side": 0,
+            "width_out_side": 0.324,
+            "length_1_side_rat": 0.7,
+            "m_1_side": 1.5,
+            "m_2_side": 0.507,
+            "n_points_side": 1000,
+            "wg_spacing": 1.35,
+            "length_access_side": 5,
+            "length_access": 1,
+            "cross_sections": [
+                "strip",
+                "nitride",
+                "nitride2",
+                "hat_nitride",
+                "hat_nitride2"
+            ],
+            "cross_section": "nitride2",
+            "layers": [
+                120,
+                93,
+                126
+            ],
+            "sim": false,
+            "access": true
+        }
+    },
+    "ec_sin2_strip_trident_T_da13613e": {
+        "design_id": "sin2_ec_trident1_L1",
+        "dut_type": "ec",
+        "function": "ec_sin2_strip_trident",
+        "settings": {
+            "trench_width": 20,
+            "trench_gap": 10,
+            "length_input": 1,
+            "width_in": 0.15,
+            "dwidth_in": 0,
+            "width_out": 0.688,
+            "length_total": 185.94375,
+            "length_1_rat": 0.12079999999999999,
+            "m_1": 1,
+            "m_2": 0.472,
+            "n_points": 1000,
+            "length_taper_out": 20,
+            "width_out_taper_out": 1.492,
+            "m_taper_out": 0.569565,
+            "n_points_taper_out": 100,
+            "width_in_side": 0.15,
+            "dwidth_in_side": 0,
+            "width_out_side": 0.306,
+            "length_1_side_rat": 0.4728,
+            "m_1_side": 1,
+            "m_2_side": 0.34,
+            "n_points_side": 1000,
+            "wg_spacing": 1.252,
+            "length_access_side": 5,
+            "length_access": 1,
+            "cross_sections": [
+                "strip",
+                "nitride",
+                "nitride2",
+                "hat_nitride",
+                "hat_nitride2"
+            ],
+            "cross_section": "nitride2",
+            "layers": [
+                120,
+                93,
+                126
+            ],
+            "sim": false,
+            "access": true
+        }
+    },
+    "ec_sin2_strip_trident_T_cd78e6b7": {
+        "design_id": "sin2_ec_trident1_L2",
+        "dut_type": "ec",
+        "function": "ec_sin2_strip_trident",
+        "settings": {
+            "trench_width": 20,
+            "trench_gap": 10,
+            "length_input": 1,
+            "width_in": 0.15,
+            "dwidth_in": 0,
+            "width_out": 0.688,
+            "length_total": 223.1325,
+            "length_1_rat": 0.10066666666666667,
+            "m_1": 1,
+            "m_2": 0.472,
+            "n_points": 1000,
+            "length_taper_out": 20,
+            "width_out_taper_out": 1.492,
+            "m_taper_out": 0.569565,
+            "n_points_taper_out": 100,
+            "width_in_side": 0.15,
+            "dwidth_in_side": 0,
+            "width_out_side": 0.306,
+            "length_1_side_rat": 0.39399999999999996,
+            "m_1_side": 1,
+            "m_2_side": 0.34,
+            "n_points_side": 1000,
+            "wg_spacing": 1.252,
+            "length_access_side": 5,
+            "length_access": 1,
+            "cross_sections": [
+                "strip",
+                "nitride",
+                "nitride2",
+                "hat_nitride",
+                "hat_nitride2"
+            ],
+            "cross_section": "nitride2",
+            "layers": [
+                120,
+                93,
+                126
+            ],
+            "sim": false,
+            "access": true
+        }
+    },
+    "ec_sin2_strip_trident_T_9f5ae7da": {
+        "design_id": "sin2_ec_trident1_w1",
+        "dut_type": "ec",
+        "function": "ec_sin2_strip_trident",
+         "settings": {
+            "trench_width": 20,
+            "trench_gap": 10,
+            "length_input": 1,
+            "width_in": 0.16,
+            "dwidth_in": 0,
+            "width_out": 0.688,
+            "length_total": 148.755,
+            "length_1_rat": 0.151,
+            "m_1": 1,
+            "m_2": 0.472,
+            "n_points": 1000,
+            "length_taper_out": 20,
+            "width_out_taper_out": 1.492,
+            "m_taper_out": 0.569565,
+            "n_points_taper_out": 100,
+            "width_in_side": 0.16,
+            "dwidth_in_side": 0,
+            "width_out_side": 0.306,
+            "length_1_side_rat": 0.591,
+            "m_1_side": 1,
+            "m_2_side": 0.34,
+            "n_points_side": 1000,
+            "wg_spacing": 1.252,
+            "length_access_side": 5,
+            "length_access": 1,
+            "cross_sections": [
+                "strip",
+                "nitride",
+                "nitride2",
+                "hat_nitride",
+                "hat_nitride2"
+            ],
+            "cross_section": "nitride2",
+            "layers": [
+                120,
+                93,
+                126
+            ],
+            "sim": false,
+            "access": true
+        }
+    },
+    "ec_sin2_strip_trident_T_7995db50": {
+        "design_id": "sin2_ec_trident1_w2",
+        "dut_type": "ec",
+        "function": "ec_sin2_strip_trident",
+        "settings": {
+            "trench_width": 20,
+            "trench_gap": 10,
+            "length_input": 1,
+            "width_in": 0.17,
+            "dwidth_in": 0,
+            "width_out": 0.688,
+            "length_total": 148.755,
+            "length_1_rat": 0.151,
+            "m_1": 1,
+            "m_2": 0.472,
+            "n_points": 1000,
+            "length_taper_out": 20,
+            "width_out_taper_out": 1.492,
+            "m_taper_out": 0.569565,
+            "n_points_taper_out": 100,
+            "width_in_side": 0.17,
+            "dwidth_in_side": 0,
+            "width_out_side": 0.306,
+            "length_1_side_rat": 0.591,
+            "m_1_side": 1,
+            "m_2_side": 0.34,
+            "n_points_side": 1000,
+            "wg_spacing": 1.252,
+            "length_access_side": 5,
+            "length_access": 1,
+            "cross_sections": [
+                "strip",
+                "nitride",
+                "nitride2",
+                "hat_nitride",
+                "hat_nitride2"
+            ],
+            "cross_section": "nitride2",
+            "layers": [
+                120,
+                93,
+                126
+            ],
+            "sim": false,
+            "access": true
+        }
+    },
+    "ec_sin2_strip_trident_T_2f230c1a": {
+        "design_id": "sin2_ec_trident8_w1",
+        "dut_type": "ec",
+        "function": "ec_sin2_strip_trident",
+        "settings": {
+            "trench_width": 20,
+            "trench_gap": 10,
+            "length_input": 1,
+            "width_in": 0.15,
+            "dwidth_in": 0.126,
+            "width_out": 0.7,
+            "length_total": 118.75,
+            "length_1_rat": 0.35,
+            "m_1": 1.779,
+            "m_2": 0.718,
+            "n_points": 1000,
+            "length_taper_out": 20,
+            "width_out_taper_out": 1.492,
+            "m_taper_out": 0.569565,
+            "n_points_taper_out": 100,
+            "width_in_side": 0.15,
+            "dwidth_in_side": 0.066,
+            "width_out_side": 0.214,
+            "length_1_side_rat": 0.55,
+            "m_1_side": 1.779,
+            "m_2_side": 0.665,
+            "n_points_side": 1000,
+            "wg_spacing": 1.759,
+            "length_access_side": 5,
+            "length_access": 1,
+            "cross_sections": [
+                "strip",
+                "nitride",
+                "nitride2",
+                "hat_nitride",
+                "hat_nitride2"
+            ],
+            "cross_section": "nitride2",
+            "layers": [
+                120,
+                93,
+                126
+            ],
+            "sim": false,
+            "access": true
+        }
+    },
+    "ec_sin2_strip_trident_T_1a7991e5": {
+        "design_id": "sin2_ec_trident8_w2",
+        "dut_type": "ec",
+        "function": "ec_sin2_strip_trident",
+        "settings": {
+            "trench_width": 20,
+            "trench_gap": 10,
+            "length_input": 1,
+            "width_in": 0.16,
+            "dwidth_in": 0.126,
+            "width_out": 0.7,
+            "length_total": 118.75,
+            "length_1_rat": 0.35,
+            "m_1": 1.779,
+            "m_2": 0.718,
+            "n_points": 1000,
+            "length_taper_out": 20,
+            "width_out_taper_out": 1.492,
+            "m_taper_out": 0.569565,
+            "n_points_taper_out": 100,
+            "width_in_side": 0.16,
+            "dwidth_in_side": 0.066,
+            "width_out_side": 0.214,
+            "length_1_side_rat": 0.55,
+            "m_1_side": 1.779,
+            "m_2_side": 0.665,
+            "n_points_side": 1000,
+            "wg_spacing": 1.759,
+            "length_access_side": 5,
+            "length_access": 1,
+            "cross_sections": [
+                "strip",
+                "nitride",
+                "nitride2",
+                "hat_nitride",
+                "hat_nitride2"
+            ],
+            "cross_section": "nitride2",
+            "layers": [
+                120,
+                93,
+                126
+            ],
+            "sim": false,
+            "access": true
+        }
+    },
+    "ec_sin2_strip_MAIN_angl_aa2de0eb": {
+        "design_id": "sin2_ec_MAIN_angled",
+        "dut_type": "ec",
+        "function": "ec_sin2_strip_MAIN_angled",
+        "settings": {
+            "trench_width": 20,
+            "trench_gap_in": 24,
+            "trench_gap_out": 20,
+            "length_input": 1,
+            "width_in": 0.15,
+            "dwidth_in": 0.1,
+            "width_out": 0.7,
+            "length_total": 400,
+            "length_1": 30,
+            "length_access": 1,
+            "m_1": 0.4,
+            "m_2": 0.9,
+            "n_points": 350,
+            "length_taper_out": 20,
+            "width_out_taper_out": 1.492,
+            "m_taper_out": 0.569565,
+            "n_points_taper_out": 100,
+            "cross_sections": [
+                "strip",
+                "nitride",
+                "nitride2",
+                "hat_nitride",
+                "hat_nitride2"
+            ],
+            "cross_section": "nitride2",
+            "layers": [
+                120,
+                93,
+                126
+            ],
+            "sim": false,
+            "access": true,
+            "angle": 8.0,
+            "radius": 100.0,
+            "length_straight": 2.5
+        }
+    },
+
+
+
+
+    "layer_transition_single_3a1cdf02":{
+        "design_id": "si_layer_transition_gwg_041_100",
+        "dut_type": "layer_transition",
+        "function": "layer_transition_single_taper",
+        "settings":{
+            "m_RIB": 0.642,
+            "m_SLAB": 0.561,
+            "width_RIB_in": 1,
+            "width_RIB_out": 0.41,
+            "width_SLAB_in": 1,
+            "width_SLAB_out": 3.074,
+            "length_SLAB": 10,
+            "length_total": 10,
+            "layers": [[171, 0], [223, 0], [223, 0]],
+            "width_GRAT_SLAB": 5.0,
+            "GRAT": false,
+            "SLAB": true,
+            "access": false,
+            "length_access": 1.0,
+            "npoints": 1000
+                    }
+    },      
+    "layer_transition_single_6f62390f":{
+        "design_id": "si_layer_transition_gwg_041_041",
+        "dut_type": "layer_transition",
+        "function": "layer_transition_single_taper",
+        "settings":{
+            "m_RIB": 1.5, 
+            "m_SLAB": 2, 
+            "width_RIB_in": 0.41, 
+            "width_RIB_out": 0.41, 
+            "width_SLAB_in": 0.41, 
+            "width_SLAB_out": 2, 
+            "length_SLAB": 15, 
+            "length_total": 16, 
+            "layers": [[171, 0], [223, 0], [223, 0]],
+            "width_GRAT_SLAB": 5.0, 
+            "GRAT": true, 
+            "SLAB": true, 
+            "access": false, 
+            "length_access": 1.0, 
+            "npoints": 1000}
+    },
+
+
+
+
+    "pd_rib_d1":{
+        "design_id": "pd_rib_d1",
+        "dut_type": "pd",
+        "function": "lateral_pd",
+        "settings":{
+            "taper_out_width": 0.75, 
+            "taper_length": 5.0, 
+            "taper_function": "tanh", 
+            "ge_width": 5.0, 
+            "ge_length": 20.0, 
+            "ge_offset": 1.0, 
+            "intrinsic_width": 0.75, 
+            "dop_plusplus_ge_separation": 0.8, 
+            "dop_plusplus_width": 1.9, 
+            "angled_facet": "single", 
+            "layer_body": [171, 0], 
+            "ge_layer": [181, 0], 
+            "contact_layer": [7, 0], 
+            "metal1_layer": [8, 0], 
+            "via1_layer": [17, 0], 
+            "metal2_layer": [18, 0], 
+            "silicide_layer": [40, 0], 
+            "upper_layers": [[176, 0], [178, 0], [11, 0]],
+            "lower_layers": [[175, 0], [177, 0], [6,  0]], 
+            "contact_offset": [0.35, 0.35], 
+            "metal1_offset": [0.15, 0.15], 
+            "via1_offset": [0.05, 0.05], 
+            "metal2_offset": [0.15, 0.15], 
+            "metal1_width": 10.0, 
+            "metal2_width": 10.0, 
+            "metal2": true, 
+            "metal2_via_n": 3,
+            "reverse_pins": true, 
+            "cross_section": "strip",
+            "custom_name": "pd_rib_d1"
+        }
+    },
+    "pd_rib_d5":{
+        "design_id": "pd_rib_d5",
+        "dut_type": "pd",
+        "function": "lateral_pd",
+        "settings":{
+            "taper_out_width": 0.75, 
+            "taper_length": 5.0, 
+            "taper_function": "tanh", 
+            "ge_width": 5.0, 
+            "ge_length": 17.0, 
+            "ge_offset": 1.0, 
+            "intrinsic_width": 0.75, 
+            "dop_plusplus_ge_separation": 0.8, 
+            "dop_plusplus_width": 1.9, 
+            "angled_facet": "single", 
+            "layer_body": [171, 0], 
+            "ge_layer": [181, 0], 
+            "contact_layer": [7, 0], 
+            "metal1_layer": [8, 0], 
+            "via1_layer": [17, 0], 
+            "metal2_layer": [18, 0], 
+            "silicide_layer": [40, 0], 
+            "upper_layers": [[176, 0], [178, 0], [11, 0]],
+            "lower_layers": [[175, 0], [177, 0], [6,  0]], 
+            "contact_offset": [0.35, 0.35], 
+            "metal1_offset": [0.15, 0.15], 
+            "via1_offset": [0.05, 0.05], 
+            "metal2_offset": [0.15, 0.15], 
+            "metal1_width": 10.0, 
+            "metal2_width": 10.0, 
+            "metal2": true, 
+            "metal2_via_n": 3,
+            "reverse_pins": true, 
+            "cross_section": "strip",
+            "custom_name": "pd_rib_d5"
+        }
+    },
+    "pd_rib_d6":{
+        "design_id": "pd_rib_d6",
+        "dut_type": "pd",
+        "function": "lateral_pd",
+        "settings":{
+            "taper_out_width": 0.75, 
+            "taper_length": 5.0, 
+            "taper_function": "tanh", 
+            "ge_width": 5.0, 
+            "ge_length": 14.0, 
+            "ge_offset": 1.0, 
+            "intrinsic_width": 0.75, 
+            "dop_plusplus_ge_separation": 0.8, 
+            "dop_plusplus_width": 1.9, 
+            "angled_facet": "single", 
+            "layer_body": [171, 0], 
+            "ge_layer": [181, 0], 
+            "contact_layer": [7, 0], 
+            "metal1_layer": [8, 0], 
+            "via1_layer": [17, 0], 
+            "metal2_layer": [18, 0], 
+            "silicide_layer": [40, 0], 
+            "upper_layers": [[176, 0], [178, 0], [11, 0]],
+            "lower_layers": [[175, 0], [177, 0], [6,  0]], 
+            "contact_offset": [0.35, 0.35], 
+            "metal1_offset": [0.15, 0.15], 
+            "via1_offset": [0.05, 0.05], 
+            "metal2_offset": [0.15, 0.15], 
+            "metal1_width": 10.0, 
+            "metal2_width": 10.0, 
+            "metal2": true, 
+            "metal2_via_n": 3,
+            "reverse_pins": true, 
+            "cross_section": "strip",
+            "custom_name": "pd_rib_d6"
+        }
+    },
+    "pd_rib_d7":{
+        "design_id": "pd_rib_d7",
+        "dut_type": "pd",
+        "function": "lateral_pd",
+        "settings":{
+            "taper_out_width": 0.75, 
+            "taper_length": 5.0, 
+            "taper_function": "tanh", 
+            "ge_width": 5.0, 
+            "ge_length": 20.0, 
+            "ge_offset": 1.0, 
+            "intrinsic_width": 0.75, 
+            "dop_plusplus_ge_separation": 0.5, 
+            "dop_plusplus_width": 1.9, 
+            "angled_facet": "single", 
+            "layer_body": [171, 0], 
+            "ge_layer": [181, 0], 
+            "contact_layer": [7, 0], 
+            "metal1_layer": [8, 0], 
+            "via1_layer": [17, 0], 
+            "metal2_layer": [18, 0], 
+            "silicide_layer": [40, 0], 
+            "upper_layers": [[176, 0], [178, 0], [11, 0]],
+            "lower_layers": [[175, 0], [177, 0], [6,  0]], 
+            "contact_offset": [0.35, 0.35], 
+            "metal1_offset": [0.15, 0.15], 
+            "via1_offset": [0.05, 0.05], 
+            "metal2_offset": [0.15, 0.15], 
+            "metal1_width": 10.0, 
+            "metal2_width": 10.0, 
+            "metal2": true, 
+            "metal2_via_n": 3,
+            "reverse_pins": true, 
+            "cross_section": "strip",
+            "custom_name": "pd_rib_d7"
+        }
+    },
+    "pd_rib_d10":{
+        "design_id": "pd_rib_d10",
+        "dut_type": "pd",
+        "function": "lateral_pd",
+        "settings":{
+            "taper_out_width": 0.75, 
+            "taper_length": 3.0, 
+            "taper_function": "tanh", 
+            "ge_width": 5.0, 
+            "ge_length": 20.0, 
+            "ge_offset": 1.0, 
+            "intrinsic_width": 0.75, 
+            "dop_plusplus_ge_separation": 0.3, 
+            "dop_plusplus_width": 1.9, 
+            "angled_facet": "single", 
+            "layer_body": [171, 0], 
+            "ge_layer": [181, 0], 
+            "contact_layer": [7, 0], 
+            "metal1_layer": [8, 0], 
+            "via1_layer": [17, 0], 
+            "metal2_layer": [18, 0], 
+            "silicide_layer": [40, 0], 
+            "upper_layers": [[176, 0], [178, 0], [11, 0]],
+            "lower_layers": [[175, 0], [177, 0], [6,  0]], 
+            "contact_offset": [0.35, 0.35], 
+            "metal1_offset": [0.15, 0.15], 
+            "via1_offset": [0.05, 0.05], 
+            "metal2_offset": [0.15, 0.15], 
+            "metal1_width": 10.0, 
+            "metal2_width": 10.0, 
+            "metal2": true, 
+            "metal2_via_n": 3,
+            "reverse_pins": true, 
+            "cross_section": "strip",
+            "custom_name": "pd_rib_d10"
+        }
+    },
+    "tower_pd":{
+        "design_id": "pd_tower",
+        "dut_type": "pd",
+        "function": "tower_pd",
+        "settings": {
+
+        }
+    },
+
+
+
+
+    "mmi_inv_d1_30":{
+        "design_id": "INV_D1_30",
+        "dut_type": "splitter2x2",
+        "function": "mmi",
+        "settings":{
+            "name": "mmi_inv_d1",
+            "version": "30nm",
+            "width_out": 0.41,
+            "length_io": 0.5
+        }
+    },
+    "mmi_inv_d1_m30":{
+        "design_id": "INV_D1_m30",
+        "dut_type": "splitter2x2",
+        "function": "mmi",
+        "settings":{
+            "name": "mmi_inv_d1",
+            "version": "m30nm",
+            "width_out": 0.41,
+            "length_io": 0.5
+        }
+    },
+    "mmi_inv_d1_38":{
+        "design_id": "INV_D1_38",
+        "dut_type": "splitter2x2",
+        "function": "mmi",
+        "settings":{
+            "name": "mmi_inv_d1",
+            "version": "38nm",
+            "width_out": 0.41,
+            "length_io": 0.5
+        }
+    },
+    "mmi_inv_d3_30":{
+        "design_id": "INV_D3_30",
+        "dut_type": "splitter2x2",
+        "function": "mmi",
+        "settings":{
+            "name": "mmi_inv_d3",
+            "version": "30nm",
+            "width_out": 0.41,
+            "length_io": 0.5
+        }
+    },
+    "mmi_inv_d3_m30":{
+        "design_id": "INV_D3_m30",
+        "dut_type": "splitter2x2",
+        "function": "mmi",
+        "settings":{
+            "name": "mmi_inv_d3",
+            "version": "m30nm",
+            "width_out": 0.41,
+            "length_io": 0.5
+        }
+    },
+    "mmi_inv_d3_38":{
+        "design_id": "INV_D3_38",
+        "dut_type": "splitter2x2",
+        "function": "mmi",
+        "settings":{
+            "name": "mmi_inv_d3",
+            "version": "38nm",
+            "width_out": 0.41,
+            "length_io": 0.5
+        }
+    },
+    "mmi_inv_d2":{
+        "design_id": "INV_D2",
+        "dut_type": "splitter2x2",
+        "function": "mmi",
+        "settings":{
+            "name": "mmi_inv_d2",
+            "version": "",
+            "width_out": 0.41,
+            "length_io": 0.5
+        }
+    },
+   
+
+
+    "polaris_60nm":{
+        "design_id": "si_crossing_polaris_11_1560",
+        "dut_type": "crossing",
+        "function": "crossing",
+        "settings":{
+            "name": "polaris",
+            "version" : "60nm"
+        }
+    },
+
+
+
+
+    "pbs_with_taper_LSC5p54__cc2e830c": {
+        "design_id": "si_pbs_sg1",
+        "dut_type": "pbs",
+        "function": "pbs_with_taper",
+        "settings": {
+        "L_sym_coupler": 5.54,
+        "L_phase_control": 7.3,
+        "width": 0.472,
+        "gap1": 0.2,
+        "Gap": 1.2,
+        "L_bend": 6.0,
+        "width2": 0.6,
+        "width3": 0.428,
+        "L_taper": 3,
+        "connection_width": 0.41,
+        "cross_section": "strip"
+        }
+    },
+    "pbs_with_taper_LSC5p2_L_5f1cd616": {
+        "design_id": "si_pbs_sg1_b",
+        "dut_type": "pbs",
+        "function": "pbs_with_taper",
+        "settings": {
+        "L_sym_coupler": 5.2,
+        "L_phase_control": 7.3,
+        "width": 0.516,
+        "gap1": 0.156,
+        "Gap": 1.156,
+        "L_bend": 6.0,
+        "width2": 0.644,
+        "width3": 0.472,
+        "L_taper": 3,
+        "connection_width": 0.41,
+        "cross_section": "strip"
+        }
+    },
+    "pbs_with_taper_LSC3p68__3fd7e4d8": {
+        "design_id": "si_pbs_sg4",
+        "dut_type": "pbs",
+        "function": "pbs_with_taper",
+        "settings": {
+        "L_sym_coupler": 3.68,
+        "L_phase_control": 8,
+        "width": 0.426,
+        "gap1": 0.2,
+        "Gap": 1.2,
+        "L_bend": 6.0,
+        "width2": 0.536,
+        "width3": 0.408,
+        "L_taper": 3,
+        "connection_width": 0.41,
+        "cross_section": "strip"
+        }
+    },
+    "pbs_with_taper_LSC4p05__a63d8ef3": {
+        "design_id": "si_pbs_sg5",
+        "dut_type": "pbs",
+        "function": "pbs_with_taper",
+        "settings": {
+        "L_sym_coupler": 4.05,
+        "L_phase_control": 7.22,
+        "width": 0.438,
+        "gap1": 0.2,
+        "Gap": 1.2,
+        "L_bend": 6.0,
+        "width2": 0.536,
+        "width3": 0.4,
+        "L_taper": 3,
+        "connection_width": 0.41,
+        "cross_section": "strip"
+        }
+    },
+    "pbs_with_taper_LSC3p51__e3a62c40": {
+        "design_id": "si_pbs_sg6",
+        "dut_type": "pbs",
+        "function": "pbs_with_taper",
+        "settings": {
+        "L_sym_coupler": 3.51,
+        "L_phase_control": 7.07,
+        "width": 0.424,
+        "gap1": 0.2,
+        "Gap": 1.2,
+        "L_bend": 6.0,
+        "width2": 0.54,
+        "width3": 0.4,
+        "L_taper": 3,
+        "connection_width": 0.41,
+        "cross_section": "strip"
+        }
+    },
+    "pbs_with_taper_LSC3p3_L_4bce7215": {
+        "design_id": "si_pbs_sg6_b",
+        "dut_type": "pbs",
+        "function": "pbs_with_taper",
+        "settings": {
+        "L_sym_coupler": 3.3,
+        "L_phase_control": 7.07,
+        "width": 0.462,
+        "gap1": 0.162,
+        "Gap": 1.162,
+        "L_bend": 6.0,
+        "width2": 0.578,
+        "width3": 0.438,
+        "L_taper": 3,
+        "connection_width": 0.41,
+        "cross_section": "strip"
+        }
+    },
+    "pbs_with_taper_LSC3p43__e7c71688": {
+        "design_id": "si_pbs_sg7",
+        "dut_type": "pbs",
+        "function": "pbs_with_taper",
+        "settings": {
+        "L_sym_coupler": 3.43,
+        "L_phase_control": 8.39,
+        "width": 0.43,
+        "gap1": 0.2,
+        "Gap": 1.2,
+        "L_bend": 6.0,
+        "width2": 0.534,
+        "width3": 0.406,
+        "L_taper": 3,
+        "connection_width": 0.41,
+        "cross_section": "strip"
+        }
+    },
+    "pbs_with_taper_LSC4p47__a355600f": {
+        "design_id": "si_pbs_sg8",
+        "dut_type": "pbs",
+        "function": "pbs_with_taper",
+        "settings": {
+        "L_sym_coupler": 4.47,
+        "L_phase_control": 8,
+        "width": 0.45,
+        "gap1": 0.2,
+        "Gap": 1.2,
+        "L_bend": 6.0,
+        "width2": 0.528,
+        "width3": 0.4,
+        "L_taper": 3,
+        "connection_width": 0.41,
+        "cross_section": "strip"
+        }
+    },
+    "pbs_with_taper_LSC4p22__21c9009c": {
+        "design_id": "si_pbs_sg14",
+        "dut_type": "pbs",
+        "function": "pbs_with_taper",
+        "settings": {
+        "L_sym_coupler": 4.22,
+        "L_phase_control": 7.85,
+        "width": 0.444,
+        "gap1": 0.2,
+        "Gap": 1.2,
+        "L_bend": 6.0,
+        "width2": 0.53,
+        "width3": 0.4,
+        "L_taper": 3,
+        "connection_width": 0.41,
+        "cross_section": "strip"
+        }
+    },
+    "pbs_with_taper_LSC4_LPC_c0bfd551": {
+        "design_id": "si_pbs_sg14_b",
+        "dut_type": "pbs",
+        "function": "pbs_with_taper",
+        "settings": {
+        "L_sym_coupler": 4,
+        "L_phase_control": 7.85,
+        "width": 0.482,
+        "gap1": 0.162,
+        "Gap": 1.162,
+        "L_bend": 6.0,
+        "width2": 0.568,
+        "width3": 0.438,
+        "L_taper": 3,
+        "connection_width": 0.41,
+        "cross_section": "strip"
+        }
+    },
+    "pbs_with_taper_LSC10p63_b9841ba0": {
+        "design_id": "si_pbs_sg9",
+        "dut_type": "pbs",
+        "function": "pbs_with_taper",
+        "settings": {
+        "L_sym_coupler": 10.63,
+        "L_phase_control": 11.73,
+        "width": 0.486,
+        "gap1": 0.25,
+        "Gap": 1.2,
+        "L_bend": 6.0,
+        "width2": 0.548,
+        "width3": 0.438,
+        "L_taper": 3,
+        "connection_width": 0.41,
+        "cross_section": "strip"
+        }
+    },
+    "pbs_with_taper_LSC10p6__130ad3c8": {
+        "design_id": "si_pbs_sg9_b",
+        "dut_type": "pbs",
+        "function": "pbs_with_taper",
+        "settings": {
+        "L_sym_coupler": 10.6,
+        "L_phase_control": 11.73,
+        "width": 0.522,
+        "gap1": 0.214,
+        "Gap": 1.164,
+        "L_bend": 6.0,
+        "width2": 0.584,
+        "width3": 0.474,
+        "L_taper": 3,
+        "connection_width": 0.41,
+        "cross_section": "strip"
+        }
+    },
+    "pbs_with_taper_LSC10p63_51e4f998": {
+        "design_id": "si_pbs_sg10",
+        "dut_type": "pbs",
+        "function": "pbs_with_taper",
+        "settings": {
+        "L_sym_coupler": 10.63,
+        "L_phase_control": 14.89,
+        "width": 0.486,
+        "gap1": 0.25,
+        "Gap": 1.2,
+        "L_bend": 6.0,
+        "width2": 0.5,
+        "width3": 0.418,
+        "L_taper": 3,
+        "connection_width": 0.41,
+        "cross_section": "strip"
+        }
+    },
+    "pbs_with_taper_LSC12p3__07c00f10": {
+        "design_id": "si_pbs_sg11",
+        "dut_type": "pbs",
+        "function": "pbs_with_taper",
+        "settings": {
+        "L_sym_coupler": 12.3,
+        "L_phase_control": 12.34,
+        "width": 0.506,
+        "gap1": 0.25,
+        "Gap": 1.2,
+        "L_bend": 6.0,
+        "width2": 0.554,
+        "width3": 0.442,
+        "L_taper": 3,
+        "connection_width": 0.41,
+        "cross_section": "strip"
+        }
+    },
+    "pbs_with_taper_LSC11p9__286ad762": {
+        "design_id": "si_pbs_sg11_b",
+        "dut_type": "pbs",
+        "function": "pbs_with_taper",
+        "settings": {
+        "L_sym_coupler": 11.9,
+        "L_phase_control": 12.34,
+        "width": 0.548,
+        "gap1": 0.208,
+        "Gap": 1.158,
+        "L_bend": 6.0,
+        "width2": 0.596,
+        "width3": 0.484,
+        "L_taper": 3,
+        "connection_width": 0.41,
+        "cross_section": "strip"
+        }
+    },
+    "pbs_with_taper_LSC10p86_b8ce85df": {
+        "design_id": "si_pbs_sg12",
+        "dut_type": "pbs",
+        "function": "pbs_with_taper",
+        "settings": {
+        "L_sym_coupler": 10.86,
+        "L_phase_control": 12.34,
+        "width": 0.484,
+        "gap1": 0.25,
+        "Gap": 1.2,
+        "L_bend": 6.0,
+        "width2": 0.554,
+        "width3": 0.444,
+        "L_taper": 3,
+        "connection_width": 0.41,
+        "cross_section": "strip"
+        }
+    },
+    "pbs_with_taper_LSC9p64__6886155f": {
+        "design_id": "si_pbs_sg13",
+        "dut_type": "pbs",
+        "function": "pbs_with_taper",
+        "settings": {
+        "L_sym_coupler": 9.64,
+        "L_phase_control": 12.34,
+        "width": 0.472,
+        "gap1": 0.25,
+        "Gap": 1.2,
+        "L_bend": 6.0,
+        "width2": 0.554,
+        "width3": 0.442,
+        "L_taper": 3,
+        "connection_width": 0.41,
+        "cross_section": "strip"
+        }
+    },
+    "pbs_with_taper_LSC9p6_L_ca505ae8": {
+        "design_id": "si_pbs_sg13_b",
+        "dut_type": "pbs",
+        "function": "pbs_with_taper",
+        "settings": {
+        "L_sym_coupler": 9.6,
+        "L_phase_control": 12.34,
+        "width": 0.518,
+        "gap1": 0.204,
+        "Gap": 1.154,
+        "L_bend": 6.0,
+        "width2": 0.6,
+        "width3": 0.488,
+        "L_taper": 3,
+        "connection_width": 0.41,
+        "cross_section": "strip"
+        }
+    },
+    "pbs_with_taper_LSC12p49_85bc2911": {
+        "design_id": "si_pbs_sg15",
+        "dut_type": "pbs",
+        "function": "pbs_with_taper",
+        "settings": {
+        "L_sym_coupler": 12.49,
+        "L_phase_control": 11.49,
+        "width": 0.504,
+        "gap1": 0.25,
+        "Gap": 1.2,
+        "L_bend": 6.0,
+        "width2": 0.576,
+        "width3": 0.45,
+        "L_taper": 3,
+        "connection_width": 0.41,
+        "cross_section": "strip"
+        }
+    },
+    "pbs_with_taper_LSC11p7__a9574785": {
+        "design_id": "si_pbs_sg15_b",
+        "dut_type": "pbs",
+        "function": "pbs_with_taper",
+        "settings": {
+        "L_sym_coupler": 11.7,
+        "L_phase_control": 11.49,
+        "width": 0.548,
+        "gap1": 0.206,
+        "Gap": 1.156,
+        "L_bend": 6.0,
+        "width2": 0.62,
+        "width3": 0.494,
+        "L_taper": 3,
+        "connection_width": 0.41,
+        "cross_section": "strip"
+        }
+    },
+    "psr_adiabatic_taper_wab_76ba25d0": {
+        "design_id": "si_psr_ac_taper_13",
+        "dut_type": "psr",
+        "function": "psr_adiabatic_taper_wabsorber",
+        "settings": {
+        "wup_rib": 0.312,
+        "wdown_rib_in": 0.178,
+        "wdown_rib_out": 0.186,
+        "wdown_slab_in": 0.2,
+        "wdown_slab_out": 0.356,
+        "gap": 0.2,
+        "coupling_length": 150,
+        "lt_length": 30,
+        "wg_width": 0.41,
+        "wg_slab_tip": 0.150
+        }
+    },
+    "psr_adiabatic_taper_wab_c24b982f": {
+        "design_id": "si_psr_ac_taper_21",
+        "dut_type": "psr",
+        "function": "psr_adiabatic_taper_wabsorber",
+        "settings": {
+        "wup_rib": 0.314,
+        "wdown_rib_in": 0.178,
+        "wdown_rib_out": 0.186,
+        "wdown_slab_in": 0.232,
+        "wdown_slab_out": 0.36,
+        "gap": 0.2,
+        "coupling_length": 134.0,
+        "lt_length": 30,
+        "wg_width": 0.41,
+        "wg_slab_tip": 0.150
+        }
+    },
+    "psr_adiabatic_taper_wab_d316c584": {
+        "design_id": "si_psr_ac_taper_17",
+        "dut_type": "psr",
+        "function": "psr_adiabatic_taper_wabsorber",
+        "settings": {
+        "wup_rib": 0.316,
+        "wdown_rib_in": 0.178,
+        "wdown_rib_out": 0.186,
+        "wdown_slab_in": 0.238,
+        "wdown_slab_out": 0.37,
+        "gap": 0.2,
+        "coupling_length": 111.0,
+        "lt_length": 30,
+        "wg_width": 0.41,
+        "wg_slab_tip": 0.150
+        }
+    },
+    "psr_adiabatic_taper_wab_731481d3": {
+        "design_id": "si_psr_ac_taper_38",
+        "dut_type": "psr",
+        "function": "psr_adiabatic_taper_wabsorber",
+        "settings": {
+        "wup_rib": 0.32,
+        "wdown_rib_in": 0.178,
+        "wdown_rib_out": 0.186,
+        "wdown_slab_in": 0.232,
+        "wdown_slab_out": 0.36,
+        "gap": 0.2,
+        "coupling_length": 139.0,
+        "lt_length": 30,
+        "wg_width": 0.41,
+        "wg_slab_tip": 0.150
+        }
+    },
+    "psr_adiabatic_taper_wab_8497434a": {
+        "design_id": "si_psr_ac_taper_16",
+        "dut_type": "psr",
+        "function": "psr_adiabatic_taper_wabsorber",
+        "settings": {
+        "wup_rib": 0.32,
+        "wdown_rib_in": 0.178,
+        "wdown_rib_out": 0.186,
+        "wdown_slab_in": 0.212,
+        "wdown_slab_out": 0.382,
+        "gap": 0.2,
+        "coupling_length": 138.0,
+        "lt_length": 30,
+        "wg_width": 0.41,
+        "wg_slab_tip": 0.150
+        }
+    },
+    "psr_adiabatic_taper_wab_02828d54": {
+        "design_id": "si_psr_ac_taper_1",
+        "dut_type": "psr",
+        "function": "psr_adiabatic_taper_wabsorber",
+        "settings": {
+        "wup_rib": 0.32,
+        "wdown_rib_in": 0.178,
+        "wdown_rib_out": 0.186,
+        "wdown_slab_in": 0.226,
+        "wdown_slab_out": 0.376,
+        "gap": 0.2,
+        "coupling_length": 125,
+        "lt_length": 30,
+        "wg_width": 0.41,
+        "wg_slab_tip": 0.150
+        }
+    },
+    "psr_adiabatic_taper_wab_15a8ad33": {
+        "design_id": "si_psr_ac_taper_34",
+        "dut_type": "psr",
+        "function": "psr_adiabatic_taper_wabsorber",
+        "settings": {
+        "wup_rib": 0.318,
+        "wdown_rib_in": 0.178,
+        "wdown_rib_out": 0.186,
+        "wdown_slab_in": 0.232,
+        "wdown_slab_out": 0.36,
+        "gap": 0.2,
+        "coupling_length": 139.0,
+        "lt_length": 30,
+        "wg_width": 0.41,
+        "wg_slab_tip": 0.150
+        }
+    },
+    "psr_adiabatic_taper_wab_513f3ea0": {
+        "design_id": "si_psr_ac_taper_35",
+        "dut_type": "psr",
+        "function": "psr_adiabatic_taper_wabsorber",
+        "settings": {
+        "wup_rib": 0.316,
+        "wdown_rib_in": 0.178,
+        "wdown_rib_out": 0.186,
+        "wdown_slab_in": 0.23,
+        "wdown_slab_out": 0.36,
+        "gap": 0.2,
+        "coupling_length": 138.0,
+        "lt_length": 30,
+        "wg_width": 0.41,
+        "wg_slab_tip": 0.150
+        }
+    },
+    "psr_adiabatic_taper_wab_3adfc440": {
+        "design_id": "si_psr_ac_taper_37",
+        "dut_type": "psr",
+        "function": "psr_adiabatic_taper_wabsorber",
+        "settings": {
+        "wup_rib": 0.32,
+        "wdown_rib_in": 0.178,
+        "wdown_rib_out": 0.186,
+        "wdown_slab_in": 0.232,
+        "wdown_slab_out": 0.36,
+        "gap": 0.2,
+        "coupling_length": 140,
+        "lt_length": 30,
+        "wg_width": 0.41,
+        "wg_slab_tip": 0.150
+        }
+    },
+    "psr_adiabatic_taper_wab_a5e7bd99": {
+        "design_id": "si_psr_ac_taper_26",
+        "dut_type": "psr",
+        "function": "psr_adiabatic_taper_wabsorber",
+        "settings": {
+        "wup_rib": 0.314,
+        "wdown_rib_in": 0.178,
+        "wdown_rib_out": 0.186,
+        "wdown_slab_in": 0.232,
+        "wdown_slab_out": 0.36,
+        "gap": 0.2,
+        "coupling_length": 138.0,
+        "lt_length": 30,
+        "wg_width": 0.41,
+        "wg_slab_tip": 0.150
+        }
+    },
+    "psr_adiabatic_taper_wab_71ad7d0a": {
+        "design_id": "si_psr_ac_taper_27",
+        "dut_type": "psr",
+        "function": "psr_adiabatic_taper_wabsorber",
+        "settings": {
+        "wup_rib": 0.314,
+        "wdown_rib_in": 0.178,
+        "wdown_rib_out": 0.186,
+        "wdown_slab_in": 0.232,
+        "wdown_slab_out": 0.36,
+        "gap": 0.2,
+        "coupling_length": 139.0,
+        "lt_length": 30,
+        "wg_width": 0.41,
+        "wg_slab_tip": 0.150
+        }
+    },
+    "psr_adiabatic_taper_wab_4bcb1c5d": {
+        "design_id": "si_psr_ac_taper_2",
+        "dut_type": "psr",
+        "function": "psr_adiabatic_taper_wabsorber",
+        "settings": {
+        "wup_rib": 0.32,
+        "wdown_rib_in": 0.136,
+        "wdown_rib_out": 0.178,
+        "wdown_slab_in": 0.226,
+        "wdown_slab_out": 0.376,
+        "gap": 0.2,
+        "coupling_length": 125,
+        "lt_length": 30,
+        "wg_width": 0.41,
+        "wg_slab_tip": 0.110
+        }
+    },
+    "psr_adiabatic_taper_wab_13d3e532": {
+        "design_id": "si_psr_ac_taper_8",
+        "dut_type": "psr",
+        "function": "psr_adiabatic_taper_wabsorber",
+        "settings": {
+        "wup_rib": 0.31,
+        "wdown_rib_in": 0.17,
+        "wdown_rib_out": 0.17,
+        "wdown_slab_in": 0.216,
+        "wdown_slab_out": 0.372,
+        "gap": 0.2,
+        "coupling_length": 125,
+        "lt_length": 30,
+        "wg_width": 0.41,
+        "wg_slab_tip": 0.150
+        }
+    },
+    "psr_adiabatic_taper_wab_135a82d5": {
+        "design_id": "si_psr_ac_taper_22",
+        "dut_type": "psr",
+        "function": "psr_adiabatic_taper_wabsorber",
+        "settings": {
+        "wup_rib": 0.314,
+        "wdown_rib_in": 0.178,
+        "wdown_rib_out": 0.186,
+        "wdown_slab_in": 0.232,
+        "wdown_slab_out": 0.358,
+        "gap": 0.2,
+        "coupling_length": 136.0,
+        "lt_length": 30,
+        "wg_width": 0.41,
+        "wg_slab_tip": 0.150
+        }
+    },
+    "psr_adiabatic_taper_wab_0de2b9cf": {
+        "design_id": "si_psr_ac_taper_20",
+        "dut_type": "psr",
+        "function": "psr_adiabatic_taper_wabsorber",
+        "settings": {
+        "wup_rib": 0.314,
+        "wdown_rib_in": 0.178,
+        "wdown_rib_out": 0.186,
+        "wdown_slab_in": 0.232,
+        "wdown_slab_out": 0.358,
+        "gap": 0.2,
+        "coupling_length": 132.0,
+        "lt_length": 30,
+        "wg_width": 0.41,
+        "wg_slab_tip": 0.150
+        }
+    },
+    "psr_adiabatic_taper_wab_3e8e6651": {
+        "design_id": "si_psr_ac_taper_14",
+        "dut_type": "psr",
+        "function": "psr_adiabatic_taper_wabsorber",
+        "settings": {
+        "wup_rib": 0.308,
+        "wdown_rib_in": 0.178,
+        "wdown_rib_out": 0.186,
+        "wdown_slab_in": 0.224,
+        "wdown_slab_out": 0.356,
+        "gap": 0.2,
+        "coupling_length": 144.0,
+        "lt_length": 30,
+        "wg_width": 0.41,
+        "wg_slab_tip": 0.150
+        }
+    },
+    "psr_adiabatic_taper_wab_9db59d3e": {
+        "design_id": "si_psr_ac_taper_4",
+        "dut_type": "psr",
+        "function": "psr_adiabatic_taper_wabsorber",
+        "settings": {
+        "wup_rib": 0.32,
+        "wdown_rib_in": 0.17,
+        "wdown_rib_out": 0.17,
+        "wdown_slab_in": 0.226,
+        "wdown_slab_out": 0.376,
+        "gap": 0.2,
+        "coupling_length": 125,
+        "lt_length": 30,
+        "wg_width": 0.41,
+        "wg_slab_tip": 0.140
+        }
+    },
+    "psr_adiabatic_taper_wab_211ad56f": {
+        "design_id": "si_psr_ac_taper_3",
+        "dut_type": "psr",
+        "function": "psr_adiabatic_taper_wabsorber",
+        "settings": {
+        "wup_rib": 0.32,
+        "wdown_rib_in": 0.156,
+        "wdown_rib_out": 0.202,
+        "wdown_slab_in": 0.226,
+        "wdown_slab_out": 0.376,
+        "gap": 0.2,
+        "coupling_length": 125,
+        "lt_length": 30,
+        "wg_width": 0.41,
+        "wg_slab_tip": 0.130
+        }
+    },
+    "psr_adiabatic_taper_wab_4c6b72f2": {
+        "design_id": "si_psr_ac_taper_33",
+        "dut_type": "psr",
+        "function": "psr_adiabatic_taper_wabsorber",
+        "settings": {
+        "wup_rib": 0.322,
+        "wdown_rib_in": 0.178,
+        "wdown_rib_out": 0.186,
+        "wdown_slab_in": 0.232,
+        "wdown_slab_out": 0.36,
+        "gap": 0.2,
+        "coupling_length": 142.0,
+        "lt_length": 30,
+        "wg_width": 0.41,
+        "wg_slab_tip": 0.150
+        }
+    },
+    "psr_adiabatic_taper_wab_eb3a4fb0": {
+        "design_id": "si_psr_ac_taper_6",
+        "dut_type": "psr",
+        "function": "psr_adiabatic_taper_wabsorber",
+        "settings": {
+        "wup_rib": 0.32,
+        "wdown_rib_in": 0.178,
+        "wdown_rib_out": 0.206,
+        "wdown_slab_in": 0.226,
+        "wdown_slab_out": 0.376,
+        "gap": 0.2,
+        "coupling_length": 125,
+        "lt_length": 30,
+        "wg_width": 0.41,
+        "wg_slab_tip": 0.150
+        }
+    },
+    "psr_adiabatic_taper_wab_53d26dd0": {
+        "design_id": "si_psr_ac_taper_5",
+        "dut_type": "psr",
+        "function": "psr_adiabatic_taper_wabsorber",
+        "settings": {
+        "wup_rib": 0.32,
+        "wdown_rib_in": 0.156,
+        "wdown_rib_out": 0.17,
+        "wdown_slab_in": 0.226,
+        "wdown_slab_out": 0.376,
+        "gap": 0.2,
+        "coupling_length": 125,
+        "lt_length": 30,
+        "wg_width": 0.41,
+        "wg_slab_tip": 0.130
+        }
+    },
+    "psr_adiabatic_taper_wab_dbc7325b": {
+        "design_id": "si_psr_ac_taper_12",
+        "dut_type": "psr",
+        "function": "psr_adiabatic_taper_wabsorber",
+        "settings": {
+        "wup_rib": 0.304,
+        "wdown_rib_in": 0.178,
+        "wdown_rib_out": 0.186,
+        "wdown_slab_in": 0.2,
+        "wdown_slab_out": 0.356,
+        "gap": 0.2,
+        "coupling_length": 150,
+        "lt_length": 30,
+        "wg_width": 0.41,
+        "wg_slab_tip": 0.150
+        }
+    },
+    "psr_adiabatic_taper_wab_00dd78aa": {
+        "design_id": "si_psr_ac_taper_25",
+        "dut_type": "psr",
+        "function": "psr_adiabatic_taper_wabsorber",
+        "settings": {
+        "wup_rib": 0.326,
+        "wdown_rib_in": 0.178,
+        "wdown_rib_out": 0.186,
+        "wdown_slab_in": 0.232,
+        "wdown_slab_out": 0.36,
+        "gap": 0.2,
+        "coupling_length": 145.0,
+        "lt_length": 30,
+        "wg_width": 0.41,
+        "wg_slab_tip": 0.150
+        }
+    },
+    "swg_ac_psr_v0":{
+        "design_id": "swg_ac_psr_v0",
+        "dut_type": "psr",
+        "function": "si_psr",
+        "settings": {
+            "name": "swg_ac_psr_v0"
+        }
+    },
+    "swg_psr_v0":{
+        "design_id": "swg_psr_v0",
+        "dut_type": "psr",
+        "function": "si_psr_tw",
+        "settings": {
+        }
+    },
+    "si_pbs_sg15_si_pol_rot_tw_24":{
+        "design_id":"si_pbs_sg15_si_pol_rot_tw_24",
+        "dut_type": "psr",
+        "function": "pbs_with_taper__rotator",
+        "settings": {
+            "L_sym_coupler": 12.49,
+            "L_phase_control": 11.49,
+            "width": 0.504,
+            "gap1": 0.25,
+            "Gap": 1.2,
+            "L_bend": 6.0,
+            "width2": 0.576,
+            "width3": 0.45,
+            "L_taper": 3,
+            "connection_width": 0.41,
+            "cross_section": "strip",
+            "name": "si_pol_rot_tw_24"
+        }
+    },
+    "si_pbs_sg15_b_si_pol_rot_tw_24":{
+        "design_id":"si_pbs_sg15_b_si_pol_rot_tw_24",
+        "dut_type": "psr",
+        "function": "pbs_with_taper__rotator",
+        "settings": {
+            "L_sym_coupler": 11.7,
+            "L_phase_control": 11.49,
+            "width": 0.548,
+            "gap1": 0.206,
+            "Gap": 1.156,
+            "L_bend": 6.0,
+            "width2": 0.62,
+            "width3": 0.494,
+            "L_taper": 3,
+            "connection_width": 0.41,
+            "cross_section": "strip",
+            "name": "si_pol_rot_tw_24"
+        }
+    },
+    "si_pbs_sg14_b_si_pol_rot_tw_24":{
+        "design_id":"si_pbs_sg14_b_si_pol_rot_tw_24",
+        "dut_type": "psr",
+        "function": "pbs_with_taper__rotator",
+        "settings": {
+            "L_sym_coupler": 4, 
+            "L_phase_control": 7.85, 
+            "width": 0.482, 
+            "gap1": 0.162, 
+            "Gap": 1.162, 
+            "L_bend": 6.0, 
+            "width2": 0.568, 
+            "width3": 0.438, 
+            "L_taper": 3, 
+            "connection_width": 0.41, 
+            "cross_section": "strip", 
+            "name": "si_pol_rot_tw_24"}
+    },
+
+
+
+
+    "rib_taper_MR1p95_WRI0p4_1840216f":{
+        "design_id": "swg_taper_410_1000",
+        "dut_type": "taper",
+        "function": "rib_taper",
+        "settings":{
+            "m_RIB": 1.95,
+            "width_RIB_in": 0.41,
+            "width_RIB_out": 1.0,
+            "width1": null,
+            "width2": null,
+            "length": 9.8,
+            "access": false,
+            "length_access": 10.0,
+            "npoints": 100,
+            "cross_section": "strip",
+            "loss": null
+        }
+    },
+    "rib_taper_MR1p95_WRI0p4_12fba18f":{
+        "design_id": "swg_taper_410_1560",
+        "dut_type": "taper",
+        "function": "rib_taper",
+        "settings":{
+            "m_RIB": 1.95,
+            "width_RIB_in": 0.41,
+            "width_RIB_out": 1.56,
+            "width1": null,
+            "width2": null,
+            "length": 9.8,
+            "access": false,
+            "length_access": 10.0,
+            "npoints": 100,
+            "cross_section": "strip",
+            "loss": null
+        }
+    },
+    "rib_taper_MR1p95_WRI0p4_9dca5112":{
+        "design_id": "swg_taper_410_930",
+        "dut_type": "taper",
+        "function": "rib_taper",
+        "settings":{
+            "m_RIB": 1.95,
+            "width_RIB_in": 0.41,
+            "width_RIB_out": 0.93,
+            "width1": null,
+            "width2": null,
+            "length": 9.8,
+            "access": false,
+            "length_access": 10.0,
+            "npoints": 100,
+            "cross_section": "strip",
+            "loss": null
+        }
+    },
+    "rib_taper_MR1p3_WRI0p41_2f4bda11": {
+    "design_id": "anwg_taper_1280_2000", 
+    "dut_type": "taper", 
+    "function": "rib_taper", 
+    "settings": {
+        "m_RIB": 1.3, 
+        "width_RIB_in": 0.41,
+        "width_RIB_out": 1.5,
+        "width1": 1.28,
+        "width2": 2,
+        "length": 12.72,
+        "access": true,
+        "length_access": 0,
+        "npoints": 100, 
+        "cross_section": "nitride2",
+        "loss": null
+        }
+    },
+    "rib_taper_MR0p965_WRI0p_f537220d": {
+    "design_id": "anwg_taper_1784_2000", 
+    "dut_type": "taper", 
+    "function": "rib_taper", 
+    "settings": {
+        "m_RIB": 0.965, 
+        "width_RIB_in": 0.41,
+        "width_RIB_out": 1.5,
+        "width1": 1.784,
+        "width2": 2,
+        "length": 5.174,
+        "access": true,
+        "length_access": 0,
+        "npoints": 100, 
+        "cross_section": "nitride2",
+        "loss": null
+        }
+    },
+    "pol_rot_tw_nom": {
+        "design_id": "pol_rot_tw_nom",
+        "dut_type": "pol_rot",
+        "function": "rotator",
+        "settings": {
+            "name": "pol_rot_tw_nom"
+        }
+    },
+    "si_pol_rot_tw_24": {
+        "design_id": "si_pol_rot_tw_24",
+        "dut_type": "pol_rot",
+        "function": "rotator",
+        "settings": {
+            "name": "si_pol_rot_tw_24"
+        }
+    },
+
+
+
+
+    "si_anwg_transition_NSNT_b7e7e990":{
+        "design_id": "VT12_PI_D0",
+        "dut_type": "vertical_transition",
+        "function": "si_anwg_transition",
+        "settings":{
+            "name_si_nwg_transition": "VT1_PI_D0_100",
+            "name_nwg_anwg_transition" : "VT2_POLINS_D_02",
+            "length": 1,
+            "width_in": null,
+            "width_out": 0.7
+        }
+    },
+    "si_anwg_transition_NSNT_01888caf":{
+        "design_id": "VT_1_2_TE",
+        "dut_type": "vertical_transition",
+        "function": "si_anwg_transition",
+        "settings":{
+            "name_si_nwg_transition": "VT_1_TE",
+            "name_nwg_anwg_transition" : "VT_2_TE",
+            "length": 1,
+            "width_in": null,
+            "width_out": 2.0
+        }
+    },
+
+
+
+
+    "Straight_410_swg_0":{
+        "design_id": "wg_swg_410",
+        "dut_type": "wg",
+        "function": "straight",
+        "settings": {
+            "cross_section": "swg",
+            "length": 0,
+            "width": 0.41
+        }
+    },
+    "Straight_410_gwg_0":{
+        "design_id": "wg_gwg_410",
+        "dut_type": "wg",
+        "function": "straight",
+        "settings": {
+            "cross_section": "shallow_gwg",
+            "length": 0,
+            "width": 0.41
+        }
+    },
+    "Straight_460_swg_0":{
+        "design_id": "wg_swg_460",
+        "dut_type": "wg",
+        "function": "straight",
+        "settings": {
+            "cross_section": "swg",
+            "length": 0,
+            "width": 0.46
+        }
+    },
+    "Straight_930_swg_0":{
+        "design_id": "wg_swg_930",
+        "dut_type": "wg",
+        "function": "straight",
+        "settings": {
+            "cross_section": "swg",
+            "length": 0,
+            "width": 0.93
+        }
+    },
+    "Straight_1000_swg_0":{
+        "design_id": "wg_swg_1000",
+        "dut_type": "wg",
+        "function": "straight",
+        "settings": {
+            "cross_section": "swg",
+            "length": 0,
+            "width": 1.00
+        }
+    },
+    "Straight_1560_swg_0":{
+        "design_id": "wg_swg_1560",
+        "dut_type": "wg",
+        "function": "straight",
+        "settings": {
+            "cross_section": "swg",
+            "length": 0,
+            "width": 1.56
+        }
+    },
+    "Straight_1500_anwg_0":{
+        "design_id": "wg_anwg_1500",
+        "dut_type": "wg",
+        "function": "straight",
+        "settings": {
+            "cross_section": "nitride2_gwg",
+            "length": 0,
+            "width": 1.50
+        }
+    },
+    "Straight_2000_anwg_0":{
+        "design_id": "wg_anwg_2000",
+        "dut_type": "wg",
+        "function": "straight",
+        "settings": {
+            "cross_section": "anwg",
+            "length": 0,
+            "width": 2.00
+        }
+    },
+    "Straight_700_anwg_0":{
+        "design_id": "wg_anwg_700",
+        "dut_type": "wg",
+        "function": "straight",
+        "settings": {
+            "cross_section": "anwg",
+            "length": 0,
+            "width": 0.70
+        }
+    },
+    "Straight_410_shallow_0":{
+        "design_id": "wg_gwg_410",
+        "dut_type": "wg",
+        "function": "straight",
+        "settings": {
+            "cross_section": "shallow",
+            "length": 0,
+            "width": 0.41
+        }
+    },
+
+
+    "serie_thermistor_AL6_0__c42c0d7d":{
+        "design_id": "serie_thermistor_v0",
+        "dut_type": "thermistor",
+        "function": "serie_thermistor",
+        "settings": {
+            "active_layer": [6, 0], 
+            "wg_layer": "swg", 
+            "mt1_layer": "metal1", 
+            "resistance": 10.0, 
+            "width": 3.1, 
+            "radius": 5.0, 
+            "max_length": 100.0, 
+            "active_layer_square": true}
+    },
+
+
+
+
+    "v7a_PUC_from_gds_Nv7a_T_d221ce1a":{
+        "design_id": "PUC00_d0",
+        "dut_type": "puc",
+        "function": "v7a_PUC_from_gds",
+        "settings":{
+            "name": "v7a_T2_PUC_00_design0"
+        }  
+    },
+    "v7a_PUC_from_gds_Nv7a_T_07b01cb4":{
+        "design_id": "PUC01_d0",
+        "dut_type": "puc",
+        "function": "v7a_PUC_from_gds",
+        "settings":{
+            "name": "v7a_T2_PUC_01_design0"
+        }  
+    },
+    "v7a_PUC_from_gds_Nv7a_T_67eba41e":{
+        "design_id": "PUC02_d0",
+        "dut_type": "puc",
+        "function": "v7a_PUC_from_gds",
+        "settings":{
+            "name": "v7a_T2_PUC_02_design0"
+        }  
+    },
+    "v7a_PUC_from_gds_Nv7a_T_dd635eab":{
+        "design_id": "PUC03_d0",
+        "dut_type": "puc",
+        "function": "v7a_PUC_from_gds",
+        "settings":{
+            "name": "v7a_T2_PUC_03_design0"
+        }  
+    },
+    "v7a_PUC_from_gds_Nv7a_T_0cc4a872":{
+        "design_id": "PUC04_d0",
+        "dut_type": "puc",
+        "function": "v7a_PUC_from_gds",
+        "settings":{
+            "name": "v7a_T2_PUC_04_design0"
+        }  
+    },
+    "v7a_PUC_from_gds_Nv7a_T_dfc9f445":{
+        "design_id": "PUC05_d1a",
+        "dut_type": "puc",
+        "function": "v7a_PUC_from_gds",
+        "settings":{
+            "name": "v7a_T2_PUC_05_design1a"
+        }  
+    },
+    "v7a_PUC_from_gds_Nv7a_T_e1f3c34e":{
+        "design_id": "PUC06_d1a",
+        "dut_type": "puc",
+        "function": "v7a_PUC_from_gds",
+        "settings":{
+            "name": "v7a_T2_PUC_06_design1a"
+        }  
+    },
+    "v7a_PUC_from_gds_Nv7a_T_f056a78a":{
+        "design_id": "PUC07_d1a",
+        "dut_type": "puc",
+        "function": "v7a_PUC_from_gds",
+        "settings":{
+            "name": "v7a_T2_PUC_07_design1a"
+        }  
+    },
+    "v7a_PUC_from_gds_Nv7a_T_0e0adbb9":{
+        "design_id": "PUC08_d1a",
+        "dut_type": "puc",
+        "function": "v7a_PUC_from_gds",
+        "settings":{
+            "name": "v7a_T2_PUC_08_design1a"
+        }  
+    },
+    "v7a_PUC_from_gds_Nv7a_T_9b605b1c":{
+        "design_id": "PUC09_d1b",
+        "dut_type": "puc",
+        "function": "v7a_PUC_from_gds",
+        "settings":{
+            "name": "v7a_T2_PUC_09_design1b"
+        }  
+    },
+    "v7a_PUC_from_gds_Nv7a_T_1b6483ef":{
+        "design_id": "PUC10_d1b",
+        "dut_type": "puc",
+        "function": "v7a_PUC_from_gds",
+        "settings":{
+            "name": "v7a_T2_PUC_10_design1b"
+        }  
+    },
+    "v7a_PUC_from_gds_Nv7a_T_051d2227":{
+        "design_id": "PUC11_d1b",
+        "dut_type": "puc",
+        "function": "v7a_PUC_from_gds",
+        "settings":{
+            "name": "v7a_T2_PUC_11_design1b"
+        }  
+    },
+    "v7a_PUC_from_gds_Nv7a_T_996a5c19":{
+        "design_id": "PUC12_d2a",
+        "dut_type": "puc",
+        "function": "v7a_PUC_from_gds",
+        "settings":{
+            "name": "v7a_T2_PUC_12_design2a"
+        }  
+    },
+    "v7a_PUC_from_gds_Nv7a_T_35b35cfd":{
+        "design_id": "PUC13_d2a",
+        "dut_type": "puc",
+        "function": "v7a_PUC_from_gds",
+        "settings":{
+            "name": "v7a_T2_PUC_13_design2a"
+        }  
+    },
+    "v7a_PUC_from_gds_Nv7a_T_4296e2f6":{
+        "design_id": "PUC14_d2b",
+        "dut_type": "puc",
+        "function": "v7a_PUC_from_gds",
+        "settings":{
+            "name": "v7a_T2_PUC_14_design2b"
+        }  
+    },
+    "v7a_PUC_from_gds_Nv7a_T_9dcc8e25":{
+        "design_id": "PUC15_d2b",
+        "dut_type": "puc",
+        "function": "v7a_PUC_from_gds",
+        "settings":{
+            "name": "v7a_T2_PUC_15_design2b"
+        }  
+    },
+    "v7a_PUC_from_gds_Nv7a_T_81650a03":{
+        "design_id": "PUC16_d3",
+        "dut_type": "puc",
+        "function": "v7a_PUC_from_gds",
+        "settings":{
+            "name": "v7a_T2_PUC_16_design3"
+        }  
+    },
+    "v7a_PUC_from_gds_Nv7a_T_80d21697":{
+        "design_id": "PUC17_d3",
+        "dut_type": "puc",
+        "function": "v7a_PUC_from_gds",
+        "settings":{
+            "name": "v7a_T2_PUC_17_design3"
+        }  
+    },
+    "v7a_PUC_from_gds_Nv7a_T_8e1970a2":{
+        "design_id": "PUC18_d3",
+        "dut_type": "puc",
+        "function": "v7a_PUC_from_gds",
+        "settings":{
+            "name": "v7a_T2_PUC_18_design3"
+        }  
+    },
+    "v7a_PUC_from_gds_Nv7a_T_422b9b16":{
+        "design_id": "PUC19_d3",
+        "dut_type": "puc",
+        "function": "v7a_PUC_from_gds",
+        "settings":{
+            "name": "v7a_T2_PUC_19_design3"
+        }  
+    },
+    "v7a_PUC_from_gds_Nv7a_T_bb971190":{
+        "design_id": "PUC20_d4",
+        "dut_type": "puc",
+        "function": "v7a_PUC_from_gds",
+        "settings":{
+            "name": "v7a_T2_PUC_20_design4"
+        }  
+    },
+    "v7a_PUC_from_gds_Nv7a_T_2cfcb17b":{
+        "design_id": "PUC21_d4",
+        "dut_type": "puc",
+        "function": "v7a_PUC_from_gds",
+        "settings":{
+            "name": "v7a_T2_PUC_21_design4"
+        }  
+    },
+    "v7a_PUC_from_gds_Nv7a_T_ec111f01":{
+        "design_id": "PUC22_d4",
+        "dut_type": "puc",
+        "function": "v7a_PUC_from_gds",
+        "settings":{
+            "name": "v7a_T2_PUC_22_design4"
+        }  
+    },
+    "v7a_PUC_from_gds_Nv7a_T_94588161":{
+        "design_id": "PUC23_d4",
+        "dut_type": "puc",
+        "function": "v7a_PUC_from_gds",
+        "settings":{
+            "name": "v7a_T2_PUC_23_design4"
+        }  
+    },
+
+
+
+    "mzis_test_group_and_eff_943753f4":{
+        "design_id": "wg_swg_410_mzi",
+        "dut_type": "mzi",
+        "function": "mzis_test_group_and_effective_index",
+        "settings": {
+            "low_order_mzi_length": 9.5054,
+            "high_order_mzi_length": 95.0535,
+            "splitter": "rib_mmi",
+            "bend": "bend_euler_custom_width_a5f814d8",
+            "grating_coupler": "tower_gc",
+            "pitch_um": 127.0,
+            "cross_section": "xs_7dd44111",
+            "cross_section2": "xs_7dd44111",
+            "extra_component": null
+        }
+    },
+    "mzis_test_group_and_eff_c280fd4c":{
+        "design_id": "wg_rib_930_mzi",
+        "dut_type": "mzi",
+        "function": "mzis_test_group_and_effective_index",
+        "settings": {
+            "low_order_mzi_length": 22.222,
+            "high_order_mzi_length": 80,
+            "splitter": "rib_mmi",
+            "bend": "bend_euler_custom_width_a5f814d8",
+            "grating_coupler": "tower_gc",
+            "pitch_um": 127.0,
+            "cross_section": "xs_7dd44111",
+            "cross_section2": "xs_eb275a15",
+            "extra_component": "rib_taper_MR1p95_WRI0p4_9dca5112"
+        }
+    },
+    "mzis_test_group_and_eff_0ecb174a":{
+        "design_id": "wg_anwg_2000_mzi",
+        "dut_type": "mzi",
+        "function": "mzis_test_group_and_effective_index",
+        "settings": {
+            "low_order_mzi_length": 33.123,
+            "high_order_mzi_length": 115.932,
+            "splitter": "rib_mmi",
+            "bend": "bend_euler_custom_width_a5f814d8",
+            "grating_coupler": "tower_gc",
+            "pitch_um": 127.0,
+            "cross_section": "xs_7dd44111",
+            "cross_section2": "xs_26c47562",
+            "extra_component": "si_anwg_transition_NSNT_01888caf"
+        }
+    },
+    "mzis_test_group_and_eff_87a9b063":{
+        "design_id": "wg_anwg_1500_mzi",
+        "dut_type": "mzi",
+        "function": "mzis_test_group_and_effective_index",
+        "settings": {
+            "low_order_mzi_length": 33.408,
+            "high_order_mzi_length": 116.927,
+            "splitter": "rib_mmi",
+            "bend": "bend_euler_custom_width_a5f814d8",
+            "grating_coupler": "tower_gc",
+            "pitch_um": 127.0,
+            "cross_section": null,
+            "cross_section2": "nitride2",
+            "extra_component": "si_anwg_transition_NSNT_1924cc9d"
+        }
+    },
+    "mzis_test_group_and_eff_2757a7ae":{
+        "design_id": "wg_nwg_1000_mzi",
+        "dut_type": "mzi",
+        "function": "mzis_test_group_and_effective_index",
+        "settings": {
+            "low_order_mzi_length": 30.846,
+            "high_order_mzi_length":  61.693,
+            "splitter": "rib_mmi",
+            "bend": "bend_euler_custom_width_a5f814d8",
+            "grating_coupler": "tower_gc",
+            "pitch_um": 127.0,
+            "cross_section": null,
+            "cross_section2": "xs_d37503c9",
+            "extra_component": "si_nwg_transition_NVT_1_8ef1e6ad"
+        }
+    }
+}

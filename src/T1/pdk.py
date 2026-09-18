@@ -1,0 +1,1671 @@
+import gdsfactory as gf
+import iprlayout_tower as ipr  # type: ignore
+import numpy as np
+from gdsfactory.typings import ComponentSpec, CrossSectionSpec, LayerSpec
+from iprlayout_tower.tower_tech import LAYER  # type: ignore
+
+change_port_cache = {}
+
+
+def change_port(component, ports_i, ports_o, flatten=True):
+    """
+    Take a component and change the input ports with the output ports.
+    """
+    # Place component
+    c = gf.Component()
+    comp_ref = c << component
+
+    # Add name
+    c.name = component.name + "_pinv"
+    c.function_name = component.function_name
+    c.settings = component.settings
+
+    # Invert port
+    for port in component.ports:
+        if port.name in ports_i:
+            port_o = ports_o[ports_i.index(port.name)]
+            c.add_port(port_o, port=comp_ref.ports[port.name])
+
+            # Update name to avoid duplicate
+            c.name += port.name + port_o
+
+    # Add info
+    c.info = comp_ref.cell.info
+
+    # Flatten
+    if flatten:
+        c.flatten()
+
+    # Manage cache
+    if c.name in change_port_cache:
+        return change_port_cache[c.name]
+    else:
+        change_port_cache[c.name] = c
+
+    return c
+
+
+def T1_dummy_adder(
+    component, distance_metal, distane_wvg, delta_hor_ver_metal=0, delta_hor_ver_wvg=0
+):
+    dummy_dict_list = []
+
+    for idx in range(2):
+        # Metal 1
+        layer = LAYER.metal1 if idx == 0 else (8, 31)
+        dummy_dict_list.append(
+            {
+                "slot_size": 2,
+                "pitch": 2.5,
+                "margin_tb": distance_metal,
+                "margin_lr": distance_metal + delta_hor_ver_metal,
+                "slot_layer": layer,
+            }
+        )
+
+        # Metal 2
+        layer = LAYER.metal2 if idx == 0 else (18, 31)
+        dummy_dict_list.append(
+            {
+                "slot_size": 2,
+                "pitch": 2.5,
+                "margin_tb": distance_metal,
+                "margin_lr": distance_metal + delta_hor_ver_metal,
+                "slot_layer": layer,
+            }
+        )
+
+        # Metal 3
+        layer = LAYER.metal3 if idx == 0 else (28, 31)
+        dummy_dict_list.append(
+            {
+                "slot_size": 4,
+                "pitch": 6.5,
+                "margin_tb": distance_metal,
+                "margin_lr": distance_metal + delta_hor_ver_metal,
+                "slot_layer": layer,
+            }
+        )
+
+        # Si
+        layer = LAYER.swg if idx == 0 else (171, 31)
+        dummy_dict_list.append(
+            {
+                "slot_size": 3,
+                "pitch": 5,
+                "margin_tb": distane_wvg,
+                "margin_lr": distane_wvg + delta_hor_ver_wvg,
+                "slot_layer": layer,
+            }
+        )
+
+        # SiN
+        layer = LAYER.nwg if idx == 0 else (174, 31)
+        dummy_dict_list.append(
+            {
+                "slot_size": 3.0,
+                "pitch": 3.5,
+                "margin_tb": distane_wvg,
+                "margin_lr": distane_wvg + delta_hor_ver_wvg,
+                "slot_layer": layer,
+            }
+        )
+
+    return ipr.dummy_adder(dummy_dict_list, component)
+
+
+@gf.cell
+def component_with_transition(component):
+    c = gf.Component()
+
+    # Place the component
+    comp_ref = c << component
+
+    # Add transition
+    trans = c << gf.c.rectangle(
+        size=(component.xsize, component.ysize), layer=(118, 120)
+    )
+    trans.center = comp_ref.center
+
+    # Add ports
+    for port in component.ports:
+        c.add_port(port.name, port=port)
+
+    return c
+
+
+@gf.cell
+def bump(layer, width, height):
+    """
+    Create a small rounded elliptical bump on the given layer.
+    """
+
+    # Create a component
+    c = gf.Component()
+
+    # Left fillet: vertical wall -> flat top
+    radius = height
+    n_pts = 10
+    center_l = (-width / 2 + radius, height - radius)
+    theta_l = np.linspace(np.pi, np.pi / 2, n_pts)
+    arc_l = [
+        (center_l[0] + radius * np.cos(t), center_l[1] + radius * np.sin(t))
+        for t in theta_l
+    ]
+
+    # Right fillet: flat top -> vertical wall
+    center_r = (width / 2 - radius, height - radius)
+    theta_r = np.linspace(np.pi / 2, 0, n_pts)
+    arc_r = [
+        (center_r[0] + radius * np.cos(t), center_r[1] + radius * np.sin(t))
+        for t in theta_r
+    ]
+
+    points = [(-width / 2, 0)] + arc_l + arc_r + [(width / 2, 0)]
+
+    c.add_polygon(points, layer=layer)
+
+    # Add ports
+    c.add_port(
+        name="o1",
+        center=(0, 0.001),
+        width=width,
+        orientation=270,
+        layer=layer,
+    )
+    return c
+
+
+@gf.cell
+def mzi_cell(
+    order_mzi_length: float = 9.5054,
+    splitter: ComponentSpec = "mmi_luka",
+    cross_section: CrossSectionSpec = "strip",
+    cross_section2: CrossSectionSpec = "strip",
+    extra_component: ComponentSpec | None = None,
+) -> gf.Component:
+    """This test structure allows to measure the group index of a waveguide.
+     There are 2 AMZIs with splitters 2x2.
+
+    Args:
+        low_order_mzi_length: imbalance length of the first amzi.
+        high_order_mzi_length: imbalance lelngth of the second mzi.
+        splitter: splitter2x2 component.
+        grating_coupler: grating coupler compoennt.
+        pitch_um: distance between gratings.
+        cross_section: spec.
+        type: 0 the inputs/outputs of both amzi are placed together,
+           1 first input and output of one amzi, an then the input
+           and output of the second one.
+    """
+    c = gf.Component()
+    splitter = gf.get_component(splitter)
+    cross_section = gf.get_cross_section(cross_section)
+    splitter_length = splitter["o3"].x - splitter["o2"].x
+    if extra_component:
+        tap = gf.get_component(extra_component)
+
+    mzis = [0] * 2
+    vectorx = [
+        0,
+        splitter_length + 60,
+    ]
+    vectory = [0, 0]
+
+    ports1 = []
+    ports2 = []
+
+    lengths = [
+        order_mzi_length + 2,
+        2,
+    ]
+
+    for n in range(2):
+        mzis[n] = c << splitter
+        mzis[n].move([vectorx[n], vectory[n]])
+        if n % 2 == 0:
+            sbend_1 = c << ipr.bend_bezier_s_custom_width()
+            sbend_2 = c << ipr.bend_bezier_s_custom_width()
+            sbend_1.connect("o2", mzis[n].ports["o1"])
+            sbend_2.mirror_y()
+            sbend_2.connect("o2", mzis[n].ports["o2"])
+
+            c.add_port(f"o{2 * n + 3}", port=sbend_1.ports["o1"])
+            c.add_port(f"o{2 * n + 2}", port=sbend_2.ports["o1"])
+
+            ports1.append(mzis[n].ports["o4"])
+            line = c << ipr.straight(length=10, cross_section=cross_section)
+            line.connect("o1", mzis[n].ports["o3"])
+            ports1.append(line["o2"])
+        else:
+            sbend_1 = c << ipr.bend_bezier_s_custom_width()
+            sbend_2 = c << ipr.bend_bezier_s_custom_width()
+            sbend_1.mirror_y()
+            sbend_1.connect("o1", mzis[n].ports["o4"])
+            sbend_2.connect("o1", mzis[n].ports["o3"])
+
+            c.add_port(f"o{2 * n + 2}", port=sbend_1.ports["o2"])
+            c.add_port(f"o{2 * n - 1}", port=sbend_2.ports["o2"])
+
+            ports2.append(mzis[n].ports["o1"])
+            line = c << ipr.straight(length=10, cross_section=cross_section)
+            line.connect("o2", mzis[n].ports["o2"])
+            ports2.append(line["o1"])
+
+    for n in range(2):
+        if extra_component is None:
+            steps = [
+                {"dx": 10},
+                {"dy": -(lengths[n] / 2 + 10)},
+                {"dx": 20 if n % 2 != 0 else 40},
+                {"dy": (lengths[n] / 2 + 10)},
+            ]
+            gf.routing.route_single(
+                c,
+                ports1[n],
+                ports2[n],
+                steps=steps,
+                bend=ipr.bend_euler_custom_width(
+                    cross_section=cross_section,
+                    width_in=0.41,
+                    width_out=0.41,
+                    width_center=0.5,
+                    p=0.466,
+                    m=1.767,
+                    radius=5,
+                ),
+                cross_section=cross_section,
+                auto_taper=False,
+                straight=ipr.straight,
+            )
+        else:
+            bend = ipr.bend_euler_custom_width(
+                cross_section=cross_section,
+                width_in=0.41,
+                width_out=0.41,
+                width_center=0.5,
+                p=0.466,
+                m=1.767,
+                radius=5,
+            )
+            bd1 = c << bend
+            bd1.mirror_y()
+            bd1.connect("o1", ports1[n])
+            bd2 = c << bend
+            bd2.connect("o1", ports2[n])
+            taper1 = c << tap
+            taper1.connect("o1", bd1["o2"])
+            st = c << gf.c.straight(
+                cross_section=cross_section2, length=lengths[n] / 2.0
+            )
+            st.connect("o1", taper1["o2"])
+            taper1 = c << tap
+            taper1.connect("o2", st["o2"])
+            ports1[n] = taper1["o1"]
+            taper2 = c << tap
+            taper2.connect("o1", bd2["o2"])
+            st = c << gf.c.straight(
+                cross_section=cross_section2, length=lengths[n] / 2.0
+            )
+            st.connect("o1", taper2["o2"])
+            taper2 = c << tap
+            taper2.connect("o2", st["o2"])
+            ports2[n] = taper2["o1"]
+            gf.routing.route_single(
+                c,
+                ports1[n],
+                ports2[n],
+                # steps=steps,
+                bend=ipr.bend_euler_custom_width(
+                    cross_section=cross_section,
+                    width_in=0.41,
+                    width_out=0.41,
+                    width_center=0.5,
+                    p=0.466,
+                    m=1.767,
+                    radius=5,
+                ),
+                cross_section=cross_section,
+                auto_taper=False,
+                straight=ipr.straight,
+            )
+
+    return c
+
+
+@gf.cell
+def mzis_test_group_and_effective_index(
+    low_order_mzi_length: float = 9.5054,
+    high_order_mzi_length: float = 95.0535,
+    splitter: ComponentSpec = "rib_mmi",
+    bend: ComponentSpec = "euler_bend",
+    grating_coupler: ComponentSpec = "gc",
+    pitch_um: float = 127.0,
+    cross_section: CrossSectionSpec = "strip",
+    cross_section2: CrossSectionSpec = "strip",
+    extra_component: ComponentSpec | None = None,
+) -> gf.Component:
+    """This test structure allows to measure the group index of a waveguide.
+     There are 2 AMZIs with splitters 2x2.
+
+    Args:
+        low_order_mzi_length: imbalance length of the first amzi.
+        high_order_mzi_length: imbalance lelngth of the second mzi.
+        splitter: splitter2x2 component.
+        grating_coupler: grating coupler compoennt.
+        pitch_um: distance between gratings.
+        cross_section: spec.
+    """
+    c = gf.Component()
+    splitter = gf.get_component(splitter)
+    gc = gf.get_component(grating_coupler)
+    cross_section = gf.get_cross_section(cross_section)
+
+    fa_in = c << ipr.grating_coupler_array(
+        grating_coupler=gc,
+        pitch=pitch_um,
+        n=10,
+        with_loopback=True,
+        dx=5,
+        cross_section=cross_section,
+    )
+    fa_in.rotate(90)
+
+    mzi_low_order = c << mzi_cell(
+        order_mzi_length=low_order_mzi_length,
+        cross_section=cross_section,
+        cross_section2=cross_section2,
+        splitter=splitter,
+        extra_component=extra_component,
+    )
+    mzi_low_order.rotate(90)
+    mzi_high_order = c << mzi_cell(
+        order_mzi_length=high_order_mzi_length,
+        cross_section=cross_section,
+        cross_section2=cross_section2,
+        splitter=splitter,
+        extra_component=extra_component,
+    )
+    mzi_high_order.rotate(-90)
+
+    bend_radius = bend["o2"].x - bend["o1"].x
+    mzi_low_order.ymax = fa_in.ymin - 2 * bend_radius
+    mzi_low_order.xmin = fa_in["o5"].x + bend_radius
+    mzi_high_order.ymax = fa_in.ymin - 2 * bend_radius
+    mzi_high_order.xmax = fa_in["o4"].x - bend_radius
+
+    port_pairs = [
+        [fa_in["o1"], mzi_high_order["o4"]],
+        [fa_in["o2"], mzi_high_order["o3"]],
+        [fa_in["o3"], mzi_high_order["o2"]],
+        [fa_in["o4"], mzi_high_order["o1"]],
+    ]
+    for idx, port_pair in enumerate(port_pairs):
+        gf.routing.route_single(
+            c,
+            port_pair[0],
+            port_pair[1],
+            cross_section=cross_section,
+            bend=bend,
+            auto_taper=False,
+            start_straight_length=bend_radius if idx == 1 else 0,
+        )
+
+    port_pairs = [
+        [fa_in["o5"], mzi_low_order["o2"]],
+        [fa_in["o6"], mzi_low_order["o1"]],
+        [fa_in["o7"], mzi_low_order["o4"]],
+        [fa_in["o8"], mzi_low_order["o3"]],
+    ]
+    for idx, port_pair in enumerate(port_pairs):
+        gf.routing.route_single(
+            c,
+            port_pair[0],
+            port_pair[1],
+            cross_section=cross_section,
+            bend=bend,
+            auto_taper=False,
+            start_straight_length=bend_radius if idx == 2 else 0,
+        )
+
+    return c
+
+
+def straight_410_gwg(length: float, **kwargs):  # Level 0
+    straight_sh_xs = gf.get_cross_section(
+        "shallow", width=0.41, offset_rwg=0.795, offset_gwg=1.795
+    )
+    kwargs["cross_section"] = straight_sh_xs
+    kwargs["additional_name"] = "gwg"
+    return gf.partial(ipr.fast_straight, length=length, **kwargs)()
+
+
+def straight_410_swg(length: float, **kwargs):  # Level 0
+    kwargs["cross_section"] = gf.get_cross_section("strip", layer=LAYER.swg, width=0.41)
+    return gf.partial(ipr.fast_straight, length=length, **kwargs)()
+
+
+def straight_930_swg(length: float, **kwargs):  # Level 0
+    kwargs["cross_section"] = gf.get_cross_section("strip", layer=LAYER.swg, width=0.93)
+    return gf.partial(ipr.fast_straight, length=length, **kwargs)()
+
+
+def straight_1560_swg(length: float, **kwargs):  # Level 0
+    kwargs["cross_section"] = gf.get_cross_section("strip", layer=LAYER.swg, width=1.56)
+    return gf.partial(ipr.fast_straight, length=length, **kwargs)()
+
+
+def straight_700_anwg(length: float, **kwargs):  # Level 0
+    kwargs["cross_section"] = gf.get_cross_section(
+        "nitride2", layer=LAYER.anwg, width=0.70
+    )
+    return gf.partial(ipr.fast_straight, length=length, **kwargs)()
+
+
+def straight_1000_nwg(length: float, **kwargs):  # Level 0
+    kwargs["cross_section"] = gf.get_cross_section(
+        "nitride", layer=LAYER.anwg, width=1.00
+    )
+    return gf.partial(ipr.fast_straight, length=length, **kwargs)()
+
+
+def straight_1500_anwg(length: float, **kwargs):  # Level 0
+    kwargs["cross_section"] = gf.get_cross_section(
+        "nitride2", layer=LAYER.anwg, width=1.50
+    )
+    return gf.partial(ipr.fast_straight, length=length, **kwargs)()
+
+
+def straight_2000_anwg(length: float, **kwargs):  # Level 0
+    kwargs["cross_section"] = gf.get_cross_section(
+        "nitride2", layer=LAYER.anwg, width=2.00
+    )
+    return gf.partial(ipr.fast_straight, length=length, **kwargs)()
+
+
+def straigth_with_3d_cross_strip(angle=90, separation=5, below=True):
+    """
+    Create a straight formed by a series of strip crossing
+    """
+
+    # Define Si cross sections
+    xs_si = gf.get_cross_section("strip", width=0.93)
+
+    # Define Si nitride cross section
+    xs_awng = gf.get_cross_section("nitride2", width=2.00)
+
+    if below:
+        # Define the 3d_crossing
+        cross_3d_comp = ipr.crossing_3D(
+            cross_section1=xs_si,
+            cross_section2=xs_awng,
+            angle=angle,
+            length1=0,
+            length2=5.0 / np.sin(angle / 180 * np.pi),
+        )
+
+        # Prepare straight with a bump
+        bump_ref = bump(layer=xs_awng.layer, width=2.00, height=0.1)
+        kwargs = {"bbmul": cross_3d_comp, "bbadd": bump_ref, "bbmul_list": ["o2", "o4"]}
+        cross_3d = ipr.bb_mul_bb(**kwargs)
+        cross_3d.function_name = cross_3d_comp.function_name
+        cross_3d.settings = cross_3d_comp.settings
+        cross_3d = change_port(
+            component=cross_3d, ports_i=["o1", "o3"], ports_o=["o1", "o2"]
+        )
+
+        # Transition between swg 930 to swg 410
+        transition = ipr.rib_taper(cross_section="strip", width_RIB_out=0.93)
+
+        # Define which straight to use
+        straight = straight_930_swg
+
+    else:
+        # Define the 3d_crossing
+        cross_3d_comp = ipr.crossing_3D(
+            cross_section1=xs_awng,
+            cross_section2=xs_si,
+            angle=angle,
+            length1=0,
+            length2=np.round(10 / np.sin(angle / 180 * np.pi) - 0.2, 3),
+        )
+
+        # Prepare straight with a bump
+        bump_ref = bump(layer=xs_si.layer, width=0.93, height=0.1)
+        kwargs = {"bbmul": cross_3d_comp, "bbadd": bump_ref, "bbmul_list": ["o2", "o4"]}
+        cross_3d = ipr.bb_mul_bb(**kwargs)
+        cross_3d.function_name = cross_3d_comp.function_name
+        cross_3d.settings = cross_3d_comp.settings
+
+        cross_3d = change_port(
+            component=cross_3d, ports_i=["o1", "o3"], ports_o=["o1", "o2"]
+        )
+
+        # Transition between nitride and swg
+        vt_opt_te = ipr.si_anwg_transition(
+            width_out=2.0,
+        )
+
+        feature_vtstraight = {
+            "bbmul": vt_opt_te,
+            "bbadd": straight_410_swg(0.5),
+            "bbmul_list": ["o1"],
+        }
+        transition = ipr.bb_mul_bb(**feature_vtstraight)
+
+        # Define which straight to use
+        straight = straight_2000_anwg
+
+    io_length = transition["o2"].x - transition["o1"].x
+
+    # Define the kwargs for the straight
+    kwargs = {
+        # Needed for calculation
+        "2_bb_extra_length": separation,
+        "2_io_length": io_length,
+        "2_sep_distance": separation,
+        # Created nbb_straight
+        "1_bb": cross_3d,
+        "1_straight": straight,
+        "1_sep_distance": separation,
+        "1_sep_variation": 0.141,
+        # Create bb_straight_bb_limited
+        "straight": ipr.nbb_straight,
+        "straight_limited": straight_410_swg,
+        "bb1": transition,
+        "bb2": transition,
+        "bb2_rev": True,
+    }
+    straight_out = gf.partial(ipr.bb_straight_bb_limited, **kwargs)
+
+    return straight_out, kwargs, cross_3d_comp
+
+
+def straigth_with_3d_cross_shallow(angle=90, separation=5, below=True):
+    """
+    Create a straight formed by a series of shallow crossing
+    """
+
+    if below:
+        # Define Si cross sections
+        xs_gwg = gf.get_cross_section("shallow", width=0.41)
+
+        # Define Si nitride cross section
+        xs_anwg = gf.get_cross_section("nitride2", width=1.50)
+
+        # Define the 3d_crossing
+        cross_3d_comp = ipr.crossing_3D(
+            cross_section1=xs_gwg,
+            cross_section2=xs_anwg,
+            angle=angle,
+            length1=0,
+            length2=np.round(5.0 / np.sin(angle / 180 * np.pi), 3),
+        )
+
+        # Prepare crossing with a bump
+        bump_ref = bump(layer=xs_anwg.layer, width=1.50, height=0.1)
+        kwargs = {"bbmul": cross_3d_comp, "bbadd": bump_ref, "bbmul_list": ["o2", "o4"]}
+        cross_3d = ipr.bb_mul_bb(**kwargs)
+        cross_3d.function_name = cross_3d_comp.function_name
+        cross_3d.settings = cross_3d_comp.settings
+
+        cross_3d = change_port(
+            component=cross_3d, ports_i=["o1", "o3"], ports_o=["o1", "o2"]
+        )
+
+        # Transition between swg 410 to gwg 410
+        transition = ipr.layer_transition_single_taper(
+            length_total=16,
+            length_SLAB=15,
+            m_SLAB=2,
+            m_RIB=1.5,
+            width_SLAB_out=2,
+            width_SLAB_in=0.41,
+            width_RIB_in=0.41,
+            width_RIB_out=0.41,
+            layers=[LAYER.swg, LAYER.rwg, LAYER.gwg],
+        )
+
+        # Define which straight to use
+        straight = straight_410_gwg
+
+    else:
+        # Define Si cross sections
+        xs_gwg = gf.get_cross_section("strip", width=0.41)
+
+        # Define SiN2 cross section (join with gwg)
+        xs_add1 = gf.Section(
+            layer=LAYER.rwg, width=10 + 0.6 / np.sin(angle / 180 * np.pi)
+        )
+        xs_add2 = gf.Section(
+            layer=LAYER.gwg, width=12 + 0.6 / np.sin(angle / 180 * np.pi)
+        )
+        xs_anwg = gf.cross_section.cross_section(
+            layer=LAYER.anwg,
+            width=1.50,
+            sections=[xs_add1, xs_add2],
+            main_section_name=f"nitride2_gwg_{angle}",
+        )
+        xs_anwg_io = gf.cross_section.cross_section(
+            layer=LAYER.anwg,
+            width=1.50,
+            sections=[xs_add2],
+            main_section_name=f"nitride2_gwg_{angle}_io",
+        )
+
+        # Define the 3d_crossing
+        cross_3d_comp = ipr.crossing_3D(
+            cross_section1=xs_anwg,
+            cross_section2=xs_gwg,
+            angle=angle,
+            length1=0,
+            length2=np.round(10.0 / np.sin(angle / 180 * np.pi) - 0.2, 3),
+        )
+
+        # Prepare crossing with a bump
+        bump_ref = bump(layer=xs_gwg.layer, width=0.41, height=0.1)
+        kwargs = {"bbmul": cross_3d_comp, "bbadd": bump_ref, "bbmul_list": ["o2", "o4"]}
+
+        cross_3d = ipr.bb_mul_bb(**kwargs)
+        cross_3d.function_name = cross_3d_comp.function_name
+        cross_3d.settings = cross_3d_comp.settings
+
+        cross_3d = change_port(
+            component=cross_3d, ports_i=["o1", "o3"], ports_o=["o1", "o2"]
+        )
+
+        # Define which straight to use
+        kwargs = {"cross_section": xs_anwg}
+        straight = gf.partial(ipr.fast_straight, **kwargs)
+
+        kwargs_io = {"cross_section": xs_anwg_io}
+        straight_io = gf.partial(ipr.fast_straight, **kwargs_io)
+
+        # Transition between nitride and swg
+        # --- add a waveguide lateral
+        vt_transition = ipr.si_anwg_transition(
+            width_out=1.5,
+        )
+        kwargs = {
+            "bbmul": vt_transition,
+            "bbadd": straight_io(length=1),
+            "bbmul_list": ["o2"],
+        }
+        tr_ref = ipr.bb_mul_bb(**kwargs)
+
+        kwargs = {
+            "bbmul": tr_ref,
+            "bbadd": straight(length=5 / np.sin(angle / 180 * np.pi)),
+            "bbmul_list": ["o2"],
+        }
+        transition = ipr.bb_mul_bb(**kwargs)
+
+    io_length = transition["o2"].x - transition["o1"].x
+
+    # Define the kwargs for the straight
+    kwargs = {
+        # Needed for calculation
+        "2_bb_extra_length": separation,
+        "2_io_length": io_length,
+        "2_sep_distance": separation,
+        # Created nbb_straight
+        "1_bb": cross_3d,
+        "1_straight": straight,
+        "1_sep_distance": separation,
+        "1_sep_variation": 0.141,
+        # Create bb_straight_bb_limited
+        "straight": ipr.nbb_straight,
+        "straight_limited": straight_410_gwg,
+        "bb1": transition,
+        "bb2": transition,
+        "bb2_rev": True,
+    }
+    straight_out = gf.partial(ipr.bb_straight_bb_limited, **kwargs)
+
+    return straight_out, kwargs, cross_3d_comp
+
+
+def all_metal_text(text, size, justify):
+    """
+    Create a text in all 3 metal layer to improve density
+    """
+    text_upper = text.upper()
+    c = gf.Component(text)
+
+    c << ipr.text(text_upper, size=size, layer=LAYER.metal1, justify=justify)
+    c << ipr.text(text_upper, size=size, layer=LAYER.metal2, justify=justify)
+    c << ipr.text(text_upper, size=size, layer=LAYER.metal3, justify=justify)
+
+    return c
+
+
+def tps_410_swg_930_swg_lim(length: float, **kwargs):  # Level 1
+    rb_taper = kwargs["bb1"]
+
+    # Add a IO of 1 um
+    kwargs["straight"] = straight_410_swg
+    kwargs["bb1"] = None
+    kwargs["bb2"] = rb_taper
+    rb_taper_in = ipr.bb_straight_bb(length=1.0, **kwargs)
+
+    # Add the correct kwargs
+    kwargs["straight"] = straight_930_swg
+    kwargs["straight_limited"] = straight_410_swg
+    kwargs["bb1"] = rb_taper_in
+    kwargs["bb2"] = rb_taper_in
+    kwargs["bb2_rev"] = "True"
+    return gf.partial(ipr.bb_straight_bb_limited, length, **kwargs)()
+
+
+def tps_410_swg_1560_swg_lim(length: float, **kwargs):  # Level 1
+    rb_taper = kwargs["bb1"]
+
+    # Add a IO of 1 um
+    kwargs["straight"] = straight_410_swg
+    kwargs["bb1"] = None
+    kwargs["bb2"] = rb_taper
+    rb_taper_in = ipr.bb_straight_bb(length=1.0, **kwargs)
+
+    # Add the correct kwargs
+    kwargs["straight"] = straight_1560_swg
+    kwargs["straight_limited"] = straight_410_swg
+    kwargs["bb1"] = rb_taper_in
+    kwargs["bb2"] = rb_taper_in
+    kwargs["bb2_rev"] = "True"
+    return gf.partial(ipr.bb_straight_bb_limited, length, **kwargs)()
+
+
+@gf.cell
+def triangle_round(
+    layer: LayerSpec = LAYER.metal2,
+    squareness_length: float = 10,
+    size: tuple = (250, 250),
+) -> gf.Component:
+    c = gf.Component()
+
+    points = [
+        (0, 0),
+        (0, size[1] - squareness_length),
+        (squareness_length, size[1] - squareness_length),
+        (size[0] - squareness_length, squareness_length),
+        (size[0] - squareness_length, 0),
+    ]
+    c.add_polygon(points, layer=layer)
+
+    return c
+
+
+######################
+### Test Structure ###
+######################
+@gf.cell
+def grating_array_test_structure(
+    components_grating_coupler: list,
+    component_bend: ComponentSpec = "bend_euler",
+    component_straight_routing: ComponentSpec = straight_410_swg,
+    extra_loopback_distance: float = 10,
+    xs_routing: CrossSectionSpec = "strip",
+) -> gf.Component:
+    """
+    Place a grating array with custom gratings to be tested.
+
+    Args:
+        component_bend (ComponentSpec): Bend used for routing.
+            Defaults to "bend_euler".
+        components_grating_coupler (List[tuple]): Array of grating coupler to be tested.
+            Defaults to [].
+        component_straight_routing (ComponentSpec) : Component used for routing.
+            Default to gf.c.straight
+        extra_loopback_distance (float): additional distance from grating to loopback routing.
+            Default to 10.
+        xs_routing (CrossSectionSpec): Cross section of waveguide used for routing.
+            Defaults to "strip".
+    """
+    # Component where to place the gratings
+    c = gf.Component()
+
+    # Get the grating coupler components
+    bend = gf.get_component(component_bend)
+    gcs = [gf.get_component(gc) for gc in components_grating_coupler]
+    n_gcs = int((len(components_grating_coupler) - 2) / 2)
+
+    # Place the gratings in a line, spaced by 127 in x
+    gratings = []
+    for idx, gc in enumerate(gcs):
+        grating_inst = c << gc
+        grating_inst.rotate(180)
+        grating_inst.xmin = 0
+        grating_inst.y = 127 * idx - grating_inst.ymax
+        gratings.append(grating_inst)
+
+    # Routing in pair the central gratings
+    routes = []
+    for idx in range(n_gcs):
+        route = gf.routing.route_single(
+            c,
+            gratings[2 * idx + 1]["o1"],
+            gratings[2 * idx + 2]["o1"],
+            port_type="optical",
+            auto_taper=False,
+            allow_width_mismatch=False,
+            cross_section=xs_routing,
+            bend=bend,
+            straight=component_straight_routing,
+        )
+        routes.append(route)
+
+    # Routing of the loopback
+    radius = abs(bend["o2"].x - bend["o1"].x)
+    steps = [
+        {"dx": radius},
+        {"dy": -2 * radius - 5},
+        {"dx": -2 * radius - extra_loopback_distance - gc.xsize},
+        {"dy": abs(gratings[-1].y - gratings[0].y) + 2 * (2 * radius + 5)},
+        {"dx": 2 * radius + extra_loopback_distance + gc.xsize},
+        {"dy": -2 * radius - 5},
+    ]
+    gf.routing.route_single(
+        c,
+        gratings[0]["o1"],
+        gratings[-1]["o1"],
+        port_type="optical",
+        auto_taper=False,
+        allow_width_mismatch=False,
+        cross_section=xs_routing,
+        bend=bend,
+        steps=steps,
+    )
+
+    # Prepare the save dictionary for json
+    for idx, route in enumerate(reversed(routes)):
+        out_dict = {}
+        for inst in route.instances:
+            temp_dict = ipr.measure_component(inst.cell, scale=1 / 1000)
+            out_dict = ipr.combine_component_dict(out_dict, temp_dict)
+
+        c.info[f"Block {idx + 1}"] = out_dict
+
+    return c
+
+
+@gf.cell
+def xt_sin_function(
+    bend_Si: ComponentSpec,
+    bend_SiN2: ComponentSpec,
+    gc_array: ComponentSpec,
+    gc_array_dist: float,
+    hv_ratios: list[float],
+    n_bends: int,
+    total_lengths: list[float],
+    separation_rep: float,
+    separation_xs: float,
+    routing_straight: ComponentSpec,
+    vt: ComponentSpec,
+):
+    """
+    Create a prop loss function with double spiral from calculation
+    attached to a vertical transition and than to a regular grating array
+    """
+    # Pre calculation
+    xs_041 = gf.get_cross_section("strip", width=0.41)
+    bend_SiN2_radius = bend_SiN2["o2"].x - bend_SiN2["o1"].x
+
+    # Create a component
+    c = gf.Component()
+
+    # Add the first double spiral
+    sp1 = c << ipr.double_spiral_from_calculation(
+        bend=bend_SiN2,
+        centralize=1,
+        n_bends=n_bends,
+        total_length=total_lengths[0],
+        separation_rep=separation_rep,
+        separation_xs=separation_xs,
+        straight=straight_2000_anwg,
+        hv_ratio=hv_ratios[0],
+    )
+
+    # Add the second double spiral
+    sp2 = c << ipr.double_spiral_from_calculation(
+        bend=bend_SiN2,
+        n_bends=n_bends,
+        centralize=1,
+        total_length=total_lengths[1],
+        separation_rep=separation_rep,
+        separation_xs=separation_xs,
+        straight=straight_2000_anwg,
+        hv_ratio=hv_ratios[1],
+    )
+    port_sep = sp1["o2"].y - sp1["o1"].y
+
+    # Collect information
+    left_inner_dict = sp1.cell.info["inner_spiral"]
+    left_outer_dict = sp1.cell.info["outer_spiral"]
+    right_inner_dict = sp2.cell.info["inner_spiral"]
+    right_outer_dict = sp2.cell.info["outer_spiral"]
+    routes_left_inner = []
+    routes_left_outer = []
+    routes_right_inner = []
+    routes_right_outer = []
+
+    # Place the grating coupler
+    gc_array_ref = c << gc_array
+    gc_array_ref.rotate(180)
+    sp1.y = gc_array_ref.y
+    sp1.xmin = gc_array_ref.xmax + gc_array_dist
+    sp2.y = gc_array_ref.y
+    sp2.xmin = sp1.xmax + port_sep * 8
+
+    # Add the vt to the first double spiral
+    lenghts = [port_sep, port_sep * 2, port_sep, port_sep * 2]
+    gc_ports = [
+        gc_array_ref["o1"],
+        gc_array_ref["o2"],
+        gc_array_ref["o3"],
+        gc_array_ref["o4"],
+    ]
+
+    for idx, port in enumerate(sp1.ports):
+        strt = c << straight_2000_anwg(length=lenghts[idx])
+        strt.connect("o1", port)
+        bend_ref = c << bend_SiN2
+        bend_ref.connect("o1", strt["o2"])
+        vt_ref = c << vt
+        vt_ref.connect("o2", bend_ref["o2"])
+
+        # Update dict
+        temp_dicts = [
+            ipr.measure_component(strt.cell),
+            ipr.measure_component(bend_ref.cell),
+            ipr.measure_component(vt_ref.cell),
+        ]
+
+        # Connect to the grating
+        dy_up = sp1.ymax - vt_ref["o1"].y + port_sep * (idx - 1)
+        dx_left = sp1.xsize + bend_SiN2_radius + 2 * port_sep * (idx - 2.5)
+
+        if idx in (2, 3):
+            route = gf.routing.route_single(
+                c,
+                port1=vt_ref["o1"],
+                port2=gc_ports[idx],
+                cross_section=xs_041,
+                straight=routing_straight,
+                bend=bend_Si,
+                steps=[
+                    {"dy": dy_up},  # go up by the height difference
+                    {"dx": -dx_left},  # then go left by the component width
+                    {"y": gc_ports[idx].y},
+                ],
+                auto_taper=False,
+            )
+        else:
+            route = gf.routing.route_single(
+                c,
+                port1=vt_ref["o1"],
+                port2=gc_ports[idx],
+                cross_section=xs_041,
+                straight=routing_straight,
+                bend=bend_Si,
+                auto_taper=False,
+            )
+
+        if idx > 1:
+            for temp_dict in temp_dicts:
+                left_inner_dict = ipr.combine_component_dict(left_inner_dict, temp_dict)
+            routes_left_inner.append(route)
+        else:
+            for temp_dict in temp_dicts:
+                left_outer_dict = ipr.combine_component_dict(left_outer_dict, temp_dict)
+            routes_left_outer.append(route)
+
+    gc_ports = [
+        gc_array_ref["o5"],
+        gc_array_ref["o6"],
+        gc_array_ref["o7"],
+        gc_array_ref["o8"],
+    ]
+
+    # Add the vt to the second double spiral
+    for idx, port in enumerate(sp2.ports):
+        if port.name not in ["o1", "o2"]:
+            strt = c << straight_2000_anwg(length=lenghts[idx])
+            strt.connect("o1", port)
+            bend_ref = c << bend_SiN2
+            bend_ref.connect("o1", strt["o2"])
+            vt_ref = c << vt
+            vt_ref.connect("o2", bend_ref["o2"])
+
+            # Update dict
+            temp_dicts = [
+                ipr.measure_component(strt.cell),
+                ipr.measure_component(bend_ref.cell),
+                ipr.measure_component(vt_ref.cell),
+            ]
+        else:
+            vt_ref = c << vt
+            vt_ref.connect("o2", port)
+
+            # Update dict
+            temp_dicts = [ipr.measure_component(vt_ref.cell)]
+
+        # Connect to the grating
+        dy_up = sp2.ymax - vt_ref["o1"].y + port_sep * (idx - 1)
+        dx = port_sep * (4 - idx)
+        if idx in (2, 3):
+            route = gf.routing.route_single(
+                c,
+                port1=vt_ref["o1"],
+                port2=gc_ports[idx],
+                cross_section=xs_041,
+                straight=routing_straight,
+                bend=bend_Si,
+                steps=[
+                    {"dy": dy_up},  # go up by the height difference
+                    {
+                        "x": gc_array_ref.xmax + dx
+                    },  # then go left by the component width
+                    {"y": gc_ports[idx].y},
+                ],
+                auto_taper=False,
+            )
+        else:
+            route = gf.routing.route_single(
+                c,
+                port1=gc_ports[idx],
+                port2=vt_ref["o1"],
+                cross_section=xs_041,
+                straight=routing_straight,
+                start_straight_length=port_sep * (4 - idx),
+                bend=bend_Si,
+                auto_taper=False,
+            )
+
+        if idx > 1:
+            for temp_dict in temp_dicts:
+                right_inner_dict = ipr.combine_component_dict(
+                    right_inner_dict, temp_dict
+                )
+            routes_right_inner.append(route)
+        else:
+            for temp_dict in temp_dicts:
+                right_outer_dict = ipr.combine_component_dict(
+                    right_outer_dict, temp_dict
+                )
+            routes_right_outer.append(route)
+
+    # Update route information
+    for route in routes_left_inner:
+        for inst in route.instances:
+            temp_dict = ipr.measure_component(inst.cell, scale=1 / 1000)
+            left_inner_dict = ipr.combine_component_dict(left_inner_dict, temp_dict)
+
+    for route in routes_left_outer:
+        for inst in route.instances:
+            temp_dict = ipr.measure_component(inst.cell, scale=1 / 1000)
+            left_outer_dict = ipr.combine_component_dict(left_outer_dict, temp_dict)
+
+    for route in routes_right_inner:
+        for inst in route.instances:
+            temp_dict = ipr.measure_component(inst.cell, scale=1 / 1000)
+            right_inner_dict = ipr.combine_component_dict(right_inner_dict, temp_dict)
+
+    for route in routes_right_outer:
+        for inst in route.instances:
+            temp_dict = ipr.measure_component(inst.cell, scale=1 / 1000)
+            right_outer_dict = ipr.combine_component_dict(right_outer_dict, temp_dict)
+
+    # Read and save the final result
+    c.info["Block 1"] = right_inner_dict
+    c.info["Block 2"] = right_outer_dict
+    c.info["Block 3"] = left_inner_dict
+    c.info["Block 4"] = left_outer_dict
+
+    return c
+
+
+n_mmi = 0
+
+
+@gf.cell
+def mmi_splitter_il_extractor(
+    absorber: ComponentSpec,
+    bend: ComponentSpec,
+    straight: ComponentSpec,
+    gc_array: ComponentSpec,
+    mmi_component: ComponentSpec,
+):
+    """
+    Create a sequence of mmi test structure from which both IL
+    and bar/cross can be extracted
+    """
+
+    # Obtain radius of the bend
+    radius = bend["o2"].y - bend["o1"].y
+
+    # Distance between gc array - default is 127 um
+    gc_port_distance = gc_array["o1"].y - gc_array["o2"].y
+
+    # Distance between MMI ports
+    mmi_port_distance = mmi_component["o2"].y - mmi_component["o1"].y
+
+    # Distance between different MMI
+    mmi_to_mmi_length = gc_port_distance / 2 - 2 * radius - mmi_port_distance
+
+    # Additional horizontal length added to the mmi
+    random_avg = 1
+    random_var = 0.141
+    hor_length = absorber.xsize - random_avg
+    assert mmi_to_mmi_length >= 0, "Please increase mmi distance."
+
+    def mmi_abs_strt(mmi_idx, ports_abs, ports_strt, ports_void=None):
+        c_int = gf.Component(f"mmi_{mmi_idx}")
+
+        # Place the mmi
+        mmi_ref = c_int << mmi_component
+
+        # Place the absorber
+        for port in ports_abs:
+            abs_ref = c_int << absorber
+            if port == "o1" or port == "o3":
+                abs_ref.mirror_y()
+            abs_ref.connect("o1", mmi_ref[port])
+
+        # Place the straight
+        for port in ports_strt:
+            strt = c_int << straight(length=hor_length)
+            strt.connect("o1", mmi_ref[port])
+            c_int.add_port(port, port=strt["o2"])
+
+        # Place normal ports
+        if ports_void is not None:
+            for port in ports_void:
+                c_int.add_port(port, port=mmi_ref[port])
+
+        return c_int
+
+    def compensator_odd(port1, port2, nbends, total_length, n_comp):
+        c_int = gf.Component(f"compensator_{n_comp}")
+
+        port_prev = port1
+
+        # Distance between port that can be used by the compensator
+        dx_distance = abs(port1.x - port2.x) - radius * (nbends)
+
+        # Useful length is total length minus the distance between ports
+        length_hor_usef = total_length - dx_distance
+
+        # Calculate length in each section
+        length_per_bend = round(
+            (length_hor_usef - (nbends - 4) * radius) / (nbends - 2), 3
+        )
+        ver_var = max(length_per_bend * 2 + radius * 2 - gc_port_distance, 0)
+
+        # Place bend straight bend for compensator
+        for jdx in range(nbends // 2):
+            # Bend
+            bend_ref = c_int << bend
+            if jdx % 2 == 1:
+                bend_ref.mirror_y()
+            bend_ref.connect("o1", port_prev)
+
+            if jdx == 0:
+                c_int.add_port("o1", port=bend_ref["o1"])
+
+            # Straight
+            if jdx == 0:
+                length = length_per_bend + ver_var
+            elif jdx == nbends // 2 - 1:
+                length = length_per_bend - ver_var
+            else:
+                length = length_per_bend * 2 + radius * 2
+            strt = c_int << straight(length=length)
+            strt.connect("o1", bend_ref["o2"])
+
+            # Bend
+            bend_ref = c_int << bend
+            if jdx % 2 == 0:
+                bend_ref.mirror_y()
+            bend_ref.connect("o1", strt["o2"])
+            port_prev = bend_ref["o2"]
+
+        # Create the final length towards the gc array
+        strt = c_int << straight(length=dx_distance)
+        strt.connect("o1", bend_ref["o2"])
+        strt.connect("o2", port2)
+
+        c_int.add_port("o2", port=strt["o2"])
+        return c_int
+
+    def compensator_even(port1, port2, nbends, total_length, n_comp):
+        c_int = gf.Component(f"compensator_{n_comp}")
+
+        port_prev = port1
+        dx_distance = abs(port1.x - port2.x) - radius * (nbends)
+        length_hor_usef = total_length - dx_distance
+        length_per_bend = length_hor_usef / nbends * 2
+
+        # Place bend straight bend for compensator
+        for jdx in range(nbends // 2):
+            # Bend
+            bend_ref = c_int << bend
+            if jdx % 2 == 0:
+                bend_ref.mirror_y()
+            bend_ref.connect("o1", port_prev)
+
+            if jdx == 0:
+                c_int.add_port("o1", port=bend_ref["o1"])
+
+            # Straight
+            strt = c_int << straight(length=length_per_bend)
+            strt.connect("o1", bend_ref["o2"])
+
+            # Bend
+            bend_ref = c_int << bend
+            if jdx % 2 == 1:
+                bend_ref.mirror_y()
+            bend_ref.connect("o1", strt["o2"])
+            port_prev = bend_ref["o2"]
+
+        # Create the final length towards the gc array
+        strt = c_int << straight(length=dx_distance)
+        strt.connect("o1", bend_ref["o2"])
+        strt.connect("o2", port2)
+
+        c_int.add_port("o2", port=strt["o2"])
+        return c_int
+
+    # Generate component
+    c = gf.Component()
+
+    # Place GC
+    gc_ref = c << gc_array
+    gc_ref.rotate(180)
+
+    global n_mmi
+    mmi_number = 9
+
+    # Place initial mmi
+    mmi_start_dy = 105
+
+    mmi_start = c << mmi_abs_strt(
+        ports_abs=["o2"], ports_strt=["o1", "o4"], ports_void=["o3"], mmi_idx=n_mmi
+    )
+    mmi_start.movex(mmi_start["o3"].x, gc_ref["o1"].x + radius * 2)
+    mmi_start.movey(mmi_start["o3"].y, gc_ref["o1"].y - mmi_start_dy)
+
+    # Distance between consecutive MMI
+    mmi_dy = (gc_ref["o2"].y - gc_ref["o1"].y) / 2
+
+    # Starting position of mmi
+    mmi_ystart = (gc_ref["o2"].y + gc_ref["o1"].y) / 2
+
+    # Create the MMI - cross
+    mmi_top_input_ports = []
+    mmi_top_output_ports = []
+    mmi_top_aux_ports = []
+    for idx in range(mmi_number - 1):
+        # Define the mmi port
+        mmi_top_input_port = "o1" if idx % 2 == 0 else "o2"
+        mmi_top_output_port = "o3" if idx % 2 == 0 else "o4"
+        mmi_top_aux1_port = "o2" if idx % 2 == 0 else "o1"
+        mmi_top_aux2_port = "o4" if idx % 2 == 0 else "o3"
+
+        # Create the mmi - rotate depending on the parity
+        if idx % 2 == 0:
+            mmi_top = c << mmi_abs_strt(
+                ports_abs=[mmi_top_aux1_port, mmi_top_aux2_port],
+                ports_strt=[mmi_top_input_port, mmi_top_output_port],
+                mmi_idx=idx + 1 + n_mmi,
+            )
+            mmi_top.movex(
+                mmi_top[mmi_top_input_port].x,
+                gc_ref["o3"].x + radius * (mmi_number - 2) * 2,
+            )
+        else:
+            mmi_top = c << mmi_abs_strt(
+                ports_abs=[mmi_top_aux1_port],
+                ports_strt=[mmi_top_input_port, mmi_top_output_port, mmi_top_aux2_port],
+                mmi_idx=idx + 1 + n_mmi,
+            )
+            mmi_top.rotate(180)
+            mmi_top.movex(
+                mmi_top[mmi_top_output_port].x,
+                gc_ref["o3"].x + radius * (mmi_number - 2) * 2,
+            )
+
+        # Position the MMIs
+        if idx != mmi_number - 2:
+            mmi_top.movey(mmi_top[mmi_top_input_port].y, mmi_ystart + idx * mmi_dy)
+        else:
+            mmi_top.movey(
+                (mmi_top["o3"].y + mmi_top["o4"].y) / 2, mmi_ystart + (idx + 1) * mmi_dy
+            )
+
+        # Collect the MMIs ports
+        mmi_top_input_ports.append(mmi_top[mmi_top_output_port])
+        mmi_top_output_ports.append(mmi_top[mmi_top_input_port])
+        if idx % 2 == 1 and idx != mmi_number - 2:
+            mmi_top_aux_ports.append(mmi_top[mmi_top_aux2_port])
+
+    # Create MMI to MMI connection
+    random_lengths = ipr.random_number_array(
+        mean=random_avg + random_var, n_elements=mmi_number - 2, variation=random_var
+    )
+    for idx in range(mmi_number - 2):
+        # Initial random length
+        strt = c << straight(length=random_lengths[idx])
+        strt.connect("o1", mmi_top_input_ports[idx])
+
+        # Bend -> strt -> bend
+        bend_ref = c << bend
+        if idx % 2 == 1:
+            bend_ref.mirror_y()
+        bend_ref.connect("o1", strt["o2"])
+
+        dy = mmi_top_output_ports[idx + 1].y - mmi_top_input_ports[idx].y - 2 * radius
+        strt = c << straight(length=dy)
+        strt.connect("o1", bend_ref["o2"])
+
+        bend_ref = c << bend
+        if idx % 2 == 1:
+            bend_ref.mirror_y()
+        bend_ref.connect("o1", strt["o2"])
+
+        # Final random length
+        strt = c << straight(length=random_lengths[idx])
+        strt.connect("o1", bend_ref["o2"])
+
+        strt.connect("o2", mmi_top_output_ports[idx + 1])
+    final_top_length = dy
+
+    # Create connection 1 of the top final MMI
+    bend_ref = c << bend
+    bend_ref.mirror_y()
+    bend_ref.connect("o1", mmi_top["o4"])
+
+    dy_top = gc_ref["o6"].y - mmi_top["o4"].y - 2 * radius
+    strt = c << straight(length=dy_top)
+    strt.connect("o1", bend_ref["o2"])
+
+    bend_ref = c << bend
+    bend_ref.connect("o1", strt["o2"])
+
+    dx_top = mmi_top["o4"].x - gc_ref["o6"].x - 2 * radius
+    strt = c << straight(length=dx_top)
+    strt.connect("o1", bend_ref["o2"])
+    strt.connect("o2", gc_ref["o6"])
+
+    # Create connection 2 of the top final MMI
+    bend_ref = c << bend
+    bend_ref.connect("o1", mmi_top["o3"])
+
+    dy_top = mmi_top["o3"].y - gc_ref["o5"].y - 2 * radius
+    strt = c << straight(length=dy_top)
+    strt.connect("o1", bend_ref["o2"])
+
+    bend_ref = c << bend
+    bend_ref.mirror_y()
+    bend_ref.connect("o1", strt["o2"])
+
+    dx_top = mmi_top["o3"].x - gc_ref["o5"].x - 2 * radius
+    strt = c << straight(length=dx_top)
+    strt.connect("o1", bend_ref["o2"])
+    strt.connect("o2", gc_ref["o5"])
+
+    # Compensation part (mmi stair + hor gc-mmi distance + ver gc-mmi distance)
+    comp_length_final = dy_top + dx_top + final_top_length
+
+    for idx, port in enumerate(reversed(mmi_top_aux_ports)):
+        total_length = (
+            comp_length_final
+            + mmi_to_mmi_length * (idx * 2 + 1)
+            + hor_length * (idx + 1) * 4
+        )
+
+        compensator = c << compensator_odd(
+            port,
+            gc_ref[f"o{4 - idx}"],
+            nbends=idx * 4 + 6,
+            total_length=total_length,
+            n_comp=idx + n_mmi,
+        )
+        compensator.connect("o2", port)
+    total_length_top = total_length + 3 * hor_length + mmi_to_mmi_length
+
+    # Create the MMI - bar
+    mmi_bot_input_ports = []
+    mmi_bot_output_ports = []
+
+    for idx in range(mmi_number - 1):
+        # Define the mmi port
+        mmi_bot_input_port = "o1"
+        mmi_bot_output_port = "o4"
+        mmi_bot_aux1_port = "o2"
+        mmi_bot_aux2_port = "o3"
+
+        # Create the mmi - rotate depending on the parity
+        if idx != mmi_number - 2:
+            mmi_bot = c << mmi_abs_strt(
+                ports_abs=[mmi_bot_aux1_port, mmi_bot_aux2_port],
+                ports_strt=[mmi_bot_input_port, mmi_bot_output_port],
+                mmi_idx=idx + mmi_number + n_mmi,
+            )
+        else:
+            mmi_bot = c << mmi_abs_strt(
+                ports_abs=[mmi_bot_aux1_port],
+                ports_strt=[mmi_bot_input_port, mmi_bot_output_port, mmi_bot_aux2_port],
+                mmi_idx=idx + mmi_number + n_mmi,
+            )
+
+        # Position the MMIs
+        if idx % 2 == 0:
+            mmi_bot.movex(
+                mmi_bot[mmi_bot_input_port].x, mmi_top_input_ports[idx].x + radius * 4
+            )
+        else:
+            mmi_bot.rotate(180)
+            mmi_bot.movex(
+                mmi_bot[mmi_bot_output_port].x, mmi_top_output_ports[idx].x + radius * 4
+            )
+
+        if idx != mmi_number - 2:
+            mmi_bot.movey(
+                mmi_bot[mmi_bot_input_port].y,
+                mmi_top_input_ports[idx].y - mmi_port_distance,
+            )
+        else:
+            mmi_bot.movey(
+                (mmi_bot["o3"].y + mmi_bot["o4"].y) / 2, mmi_ystart + (idx + 5) * mmi_dy
+            )
+
+        # Collect the MMIs
+        mmi_bot_input_ports.append(mmi_bot[mmi_bot_output_port])
+        mmi_bot_output_ports.append(mmi_bot[mmi_bot_input_port])
+
+    # Create MMI to MMI connection
+    for idx in range(mmi_number - 2):
+        # Initial random length
+        strt = c << straight(length=random_lengths[idx])
+        strt.connect("o1", mmi_bot_input_ports[idx])
+
+        # Bend -> strt -> bend
+        bend_ref = c << bend
+        if idx % 2 == 1:
+            bend_ref.mirror_y()
+        bend_ref.connect("o1", strt["o2"])
+
+        dy = mmi_bot_output_ports[idx + 1].y - mmi_bot_input_ports[idx].y - 2 * radius
+        strt = c << straight(length=dy)
+        strt.connect("o1", bend_ref["o2"])
+
+        bend_ref = c << bend
+        if idx % 2 == 1:
+            bend_ref.mirror_y()
+        bend_ref.connect("o1", strt["o2"])
+
+        # Final random length
+        strt = c << straight(length=random_lengths[idx])
+        strt.connect("o1", bend_ref["o2"])
+
+        strt.connect("o2", mmi_bot_output_ports[idx + 1])
+    final_length = dy
+
+    # Create stairs for the initial mmi
+    stairs_port_input = mmi_bot_output_ports[0]
+    stairs_sep = 0.5
+    for idx in range(8):
+        bend_ref = c << bend
+        if idx % 2 == 1:
+            bend_ref.mirror_y()
+        bend_ref.connect("o1", stairs_port_input)
+
+        strt = c << straight(length=stairs_sep)
+        strt.connect("o1", bend_ref["o2"])
+
+        stairs_port_input = strt["o2"]
+
+    bend_ref = c << bend
+    bend_ref.connect("o1", stairs_port_input)
+
+    dx_stairs = bend_ref["o2"].x - mmi_start["o4"].x - radius
+    dy_stairs = bend_ref["o2"].y - mmi_start["o4"].y - radius
+
+    strt = c << straight(length=dy_stairs)
+    strt.connect("o1", bend_ref["o2"])
+
+    bend_ref = c << bend
+    bend_ref.mirror_y()
+    bend_ref.connect("o1", strt["o2"])
+
+    strt = c << straight(length=dx_stairs)
+    strt.connect("o1", bend_ref["o2"])
+
+    # Create stairs 1 for the final mmi
+    bend_ref = c << bend
+    bend_ref.connect("o1", mmi_bot["o3"])
+
+    dy = mmi_bot["o3"].y - gc_ref["o7"].y - 2 * radius
+    strt = c << straight(length=dy)
+    strt.connect("o1", bend_ref["o2"])
+
+    bend_ref = c << bend
+    bend_ref.mirror_y()
+    bend_ref.connect("o1", strt["o2"])
+
+    dx = mmi_bot["o3"].x - gc_ref["o7"].x - 2 * radius
+    strt = c << straight(length=dx)
+    strt.connect("o1", bend_ref["o2"])
+    strt.connect("o2", gc_ref["o7"])
+
+    # Create stairs 2 for the final mmi
+    bend_ref = c << bend
+    bend_ref.mirror_y()
+    bend_ref.connect("o1", mmi_bot["o4"])
+
+    dy = gc_ref["o8"].y - mmi_bot["o4"].y - 2 * radius
+    strt = c << straight(length=dy)
+    strt.connect("o1", bend_ref["o2"])
+
+    bend_ref = c << bend
+    bend_ref.connect("o1", strt["o2"])
+
+    dx = mmi_bot["o4"].x - gc_ref["o8"].x - 2 * radius
+    strt = c << straight(length=dx)
+    strt.connect("o1", bend_ref["o2"])
+    strt.connect("o2", gc_ref["o8"])
+
+    # Calculate total length of bottom part
+    comp_length_final = dy + dx + final_length
+    total_length_bot = (
+        comp_length_final
+        + (mmi_to_mmi_length + mmi_port_distance) * (mmi_number - 3)
+        + hor_length * ((mmi_number - 2) * 2 + 1)
+    )
+
+    diff = total_length_bot - total_length_top
+
+    # Compensate also for the difference in input position of the mmi
+    bot_link = dx_stairs + dy_stairs + stairs_sep * 8 + hor_length * 2
+    top_link_y = mmi_top_output_ports[0].y - mmi_start["o3"].y - 2 * radius
+    diff = diff + bot_link - top_link_y - hor_length
+
+    # Use the difference to compensate top part
+    bend_ref = c << bend
+    bend_ref.connect("o1", mmi_start["o3"])
+
+    strt = c << straight(length=top_link_y)
+    strt.connect("o1", bend_ref["o2"])
+
+    bend_ref = c << bend
+    bend_ref.mirror_y()
+    bend_ref.connect("o1", strt["o2"])
+
+    comp_strt = c << compensator_even(
+        port1=mmi_top_output_ports[0],
+        port2=bend_ref["o2"],
+        nbends=8,
+        total_length=diff,
+        n_comp=mmi_number + n_mmi,
+    )
+    comp_strt.connect("o1", bend_ref["o2"])
+
+    # Connect the input mmi
+    bend_ref = c << bend
+    bend_ref.mirror_y()
+    bend_ref.connect("o1", gc_ref["o1"])
+    strt = c << straight(length=mmi_start_dy - radius * 4)
+    strt.connect("o1", bend_ref["o2"])
+    bend_ref = c << bend
+    bend_ref.mirror_y()
+    bend_ref.connect("o1", strt["o2"])
+    dx1 = mmi_component.xsize
+    strt = c << straight(length=dx1)
+    strt.connect("o1", bend_ref["o2"])
+    bend_ref = c << bend
+    bend_ref.connect("o1", strt["o2"])
+    dx2 = mmi_port_distance
+    strt = c << straight(length=dx2)
+    strt.connect("o1", bend_ref["o2"])
+    bend_ref = c << bend
+    bend_ref.connect("o1", strt["o2"])
+    dx3 = mmi_start["o1"].x - bend_ref["o2"].x
+    strt = c << straight(length=dx3)
+    strt.connect("o1", bend_ref["o2"])
+
+    # Json Generation Information = Bend
+    all_blocks_dict = {}
+    bend_dict = ipr.measure_component(bend_ref.cell, scale=1)
+    key = list(bend_dict.keys())[0]
+    bend_dict[key] *= 30
+    all_blocks_dict = ipr.combine_component_dict(all_blocks_dict, bend_dict)
+
+    # Json Generation Information = Straight
+    strt_dict = ipr.measure_component(straight(length=1), scale=1)
+    key = list(strt_dict.keys())[0]
+    total_length = (
+        total_length_bot
+        + bot_link
+        + mmi_start_dy
+        - radius * 4
+        + dx1
+        + dx2
+        + dx3
+        + hor_length
+    )
+    strt_dict[key] *= total_length
+    all_blocks_dict = ipr.combine_component_dict(all_blocks_dict, strt_dict)
+
+    # Json Generation Information = MMI
+    mmi_dict = ipr.measure_component(mmi_component, scale=1)
+    key = list(mmi_dict.keys())[0]
+    n_mmi += mmi_number * 2 - 1
+
+    # Populate the info
+    for idx in range(8):
+        mmi_dict[key] = min(3 + idx * 2, mmi_number)
+        block_dict = ipr.combine_component_dict(all_blocks_dict, mmi_dict)
+
+        c.info[f"Block {idx}"] = block_dict
+    c.mirror_y()
+    return c

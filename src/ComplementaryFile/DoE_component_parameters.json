@@ -1,0 +1,282 @@
+{   
+    "T1": {
+        "10.0":{
+            "comp": ["mmi_inv_d1_30",
+                    "mmi_inv_d1_m30",
+                    "mmi_inv_d1_38",
+                    "mmi_inv_d3_30",
+                    "mmi_inv_d3_m30",
+                    "mmi_inv_d3_38",
+                    "mmi_inv_d2"]
+        },
+
+        "11.0":{
+            "comp": ["mmi_inv_d1_30",
+                     "mmi_inv_d1_38",
+                     "mmi_inv_d3_30",
+                     "mmi_inv_d3_38"]
+        }
+    },
+    
+    "T2": {
+        "1.0":
+            {   "comp":["diode_linear_LC5_LD0p5__38e623cc",
+                        "diode_linear_LC10_LD0p5_baf596bc",
+                        "diode_linear_LC15_LD0p5_2ab1833b",
+                        "diode_linear_LC5_LD0p5__e1754908",
+                        "diode_linear_LC5_LD0p5__ad37b249",
+                        "diode_linear_LC5_LD0p5__7404c1dd",
+                        "diode_linear_LC5_LD5p15_fed94d24",
+                        "diode_linear_LC5_LD5p15_10ac6cc5",
+                        "diode_linear_LC5_LD5p25_5ff7b499",
+                        "diode_linear_LC5_LD5p1__95894f70",
+                        "diode_guard_ring_Cdiode_ddb055e5",
+                        "diode_guard_ring_Cdiode_42601802",
+                        "diode_guard_ring_Cdiode_3d7f2868",
+                        "diode_guard_ring_Cdiode_4abd448c",
+                        "diode_linear_LC5_LD5p15_b0c6a261",
+                        "diode_linear_LC5p15_LD0_d4b2ee29"]
+            },
+
+        "2.0":
+            {   "comp": ["v7a_PUC_from_gds_Nv7a_T_d221ce1a",
+                         "v7a_PUC_from_gds_Nv7a_T_07b01cb4", 
+                         "v7a_PUC_from_gds_Nv7a_T_67eba41e", 
+                         "v7a_PUC_from_gds_Nv7a_T_dd635eab"]
+            },
+
+        "3.0":
+            {   "comp": ["v7a_PUC_from_gds_Nv7a_T_0cc4a872",
+                         "v7a_PUC_from_gds_Nv7a_T_dfc9f445",
+                         "v7a_PUC_from_gds_Nv7a_T_e1f3c34e",
+                         "v7a_PUC_from_gds_Nv7a_T_f056a78a"]
+            },
+
+        "4.0":
+            {   "comp": ["v7a_PUC_from_gds_Nv7a_T_0e0adbb9",
+                         "v7a_PUC_from_gds_Nv7a_T_9b605b1c",
+                         "v7a_PUC_from_gds_Nv7a_T_1b6483ef",
+                         "v7a_PUC_from_gds_Nv7a_T_051d2227"]
+            },
+                                      
+        "5.0":
+            {   "comp": ["v7a_PUC_from_gds_Nv7a_T_996a5c19",
+                         "v7a_PUC_from_gds_Nv7a_T_35b35cfd",
+                         "v7a_PUC_from_gds_Nv7a_T_4296e2f6",
+                         "v7a_PUC_from_gds_Nv7a_T_9dcc8e25"]
+            },
+
+        "6.0":
+            {   "comp": ["v7a_PUC_from_gds_Nv7a_T_81650a03",
+                         "v7a_PUC_from_gds_Nv7a_T_80d21697",
+                         "v7a_PUC_from_gds_Nv7a_T_8e1970a2",
+                         "v7a_PUC_from_gds_Nv7a_T_422b9b16"]
+            },
+
+        "7.0":
+            {   "comp": ["v7a_PUC_from_gds_Nv7a_T_bb971190",
+                         "v7a_PUC_from_gds_Nv7a_T_2cfcb17b",
+                         "v7a_PUC_from_gds_Nv7a_T_ec111f01",
+                         "v7a_PUC_from_gds_Nv7a_T_94588161"]
+            },
+
+        "8.0":{ "comp": ["serie_thermistor_AL6_0__c42c0d7d"]
+            },
+        
+        "10.0":{
+            "comp": ["tower_pd",
+                     "pd_rib_d1",
+                     "pd_rib_d5",
+                     "pd_rib_d6",
+                     "pd_rib_d7",
+                     "pd_rib_d10"]
+        },
+
+        "11.0":{
+            "comp": ["ec_main",
+                     "ec_sin2_strip_single_TW_ab5407d1",
+                     "ec_sin2_strip_single_TW_b97aafb6",
+                     "ec_sin2_strip_single_TW_e1e47b66",
+                     "ec_sin2_strip_single_TW_025e1bdb",
+                     "ec_sin2_strip_single_TW_2713c5a1",
+                     "ec_sin2_strip_MAIN_TW20_0936c6c6",
+                     "ec_sin2_strip_single_TW_60434a34",
+                     "ec_sin2_strip_single_TW_e2da12e6",
+                     "ec_sin2_strip_single_TW_538df7b6",
+                     "ec_sin2_strip_single_TW_cbcde265",
+                     "ec_sin2_strip_single_TW_3dbfa792",
+                     "ec_sin2_strip_trident_T_e584de09",
+                     "ec_sin2_strip_trident_T_b7389297",
+                     "ec_sin2_strip_trident_T_82e1086f",
+                     "ec_sin2_strip_trident_T_9ac0954d",
+                     "ec_sin2_strip_trident_T_71d41d99",
+                     "ec_sin2_strip_trident_T_80605a50",
+                     "ec_sin2_strip_trident_T_5f5205a1",
+                     "ec_sin2_strip_trident_T_4acadf3f",
+                     "ec_sin2_strip_trident_T_8f9abc8c",
+                     "ec_sin2_strip_trident_T_da13613e",
+                     "ec_sin2_strip_trident_T_cd78e6b7",
+                     "ec_sin2_strip_trident_T_9f5ae7da",
+                     "ec_sin2_strip_trident_T_7995db50",
+                     "ec_sin2_strip_trident_T_2f230c1a",
+                     "ec_sin2_strip_trident_T_1a7991e5",
+                     "ec_sin2_strip_MAIN_angl_aa2de0eb"],
+            "tilt":[false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    true
+                ]
+        },
+
+        "12.0":{
+            "comp": ["pbs_with_taper_LSC5p54__cc2e830c", 
+                     "pbs_with_taper_LSC5p2_L_5f1cd616", 
+                     "pbs_with_taper_LSC3p68__3fd7e4d8", 
+                     "pbs_with_taper_LSC4p05__a63d8ef3", 
+                     "pbs_with_taper_LSC3p51__e3a62c40", 
+                     "pbs_with_taper_LSC3p3_L_4bce7215",
+                     "pbs_with_taper_LSC3p43__e7c71688", 
+                     "pbs_with_taper_LSC4p47__a355600f",
+                     "pbs_with_taper_LSC4p22__21c9009c", 
+                     "pbs_with_taper_LSC4_LPC_c0bfd551",
+                     "pbs_with_taper_LSC10p63_b9841ba0", 
+                     "pbs_with_taper_LSC10p6__130ad3c8", 
+                     "pbs_with_taper_LSC10p63_51e4f998", 
+                     "pbs_with_taper_LSC12p3__07c00f10", 
+                     "pbs_with_taper_LSC11p9__286ad762", 
+                     "pbs_with_taper_LSC10p86_b8ce85df", 
+                     "pbs_with_taper_LSC9p64__6886155f", 
+                     "pbs_with_taper_LSC9p6_L_ca505ae8", 
+                     "pbs_with_taper_LSC12p49_85bc2911", 
+                     "pbs_with_taper_LSC11p7__a9574785"] 
+        },
+
+        "13.0":{
+            "comp": ["psr_adiabatic_taper_wab_76ba25d0",
+                     "psr_adiabatic_taper_wab_c24b982f",
+                     "psr_adiabatic_taper_wab_d316c584",
+                     "psr_adiabatic_taper_wab_731481d3",
+                     "psr_adiabatic_taper_wab_8497434a",
+                     "psr_adiabatic_taper_wab_02828d54",
+                     "psr_adiabatic_taper_wab_15a8ad33",
+                     "psr_adiabatic_taper_wab_513f3ea0",
+                     "psr_adiabatic_taper_wab_3adfc440",
+                     "psr_adiabatic_taper_wab_a5e7bd99",
+                     "psr_adiabatic_taper_wab_71ad7d0a",
+                     "psr_adiabatic_taper_wab_4bcb1c5d",
+                     "psr_adiabatic_taper_wab_13d3e532",
+                     "psr_adiabatic_taper_wab_135a82d5",
+                     "psr_adiabatic_taper_wab_0de2b9cf",
+                     "psr_adiabatic_taper_wab_3e8e6651",
+                     "psr_adiabatic_taper_wab_9db59d3e",
+                     "psr_adiabatic_taper_wab_211ad56f",
+                     "psr_adiabatic_taper_wab_4c6b72f2",
+                     "psr_adiabatic_taper_wab_eb3a4fb0",
+                     "psr_adiabatic_taper_wab_53d26dd0",
+                     "psr_adiabatic_taper_wab_dbc7325b",
+                     "psr_adiabatic_taper_wab_00dd78aa",
+                     "swg_ac_psr_v0"] 
+        },
+
+        "13.1":{
+            "comp": ["pbs_with_taper_LSC12p49_85bc2911",
+                     "pbs_with_taper_LSC11p7__a9574785",
+                     "pbs_with_taper_LSC4_LPC_c0bfd551"],
+            "rotator": ["si_pol_rot_tw_24",
+                        "si_pol_rot_tw_24",
+                        "si_pol_rot_tw_24"]    
+        },
+
+        "14.0":{
+            "comp": ["si_pol_rot_tw_24",
+                     "si_pol_rot_tw_24",
+                     "pol_rot_tw_nom",
+                     "pol_rot_tw_nom"],
+            "n_comp": [20, 40, 20, 40]
+        },
+
+        "15.0":{
+            "comp_list": [["psr_adiabatic_taper_wab_76ba25d0"],
+                          ["swg_psr_v0"],
+                          ["pbs_with_taper_LSC12p49_85bc2911", "pol_rot_tw_nom"],
+                          ["pbs_with_taper_LSC11p7__a9574785", "pol_rot_tw_nom"],
+                          ["pbs_with_taper_LSC11p7__a9574785", "psr_adiabatic_taper_wab_76ba25d0"],
+                          ["pbs_with_taper_LSC11p7__a9574785", "pbs_with_taper_LSC11p7__a9574785", "pol_rot_tw_nom"]],
+            "in_port_list": [["o1"],
+                             ["o2"],
+                             ["o2", "o1"],
+                             ["o2", "o1"],
+                             ["o2", "o1"],
+                             ["o2", "o2", "o1"]],
+            "out_port_list": [["o2"],
+                              ["o4"],
+                              ["o4", "o2"], 
+                              ["o4", "o2"],
+                              ["o4", "o2"],
+                              ["o4", "o4", "o2"]], 
+            "port_final_list": [
+                ["o3"],
+                ["o3"], 
+                ["o3", null],
+                ["o3", null],
+                ["o3", null],
+                ["o3", null, null]]
+
+        },
+
+        "17.0":
+        {
+            "comp": ["clothoid_Vbloss_H3p995__1bf93c48",
+                    "clothoid_Vbloss_H3p995__6cb323a1"]
+        },
+
+        "17.1":
+        {
+            "comp": ["bend_variant_Vbloss_R3__916af51a",
+                     "bend_variant_Vbloss_R5__7465d1e4",
+                     "bend_variant_Vbloss_R5__6fb16ea8"]
+        },
+
+        "18.0":
+        {
+            "comp": ["bend_variant_Vbloss_R50_cd6a1f6a", 
+                     "bend_variant_Vna_R57p60_d2ebac82"],
+            "taper": ["rib_taper_MR1p3_WRI0p41_2f4bda11",
+                     "rib_taper_MR0p965_WRI0p_f537220d"]
+        },
+
+        "20.0":
+            {   "arm_separation":        [25],
+                "phase_shifter_spacing": [0.5],
+                "width_center":          [1.0],
+                "width_remaining":       [0.41],
+                "width_var":             [-0.1],
+                "wv_length":             [50],
+                "name":                  ["CPUC_FOLD1"]}
+      
+    }
+}
