@@ -49,7 +49,7 @@ def component_placement(die: gf.Component) -> gf.Component:
     die_x_min = die.xmin
     edge_margin = 120
     edge_margin_right = 50
-    structure_to_structure_margin_top = 185
+    structure_to_structure_margin_top = 50
     structure_to_structure_margin_middle = 150
     structure_to_structure_margin_bot = 320
     min_gc_gc_distance = 200
@@ -136,7 +136,7 @@ def component_placement(die: gf.Component) -> gf.Component:
         n=10,
         with_loopback=True,
         cross_section=xs_swg,
-        dx=10,
+        dx=5,
     )
 
     # Grating coupler for TM is formed by rot + 3 si_ps_tw
@@ -246,21 +246,24 @@ def component_placement(die: gf.Component) -> gf.Component:
 
         # Parameters for the cell
         gap = 3 + 0.93 - 0.41
-        sep = 14.45
-        n_bends = 100
-        comp_len = [5 * 10000, 10 * 10000, 15 * 10000, 20 * 10000]
+        sep = 10.95
+        n_bends = 144
+        comp_len = [69000,  #less than 75000 because of routing
+                    146000, #less than 150000 because of routing
+                    225000,
+                    300000]
 
         # Create the test structure 1.1
         ts = "1.1"
         t = die << ipr.test_double_spirals_from_calculation(
             bend=routing_bend_Si,
             blocks_distance=(50, 0),
-            block_gc_distance=30,
+            block_gc_distance=35,
             gc_array=gc_array,
             n_bends=n_bends,
-            hv_ratios=[0.5, 0.89],
+            hv_ratios=[0.91, 0.3],
             straight=routing_strt,
-            lengths=[comp_len[0], comp_len[3]],
+            lengths=[comp_len[3], comp_len[0]],
             separations_rep=sep,
             separations_xs=gap,
             straight_route=routing_strt,
@@ -284,12 +287,12 @@ def component_placement(die: gf.Component) -> gf.Component:
         t = die << ipr.test_double_spirals_from_calculation(
             bend=routing_bend_Si,
             blocks_distance=(50, 0),
-            block_gc_distance=30,
+            block_gc_distance=35,
             gc_array=gc_array,
             n_bends=n_bends,
-            hv_ratios=[0.8, 0.9],
+            hv_ratios=[0.87, 0.74],
             straight=routing_strt,
-            lengths=[comp_len[1], comp_len[2]],
+            lengths=[comp_len[2], comp_len[1]],
             separations_rep=sep,
             separations_xs=gap,
             straight_route=routing_strt,
