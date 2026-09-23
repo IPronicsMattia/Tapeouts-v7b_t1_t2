@@ -50,8 +50,8 @@ def component_placement(die: gf.Component) -> gf.Component:
     edge_margin = 120
     edge_margin_right = 50
     structure_to_structure_margin_top = 50
-    structure_to_structure_margin_middle = 150
-    structure_to_structure_margin_bot = 320
+    structure_to_structure_margin_middle = 50
+    structure_to_structure_margin_bot = 50
     min_gc_gc_distance = 200
     bb_variation = 0.141
 
@@ -137,6 +137,12 @@ def component_placement(die: gf.Component) -> gf.Component:
         with_loopback=True,
         cross_section=xs_swg,
         dx=5,
+    )
+    gc_array_noloopbak = ipr.grating_coupler_array(
+        grating_coupler=ipr.tower_gc,
+        n=10,
+        with_loopback=False,
+        cross_section=xs_swg
     )
 
     # Grating coupler for TM is formed by rot + 3 si_ps_tw
@@ -392,66 +398,59 @@ def component_placement(die: gf.Component) -> gf.Component:
         # Parameters for the cell
         gap = 5
         sep = 17
-        n_bends = 84
-        comp_len = [4 * 10000, 8 * 10000, 12 * 10000, 16 * 10000]
+        n_bends = 50
+        comp_len = [4.5 * 10000,
+                    9.0 * 10000,
+                    13.5 * 10000,
+                    18.0 * 10000]
 
-        # Create the test structure 3.1
-        ts = "3.1"
-        t = die << xt_sin_function(
+        # Create the test structure 3.1 and 3.2 simultaneusly
+        t_ref = xt_sin_function(
             bend_SiN2=bend_taper_wtaper,
             bend_Si=routing_bend_Si,
-            gc_array=gc_array,
-            gc_array_dist=110,
-            hv_ratios=[1, 0.065],
+            gc_array=gc_array_noloopbak,
+            gc_array_dist=50,
+            hv_ratios=[0.0, 0.0, 0.0, 0.0],
             n_bends=n_bends,
-            total_lengths=[comp_len[0], comp_len[3]],
+            total_lengths=comp_len,
+            separation_structure=100,
             separation_rep=sep,
             separation_xs=gap,
             routing_straight=routing_strt,
             vt=vt_opt_te,
         )
+        t = die << t_ref
+
+        # Create different copy for T1 and T2
+        t1 = t_ref.copy()
+        t2 = t_ref.copy()
+        for idx in range(4):
+            t1.info.model_extra.pop(f"Block {idx+5}", None)
+            t2.info.model_extra.pop(f"Block {idx+1}", None)
 
         # Assign to the dictionary
+        ts = '3.1'
         structures[ts] = t
-        structures_text[ts] = f"{ts} PROP LOSS XT AWNG 2.00"
+        structures_text[ts] = f"{ts} PROP LOSS XT AWNG 2.00 " + " " * 768 + \
+                               "3.2 PROP LOSS XT AWNG 2.00"
 
         # Json Part
         if create_json:
+            # TS03.1
             json_writer.structure_json(
                 component=gf.get_component(straight_2000_anwg(length=0)),
                 component_IO=gc_array,
-                structure_title=f"TS0{ts}",
-                structure=t.cell,
+                structure_title="TS03.1",
+                structure=t1,
                 extra_dict={"analysis": ["propte_dbcm", "xtte_db"]},
             )
 
-        # Create the test structure 3.2
-        ts = "3.2"
-        t = die << xt_sin_function(
-            bend_SiN2=bend_taper_wtaper,
-            bend_Si=routing_bend_Si,
-            gc_array=gc_array,
-            gc_array_dist=110,
-            hv_ratios=[0.1, 0.1],
-            n_bends=n_bends,
-            total_lengths=[comp_len[1], comp_len[2]],
-            separation_rep=sep,
-            separation_xs=gap,
-            routing_straight=routing_strt,
-            vt=vt_opt_te,
-        )
-
-        # Assign to the dictionary
-        structures[ts] = t
-        structures_text[ts] = f"{ts} PROP LOSS XT AWNG 2.00"
-
-        # Json Part
-        if create_json:
+            # TS03.2
             json_writer.structure_json(
                 component=gf.get_component(straight_2000_anwg(length=0)),
                 component_IO=gc_array,
-                structure_title=f"TS0{ts}",
-                structure=t.cell,
+                structure_title="TS03.2",
+                structure=t2,
                 extra_dict={"analysis": ["propte_dbcm", "xtte_db"]},
             )
 
@@ -1270,7 +1269,6 @@ def component_placement(die: gf.Component) -> gf.Component:
     left_bot_structure = [
         "11.2",
         "3.1",
-        "3.2",
         "5.2",
         "7.1",
         "7.2",

@@ -897,6 +897,7 @@ def xt_sin_function(
     hv_ratios: list[float],
     n_bends: int,
     total_lengths: list[float],
+    separation_structure: float,
     separation_rep: float,
     separation_xs: float,
     routing_straight: ComponentSpec,
@@ -904,11 +905,28 @@ def xt_sin_function(
 ):
     """
     Create a prop loss function with double spiral from calculation
-    attached to a vertical transition and than to a regular grating array
+    attached to a vertical transition and than to a regular grating array.
+
+    Args:
+        bend_Si (ComponentSpec): Si bend used for Si routing.
+        bend_SiN2 (ComponentSpec): SiN2 bend used for the Propagation Loss spiral.
+        gc_array (ComponentSpec) : Grating array without loopback.
+        gc_array_dist (float): Distance to be mantain from the gc_array in x direction.
+        hv_ratios (list[float]): Horizontal vertical ratio to be passed to
+            the Propagation Loss spiral.
+        n_bends (int): Number of bend to be used for the Propagation Loss spiral.
+        total_lengths (list[float]): Total length to be used for
+            Propagation Loss spiral.
+        separation_structure (float): distance between spirals x direction.
+        separation_rep (float): internal distance between safe replica.
+        separation_xs (float): interanl distance between adjacent replica.
+        routing_straight (ComponentSpec): Si straight used for Si routing.
+        vt (ComponentSpec): vertical transition to be used.
     """
     # Pre calculation
     xs_041 = gf.get_cross_section("strip", width=0.41)
-    bend_SiN2_radius = bend_SiN2["o2"].x - bend_SiN2["o1"].x
+    bend_radius = bend_Si["o2"].x - bend_Si["o1"].x
+    rout_safe_dist = 5
 
     # Create a component
     c = gf.Component()
@@ -936,102 +954,159 @@ def xt_sin_function(
         straight=straight_2000_anwg,
         hv_ratio=hv_ratios[1],
     )
-    port_sep = sp1["o2"].y - sp1["o1"].y
+
+    # Add the third double spiral
+    sp3 = c << ipr.double_spiral_from_calculation(
+        bend=bend_SiN2,
+        n_bends=n_bends,
+        centralize=1,
+        total_length=total_lengths[2],
+        separation_rep=separation_rep,
+        separation_xs=separation_xs,
+        straight=straight_2000_anwg,
+        hv_ratio=hv_ratios[2],
+    )
+
+    # Add the last double spiral
+    sp4 = c << ipr.double_spiral_from_calculation(
+        bend=bend_SiN2,
+        n_bends=n_bends,
+        centralize=1,
+        total_length=total_lengths[3],
+        separation_rep=separation_rep,
+        separation_xs=separation_xs,
+        straight=straight_2000_anwg,
+        hv_ratio=hv_ratios[3],
+    )
+
+    # Mirror for better routing
+    sp2.mirror_y()
+    sp4.mirror_y()
 
     # Collect information
-    left_inner_dict = sp1.cell.info["inner_spiral"]
-    left_outer_dict = sp1.cell.info["outer_spiral"]
-    right_inner_dict = sp2.cell.info["inner_spiral"]
-    right_outer_dict = sp2.cell.info["outer_spiral"]
-    routes_left_inner = []
-    routes_left_outer = []
-    routes_right_inner = []
-    routes_right_outer = []
+    port_sep = sp1["o2"].y - sp1["o1"].y
+    sp1_inner_dict = sp1.cell.info["inner_spiral"]
+    sp1_outer_dict = sp1.cell.info["outer_spiral"]
+    sp2_inner_dict = sp2.cell.info["inner_spiral"]
+    sp2_outer_dict = sp2.cell.info["outer_spiral"]
+    sp3_inner_dict = sp3.cell.info["inner_spiral"]
+    sp3_outer_dict = sp3.cell.info["outer_spiral"]
+    sp4_inner_dict = sp4.cell.info["inner_spiral"]
+    sp4_outer_dict = sp4.cell.info["outer_spiral"]
+    routes_sp1_inner = []
+    routes_sp1_outer = []
+    routes_sp2_inner = []
+    routes_sp2_outer = []
+    routes_sp3_inner = []
+    routes_sp3_outer = []
+    routes_sp4_inner = []
+    routes_sp4_outer = []
 
     # Place the grating coupler
-    gc_array_ref = c << gc_array
-    gc_array_ref.rotate(180)
-    sp1.y = gc_array_ref.y
-    sp1.xmin = gc_array_ref.xmax + gc_array_dist
-    sp2.y = gc_array_ref.y
-    sp2.xmin = sp1.xmax + port_sep * 8
+    gc_array_left = c << gc_array
+    gc_array_left.rotate(180)
+    sp1.xmin = gc_array_left.xmax + gc_array_dist
+    sp1.ymin = gc_array_left.ymin
+    sp2.xmin = gc_array_left.xmax + gc_array_dist
+    sp2.ymax = gc_array_left.ymax
+    sp3.xmin = sp2.xmax + separation_structure
+    sp3.y = sp2.y
+    sp4.xmin = sp1.xmax + separation_structure
+    sp4.y = sp1.y
+    gc_array_right = c << gc_array
+    gc_array_right.rotate(180)
+    gc_array_right.xmin = max(sp4.xmax, sp3.xmax) + gc_array_dist
+
+    # Add loopback to the grating coupler
+    gf.routing.route_single(
+        c,
+        port1=gc_array_left["o0"],
+        port2=gc_array_left["o9"],
+        steps=[
+            {"dx": bend_radius},
+            {"dy": -2 * bend_radius - 5},
+            {"dx": -2 * bend_radius - 5 - gc_array.xsize},
+            {"dy": abs(gc_array_left["o9"].y - gc_array_left["o0"].y) + \
+                   + 2 * (2 * bend_radius + 5)},
+            {"dx": 2 * bend_radius + 5 + gc_array.xsize},
+            {"dy": -2 * bend_radius - 5},
+        ],
+        radius=bend_radius,
+        layer=xs_041.layer,
+        route_width=xs_041.width,
+        bend=ipr.bend_euler_custom_width,
+        auto_taper=False,
+    )
+
+    gf.routing.route_single(
+        c,
+        port1=gc_array_right["o0"],
+        port2=gc_array_right["o9"],
+        radius=bend_radius,
+        layer=xs_041.layer,
+        route_width=xs_041.width,
+        bend=ipr.bend_euler_custom_width,
+        auto_taper=False,
+        start_straight_length=5
+    )
+
+    # Place the gc_array going back
+    port_out = []
+    for idx in range(len(gc_array_right.ports)-2):
+        port = gc_array_right[f"o{idx+1}"]
+        # Going back is formed by bend straight bend straight
+        bend1 = c << bend_Si
+        bend1.mirror_y()
+        bend1.connect("o1", port)
+        strt1 = c << straight_410_swg(length=5)
+        strt1.connect("o1", bend1["o2"])
+        bend2 = c << bend_Si
+        bend2.mirror_y()
+        bend2.connect("o1", strt1["o2"])
+        strt2 = c << straight_410_swg(length=gc_array.xsize)
+        strt2.connect("o1", bend2["o2"])
+        port_out.append(strt2["o2"])
+
+    # Information used later for counting building blocks
+    right_input_dicts = [
+        ipr.measure_component(bend1.cell),
+        ipr.measure_component(bend2.cell),
+        ipr.measure_component(strt1.cell),
+        ipr.measure_component(strt2.cell),
+    ]
 
     # Add the vt to the first double spiral
     lenghts = [port_sep, port_sep * 2, port_sep, port_sep * 2]
     gc_ports = [
-        gc_array_ref["o1"],
-        gc_array_ref["o2"],
-        gc_array_ref["o3"],
-        gc_array_ref["o4"],
+        gc_array_left["o1"],
+        gc_array_left["o2"],
+        gc_array_left["o3"],
+        gc_array_left["o4"],
+        gc_array_left["o8"],
+        gc_array_left["o7"],
+        gc_array_left["o6"],
+        gc_array_left["o5"],
+        port_out[5],
+        port_out[4],
+        port_out[7],
+        port_out[6],
+        port_out[2],
+        port_out[3],
+        port_out[0],
+        port_out[1],
     ]
 
-    for idx, port in enumerate(sp1.ports):
-        strt = c << straight_2000_anwg(length=lenghts[idx])
-        strt.connect("o1", port)
-        bend_ref = c << bend_SiN2
-        bend_ref.connect("o1", strt["o2"])
-        vt_ref = c << vt
-        vt_ref.connect("o2", bend_ref["o2"])
+    for jdx, sp in enumerate([sp1, sp2, sp3, sp4]):
+        for idx, port in enumerate(sp.ports):
+            # total index
+            tdx = idx + 4 * jdx
 
-        # Update dict
-        temp_dicts = [
-            ipr.measure_component(strt.cell),
-            ipr.measure_component(bend_ref.cell),
-            ipr.measure_component(vt_ref.cell),
-        ]
-
-        # Connect to the grating
-        dy_up = sp1.ymax - vt_ref["o1"].y + port_sep * (idx - 1)
-        dx_left = sp1.xsize + bend_SiN2_radius + 2 * port_sep * (idx - 2.5)
-
-        if idx in (2, 3):
-            route = gf.routing.route_single(
-                c,
-                port1=vt_ref["o1"],
-                port2=gc_ports[idx],
-                cross_section=xs_041,
-                straight=routing_straight,
-                bend=bend_Si,
-                steps=[
-                    {"dy": dy_up},  # go up by the height difference
-                    {"dx": -dx_left},  # then go left by the component width
-                    {"y": gc_ports[idx].y},
-                ],
-                auto_taper=False,
-            )
-        else:
-            route = gf.routing.route_single(
-                c,
-                port1=vt_ref["o1"],
-                port2=gc_ports[idx],
-                cross_section=xs_041,
-                straight=routing_straight,
-                bend=bend_Si,
-                auto_taper=False,
-            )
-
-        if idx > 1:
-            for temp_dict in temp_dicts:
-                left_inner_dict = ipr.combine_component_dict(left_inner_dict, temp_dict)
-            routes_left_inner.append(route)
-        else:
-            for temp_dict in temp_dicts:
-                left_outer_dict = ipr.combine_component_dict(left_outer_dict, temp_dict)
-            routes_left_outer.append(route)
-
-    gc_ports = [
-        gc_array_ref["o5"],
-        gc_array_ref["o6"],
-        gc_array_ref["o7"],
-        gc_array_ref["o8"],
-    ]
-
-    # Add the vt to the second double spiral
-    for idx, port in enumerate(sp2.ports):
-        if port.name not in ["o1", "o2"]:
+            # Place straight + bend + VT
             strt = c << straight_2000_anwg(length=lenghts[idx])
             strt.connect("o1", port)
             bend_ref = c << bend_SiN2
+            if jdx == 1 or jdx == 3:
+                bend_ref.mirror_y()
             bend_ref.connect("o1", strt["o2"])
             vt_ref = c << vt
             vt_ref.connect("o2", bend_ref["o2"])
@@ -1042,84 +1117,140 @@ def xt_sin_function(
                 ipr.measure_component(bend_ref.cell),
                 ipr.measure_component(vt_ref.cell),
             ]
-        else:
-            vt_ref = c << vt
-            vt_ref.connect("o2", port)
 
-            # Update dict
-            temp_dicts = [ipr.measure_component(vt_ref.cell)]
+            # Decide the start_straight_length depending on the case
+            if jdx == 0 and idx == 2:
+                steps = [{"y": sp1.ymax + bend_radius},
+                         {"x": gc_ports[tdx].x + bend_radius * 4},
+                         {"y": gc_ports[tdx].y}]
+            elif jdx == 0 and idx == 3:
+                steps = [{"y": sp1.ymax + bend_radius + rout_safe_dist},
+                         {"x": gc_ports[tdx].x + bend_radius * 2},
+                         {"y": gc_ports[tdx].y}]
+            elif jdx == 1 and idx == 2:
+                steps = [{"y": sp2.ymin - bend_radius},
+                         {"x": gc_ports[tdx].x + bend_radius * 4},
+                         {"y": gc_ports[tdx].y}]
+            elif jdx == 1 and idx == 3:
+                steps = [{"y": sp2.ymin - bend_radius - rout_safe_dist},
+                         {"x": gc_ports[tdx].x + bend_radius * 2},
+                         {"y": gc_ports[tdx].y}]
+            elif jdx == 2 and idx == 0:
+                steps = [{"y": sp3.ymin - bend_radius},
+                         {"x": gc_ports[tdx].x - bend_radius * 4},
+                         {"y": gc_ports[tdx].y}]
+            elif jdx == 2 and idx == 1:
+                steps = [{"y": sp3.ymin - bend_radius - rout_safe_dist},
+                         {"x": gc_ports[tdx].x - bend_radius * 2},
+                         {"y": gc_ports[tdx].y}]
+            elif jdx == 3 and idx == 0:
+                steps = [{"y": sp4.ymax + bend_radius},
+                         {"x": gc_ports[tdx].x - bend_radius * 4},
+                         {"y": gc_ports[tdx].y}]
+            elif jdx == 3 and idx == 1:
+                steps = [{"y": sp4.ymax + bend_radius + rout_safe_dist},
+                         {"x": gc_ports[tdx].x - bend_radius * 2},
+                         {"y": gc_ports[tdx].y}]
+            else:
+                steps = []
 
-        # Connect to the grating
-        dy_up = sp2.ymax - vt_ref["o1"].y + port_sep * (idx - 1)
-        dx = port_sep * (4 - idx)
-        if idx in (2, 3):
+            # Connect to the grating
             route = gf.routing.route_single(
                 c,
                 port1=vt_ref["o1"],
-                port2=gc_ports[idx],
+                port2=gc_ports[tdx],
                 cross_section=xs_041,
                 straight=routing_straight,
                 bend=bend_Si,
-                steps=[
-                    {"dy": dy_up},  # go up by the height difference
-                    {
-                        "x": gc_array_ref.xmax + dx
-                    },  # then go left by the component width
-                    {"y": gc_ports[idx].y},
-                ],
                 auto_taper=False,
+                steps=steps
             )
-        else:
-            route = gf.routing.route_single(
-                c,
-                port1=gc_ports[idx],
-                port2=vt_ref["o1"],
-                cross_section=xs_041,
-                straight=routing_straight,
-                start_straight_length=port_sep * (4 - idx),
-                bend=bend_Si,
-                auto_taper=False,
-            )
+            if jdx == 0 and idx < 2:
+                for temp_dict in temp_dicts:
+                    sp1_outer_dict = ipr.combine_component_dict(sp1_outer_dict, temp_dict)
+                routes_sp1_outer.append(route)
+            elif jdx == 0 and idx >= 2:
+                for temp_dict in temp_dicts:
+                    sp1_inner_dict = ipr.combine_component_dict(sp1_inner_dict, temp_dict)
+                routes_sp1_inner.append(route)
+            elif jdx == 1 and idx < 2:
+                for temp_dict in temp_dicts:
+                    sp2_outer_dict = ipr.combine_component_dict(sp2_outer_dict, temp_dict)
+                routes_sp2_outer.append(route)
+            elif jdx == 1 and idx >= 2:
+                for temp_dict in temp_dicts:
+                    sp2_inner_dict = ipr.combine_component_dict(sp2_inner_dict, temp_dict)
+                routes_sp2_inner.append(route)
+            elif jdx == 2 and idx < 2:
+                for temp_dict in temp_dicts:
+                    sp3_inner_dict = ipr.combine_component_dict(sp3_inner_dict, temp_dict)
+                routes_sp3_inner.append(route)
+            elif jdx == 2 and idx >= 2:
+                for temp_dict in temp_dicts:
+                    sp3_outer_dict = ipr.combine_component_dict(sp3_outer_dict, temp_dict)
+                routes_sp3_outer.append(route)
+            elif jdx == 3 and idx < 2:
+                for temp_dict in temp_dicts:
+                    sp4_inner_dict = ipr.combine_component_dict(sp4_inner_dict, temp_dict)
+                routes_sp4_inner.append(route)
+            elif jdx == 3 and idx >= 2:
+                for temp_dict in temp_dicts:
+                    sp4_outer_dict = ipr.combine_component_dict(sp4_outer_dict, temp_dict)
+                routes_sp4_outer.append(route)
 
-        if idx > 1:
-            for temp_dict in temp_dicts:
-                right_inner_dict = ipr.combine_component_dict(
-                    right_inner_dict, temp_dict
-                )
-            routes_right_inner.append(route)
-        else:
-            for temp_dict in temp_dicts:
-                right_outer_dict = ipr.combine_component_dict(
-                    right_outer_dict, temp_dict
-                )
-            routes_right_outer.append(route)
-
-    # Update route information
-    for route in routes_left_inner:
+    # Update route information for left part
+    for route in routes_sp1_inner:
         for inst in route.instances:
             temp_dict = ipr.measure_component(inst.cell, scale=1 / 1000)
-            left_inner_dict = ipr.combine_component_dict(left_inner_dict, temp_dict)
-
-    for route in routes_left_outer:
+            sp1_inner_dict = ipr.combine_component_dict(sp1_inner_dict, temp_dict)
+    for route in routes_sp1_outer:
         for inst in route.instances:
             temp_dict = ipr.measure_component(inst.cell, scale=1 / 1000)
-            left_outer_dict = ipr.combine_component_dict(left_outer_dict, temp_dict)
-
-    for route in routes_right_inner:
+            sp1_outer_dict = ipr.combine_component_dict(sp1_outer_dict, temp_dict)
+    for route in routes_sp2_inner:
         for inst in route.instances:
             temp_dict = ipr.measure_component(inst.cell, scale=1 / 1000)
-            right_inner_dict = ipr.combine_component_dict(right_inner_dict, temp_dict)
-
-    for route in routes_right_outer:
+            sp2_inner_dict = ipr.combine_component_dict(sp2_inner_dict, temp_dict)
+    for route in routes_sp2_outer:
         for inst in route.instances:
             temp_dict = ipr.measure_component(inst.cell, scale=1 / 1000)
-            right_outer_dict = ipr.combine_component_dict(right_outer_dict, temp_dict)
+            sp2_outer_dict = ipr.combine_component_dict(sp2_outer_dict, temp_dict)
+
+    # Update route information for right part
+    for route in routes_sp3_inner:
+        for inst in route.instances:
+            temp_dict = ipr.measure_component(inst.cell, scale=1 / 1000)
+            sp3_inner_dict = ipr.combine_component_dict(sp3_inner_dict, temp_dict)
+        for right_input_dict in right_input_dicts:
+            sp3_inner_dict = ipr.combine_component_dict(sp3_inner_dict, right_input_dict)
+    for route in routes_sp3_outer:
+        for inst in route.instances:
+            temp_dict = ipr.measure_component(inst.cell, scale=1 / 1000)
+            sp3_outer_dict = ipr.combine_component_dict(sp3_outer_dict, temp_dict)
+        for right_input_dict in right_input_dicts:
+            sp3_outer_dict = ipr.combine_component_dict(sp3_outer_dict, right_input_dict)
+    for route in routes_sp4_inner:
+        for inst in route.instances:
+            temp_dict = ipr.measure_component(inst.cell, scale=1 / 1000)
+            sp4_inner_dict = ipr.combine_component_dict(sp4_inner_dict, temp_dict)
+        for right_input_dict in right_input_dicts:
+            sp4_inner_dict = ipr.combine_component_dict(sp4_inner_dict, right_input_dict)
+    for route in routes_sp4_outer:
+        for inst in route.instances:
+            temp_dict = ipr.measure_component(inst.cell, scale=1 / 1000)
+            sp4_outer_dict = ipr.combine_component_dict(sp4_outer_dict, temp_dict)
+        for right_input_dict in right_input_dicts:
+            sp4_outer_dict = ipr.combine_component_dict(sp4_outer_dict, right_input_dict)
 
     # Read and save the final result
-    c.info["Block 1"] = right_inner_dict
-    c.info["Block 2"] = right_outer_dict
-    c.info["Block 3"] = left_inner_dict
-    c.info["Block 4"] = left_outer_dict
+    c.info["Block 1"] = sp2_outer_dict
+    c.info["Block 2"] = sp2_inner_dict
+    c.info["Block 3"] = sp1_inner_dict
+    c.info["Block 4"] = sp1_outer_dict
+    c.info["Block 5"] = sp3_outer_dict
+    c.info["Block 6"] = sp3_inner_dict
+    c.info["Block 7"] = sp4_inner_dict
+    c.info["Block 8"] = sp4_outer_dict
 
     return c
 
