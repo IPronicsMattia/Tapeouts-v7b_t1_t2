@@ -1,12 +1,9 @@
 {
     "DIE_T1": {
         "TS01.1": {
-            "design_id": "wg_swg_930",
+            "design_id": "wg_swg_410",
             "dut_type": "wg",
-            "analysis": [
-                "propte_dbcm",
-                "xtte_db"
-            ],
+            "analysis": [],
             "pol": [
                 "te"
             ],
@@ -15,28 +12,16 @@
             ],
             "cutback": {
                 "num_components": [
-                    20.718,
-                    5.014,
-                    4.842,
-                    19.99
-                ],
-                "wg_swg_410": [
-                    243.75,
-                    259.75,
-                    273.61,
-                    247.21
+                    117,
+                    117,
+                    117,
+                    117
                 ],
                 "swg_custom_bend_euler_r5": [
-                    110,
-                    106,
-                    106,
-                    110
-                ],
-                "swg_taper_410_930": [
-                    218,
-                    210,
-                    206,
-                    216
+                    2,
+                    2,
+                    2,
+                    2
                 ]
             },
             "gdsfactory": {
@@ -44,7 +29,7 @@
                 "settings": {
                     "cross_section": "swg",
                     "length": 0,
-                    "width": 0.93
+                    "width": 0.41
                 }
             },
             "gc": [
@@ -59,12 +44,9 @@
             ]
         },
         "TS01.2": {
-            "design_id": "wg_swg_930",
+            "design_id": "wg_swg_410",
             "dut_type": "wg",
-            "analysis": [
-                "propte_dbcm",
-                "xtte_db"
-            ],
+            "analysis": [],
             "pol": [
                 "te"
             ],
@@ -73,28 +55,16 @@
             ],
             "cutback": {
                 "num_components": [
-                    15.732,
-                    10.202,
-                    9.855,
-                    15.176
-                ],
-                "wg_swg_410": [
-                    226.35,
-                    259.75,
-                    273.61,
-                    231.35
+                    117,
+                    117,
+                    117,
+                    117
                 ],
                 "swg_custom_bend_euler_r5": [
-                    106,
-                    106,
-                    106,
-                    106
-                ],
-                "swg_taper_410_930": [
-                    212,
-                    210,
-                    206,
-                    212
+                    2,
+                    2,
+                    2,
+                    2
                 ]
             },
             "gdsfactory": {
@@ -102,7 +72,93 @@
                 "settings": {
                     "cross_section": "swg",
                     "length": 0,
-                    "width": 0.93
+                    "width": 0.41
+                }
+            },
+            "gc": [
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc"
+            ]
+        },
+        "TS01.3": {
+            "design_id": "wg_swg_410",
+            "dut_type": "wg",
+            "analysis": [],
+            "pol": [
+                "te"
+            ],
+            "propagation_mode": [
+                "te"
+            ],
+            "cutback": {
+                "num_components": [
+                    117,
+                    117,
+                    117,
+                    117
+                ],
+                "swg_custom_bend_euler_r5": [
+                    2,
+                    2,
+                    2,
+                    2
+                ]
+            },
+            "gdsfactory": {
+                "function": "straight",
+                "settings": {
+                    "cross_section": "swg",
+                    "length": 0,
+                    "width": 0.41
+                }
+            },
+            "gc": [
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc"
+            ]
+        },
+        "TS01.4": {
+            "design_id": "wg_swg_410",
+            "dut_type": "wg",
+            "analysis": [],
+            "pol": [
+                "te"
+            ],
+            "propagation_mode": [
+                "te"
+            ],
+            "cutback": {
+                "num_components": [
+                    117,
+                    117,
+                    117,
+                    117
+                ],
+                "swg_custom_bend_euler_r5": [
+                    2,
+                    2,
+                    2,
+                    2
+                ]
+            },
+            "gdsfactory": {
+                "function": "straight",
+                "settings": {
+                    "cross_section": "swg",
+                    "length": 0,
+                    "width": 0.41
                 }
             },
             "gc": [
@@ -117,1422 +173,6 @@
             ]
         },
         "TS02.1": {
-            "design_id": "wg_swg_410",
-            "dut_type": "wg",
-            "analysis": [
-                "propte_dbcm",
-                "xtte_db"
-            ],
-            "pol": [
-                "te"
-            ],
-            "propagation_mode": [
-                "te"
-            ],
-            "cutback": {
-                "num_components": [
-                    16.809,
-                    4.21,
-                    4.059,
-                    16.209
-                ],
-                "swg_custom_bend_euler_r5": [
-                    102,
-                    98,
-                    98,
-                    102
-                ]
-            },
-            "gdsfactory": {
-                "function": "straight",
-                "settings": {
-                    "cross_section": "swg",
-                    "length": 0,
-                    "width": 0.41
-                }
-            },
-            "gc": [
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc"
-            ]
-        },
-        "TS02.2": {
-            "design_id": "wg_swg_410",
-            "dut_type": "wg",
-            "analysis": [
-                "propte_dbcm",
-                "xtte_db"
-            ],
-            "pol": [
-                "te"
-            ],
-            "propagation_mode": [
-                "te"
-            ],
-            "cutback": {
-                "num_components": [
-                    12.76,
-                    8.363,
-                    8.081,
-                    12.336
-                ],
-                "swg_custom_bend_euler_r5": [
-                    102,
-                    98,
-                    98,
-                    102
-                ]
-            },
-            "gdsfactory": {
-                "function": "straight",
-                "settings": {
-                    "cross_section": "swg",
-                    "length": 0,
-                    "width": 0.41
-                }
-            },
-            "gc": [
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc"
-            ]
-        },
-        "TS03.1": {
-            "design_id": "wg_anwg_2000",
-            "dut_type": "wg",
-            "analysis": [
-                "propte_dbcm",
-                "xtte_db"
-            ],
-            "pol": [
-                "te"
-            ],
-            "propagation_mode": [
-                "te"
-            ],
-            "cutback": {
-                "num_components": [
-                    16.004,
-                    16.0,
-                    4.004,
-                    4.004
-                ],
-                "wg_swg_410": [
-                    26.21,
-                    12,
-                    16,
-                    8
-                ],
-                "wg_swg_930": [
-                    12010.11,
-                    3015.92,
-                    4910.19,
-                    1416.0
-                ],
-                "VT_1_2_TE": [
-                    2,
-                    2,
-                    2,
-                    2
-                ],
-                "anwg_variant_bend_bloss_r50": [
-                    86,
-                    84,
-                    86,
-                    86
-                ],
-                "swg_custom_bend_euler_r5": [
-                    6,
-                    4,
-                    6,
-                    2
-                ],
-                "swg_taper_410_930": [
-                    14,
-                    12,
-                    16,
-                    8
-                ],
-                "INT_rib_taper_MR1p95_WRI1p2": [
-                    172,
-                    168,
-                    172,
-                    172
-                ]
-            },
-            "gdsfactory": {
-                "function": "straight",
-                "settings": {
-                    "cross_section": "anwg",
-                    "length": 0,
-                    "width": 2.0
-                }
-            },
-            "gc": [
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc"
-            ]
-        },
-        "TS03.2": {
-            "design_id": "wg_anwg_2000",
-            "dut_type": "wg",
-            "analysis": [
-                "propte_dbcm",
-                "xtte_db"
-            ],
-            "pol": [
-                "te"
-            ],
-            "propagation_mode": [
-                "te"
-            ],
-            "cutback": {
-                "num_components": [
-                    12.004,
-                    12.0,
-                    8.004,
-                    8.004
-                ],
-                "wg_swg_410": [
-                    26.21,
-                    12,
-                    16,
-                    8
-                ],
-                "wg_swg_930": [
-                    11901.41,
-                    4811.98,
-                    6872.42,
-                    1473.46
-                ],
-                "VT_1_2_TE": [
-                    2,
-                    2,
-                    2,
-                    2
-                ],
-                "anwg_variant_bend_bloss_r50": [
-                    86,
-                    84,
-                    86,
-                    86
-                ],
-                "swg_custom_bend_euler_r5": [
-                    6,
-                    4,
-                    6,
-                    2
-                ],
-                "swg_taper_410_930": [
-                    14,
-                    12,
-                    16,
-                    8
-                ],
-                "INT_rib_taper_MR1p95_WRI1p2": [
-                    172,
-                    168,
-                    172,
-                    172
-                ]
-            },
-            "gdsfactory": {
-                "function": "straight",
-                "settings": {
-                    "cross_section": "anwg",
-                    "length": 0,
-                    "width": 2.0
-                }
-            },
-            "gc": [
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc"
-            ]
-        },
-        "TS04.1": {
-            "design_id": "swg_custom_bend_euler_r5",
-            "dut_type": "bend",
-            "analysis": [
-                "ilte_db"
-            ],
-            "pol": [
-                "te"
-            ],
-            "propagation_mode": [
-                "te"
-            ],
-            "cutback": {
-                "num_components": [
-                    1522,
-                    6008,
-                    4564,
-                    3042
-                ],
-                "wg_swg_410": [
-                    10610.01,
-                    10849.8,
-                    10546.88,
-                    10966.58
-                ],
-                "INT_bend_euler_custom_width": [
-                    76,
-                    76,
-                    76,
-                    76
-                ]
-            },
-            "gdsfactory": {
-                "function": "bend_euler_custom_width",
-                "settings": {
-                    "radius": null,
-                    "angle": 90.0,
-                    "p": 0.466,
-                    "m": 1.767,
-                    "width_in": 0.41,
-                    "width_out": 0.41,
-                    "width_center": 0.5,
-                    "with_arc_floorplan": true,
-                    "npoints": 100,
-                    "direction": "ccw",
-                    "cross_section": "strip",
-                    "loss": 0.0001
-                }
-            },
-            "gc": [
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc"
-            ]
-        },
-        "TS05.1": {
-            "design_id": "swg_taper_410_930",
-            "dut_type": "taper",
-            "analysis": [
-                "ilte_db"
-            ],
-            "pol": [
-                "te"
-            ],
-            "propagation_mode": [
-                "te"
-            ],
-            "cutback": {
-                "num_components": [
-                    2004,
-                    4012,
-                    6038,
-                    8024
-                ],
-                "wg_swg_410": [
-                    5365.08,
-                    5369.09,
-                    5348.83,
-                    5357.77
-                ],
-                "wg_swg_930": [
-                    7676.29,
-                    7659.74,
-                    7655.49,
-                    7630.29
-                ],
-                "swg_custom_bend_euler_r5": [
-                    112,
-                    112,
-                    112,
-                    112
-                ]
-            },
-            "gdsfactory": {
-                "function": "rib_taper",
-                "settings": {
-                    "m_RIB": 1.95,
-                    "width_RIB_in": 0.41,
-                    "width_RIB_out": 0.93,
-                    "width1": null,
-                    "width2": null,
-                    "length": 9.8,
-                    "access": false,
-                    "length_access": 10.0,
-                    "npoints": 100,
-                    "cross_section": "strip",
-                    "loss": null
-                }
-            },
-            "gc": [
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc"
-            ]
-        },
-        "TS05.2": {
-            "design_id": "swg_taper_410_1560",
-            "dut_type": "taper",
-            "analysis": [
-                "ilte_db"
-            ],
-            "pol": [
-                "te"
-            ],
-            "propagation_mode": [
-                "te"
-            ],
-            "cutback": {
-                "num_components": [
-                    2004,
-                    4012,
-                    6038,
-                    8024
-                ],
-                "wg_swg_1560": [
-                    7676.71,
-                    7659.6,
-                    7658.97,
-                    7634.54
-                ],
-                "wg_swg_410": [
-                    5365.29,
-                    5371.12,
-                    5348.51,
-                    5357.93
-                ],
-                "swg_custom_bend_euler_r5": [
-                    112,
-                    112,
-                    112,
-                    112
-                ]
-            },
-            "gdsfactory": {
-                "function": "rib_taper",
-                "settings": {
-                    "m_RIB": 1.95,
-                    "width_RIB_in": 0.41,
-                    "width_RIB_out": 1.56,
-                    "width1": null,
-                    "width2": null,
-                    "length": 9.8,
-                    "access": false,
-                    "length_access": 10.0,
-                    "npoints": 100,
-                    "cross_section": "strip",
-                    "loss": null
-                }
-            },
-            "gc": [
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc"
-            ]
-        },
-        "TS06.1": {
-            "design_id": "si_crossing_polaris_11_1560",
-            "dut_type": "crossing",
-            "analysis": [
-                "ilte_db"
-            ],
-            "pol": [
-                "te"
-            ],
-            "propagation_mode": [
-                "te"
-            ],
-            "cutback": {
-                "num_components": [
-                    1240,
-                    5180,
-                    3720,
-                    2480
-                ],
-                "wg_swg_1560": [
-                    16578.99,
-                    16650.21,
-                    16382.81,
-                    16645.19
-                ],
-                "wg_swg_410": [
-                    182.99,
-                    195.98,
-                    205.48,
-                    182.99
-                ],
-                "swg_custom_bend_euler_r5": [
-                    42,
-                    44,
-                    46,
-                    42
-                ],
-                "swg_taper_410_1560": [
-                    50,
-                    56,
-                    56,
-                    50
-                ]
-            },
-            "gdsfactory": {
-                "function": "crossing",
-                "settings": {
-                    "name": "polaris",
-                    "version": "60nm"
-                }
-            },
-            "gc": [
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc"
-            ]
-        },
-        "TS07.1": {
-            "design_id": "VT12_PI_D0",
-            "dut_type": "vertical_transition",
-            "analysis": [
-                "ilte_db"
-            ],
-            "pol": [
-                "te"
-            ],
-            "propagation_mode": [
-                "te"
-            ],
-            "cutback": {
-                "num_components": [
-                    176,
-                    704,
-                    528,
-                    352
-                ],
-                "wg_anwg_700": [
-                    100.45,
-                    402.82,
-                    300.92,
-                    201.35
-                ],
-                "wg_swg_410": [
-                    199.68,
-                    519.47,
-                    420.19,
-                    299.96
-                ],
-                "wg_swg_930": [
-                    388.08,
-                    2054.12,
-                    3400.86,
-                    388.08
-                ],
-                "swg_custom_bend_euler_r5": [
-                    90,
-                    92,
-                    92,
-                    90
-                ],
-                "swg_taper_410_930": [
-                    12,
-                    16,
-                    16,
-                    12
-                ]
-            },
-            "gdsfactory": {
-                "function": "si_anwg_transition",
-                "settings": {
-                    "name_si_nwg_transition": "VT1_PI_D0_100",
-                    "name_nwg_anwg_transition": "VT2_POLINS_D_02",
-                    "length": 1,
-                    "width_in": null,
-                    "width_out": 0.7
-                }
-            },
-            "gc": [
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc"
-            ]
-        },
-        "TS07.2": {
-            "design_id": "VT12_PI_D0",
-            "dut_type": "vertical_transition",
-            "analysis": [
-                "iltm_db"
-            ],
-            "pol": [
-                "te"
-            ],
-            "propagation_mode": [
-                "tm"
-            ],
-            "cutback": {
-                "num_components": [
-                    20,
-                    80,
-                    60,
-                    40
-                ],
-                "wg_anwg_700": [
-                    11.51,
-                    45.42,
-                    34.26,
-                    23.2
-                ],
-                "wg_swg_410": [
-                    72.15,
-                    112.01,
-                    92.18,
-                    62.56
-                ],
-                "wg_swg_930": [
-                    401.41,
-                    1234.57,
-                    1946.8,
-                    394.38
-                ],
-                "swg_custom_bend_euler_r10": [
-                    22,
-                    24,
-                    24,
-                    22
-                ],
-                "swg_taper_410_930": [
-                    8,
-                    16,
-                    16,
-                    12
-                ]
-            },
-            "gdsfactory": {
-                "function": "si_anwg_transition",
-                "settings": {
-                    "name_si_nwg_transition": "VT1_PI_D0_100",
-                    "name_nwg_anwg_transition": "VT2_POLINS_D_02",
-                    "length": 1,
-                    "width_in": null,
-                    "width_out": 0.7
-                }
-            },
-            "gc": [
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc"
-            ],
-            "gc_extra": [
-                [
-                    "rotator",
-                    "si_ps_tw",
-                    "si_ps_tw",
-                    "si_ps_tw"
-                ],
-                [
-                    "rotator"
-                ],
-                [
-                    "rotator",
-                    "si_ps_tw",
-                    "si_ps_tw",
-                    "si_ps_tw"
-                ],
-                [
-                    "rotator"
-                ],
-                [
-                    "rotator",
-                    "si_ps_tw",
-                    "si_ps_tw",
-                    "si_ps_tw"
-                ],
-                [
-                    "rotator"
-                ],
-                [
-                    "rotator",
-                    "si_ps_tw",
-                    "si_ps_tw",
-                    "si_ps_tw"
-                ],
-                [
-                    "rotator"
-                ]
-            ]
-        },
-        "TS07.3": {
-            "design_id": "VT_1_2_TE",
-            "dut_type": "vertical_transition",
-            "analysis": [
-                "ilte_db"
-            ],
-            "pol": [
-                "te"
-            ],
-            "propagation_mode": [
-                "te"
-            ],
-            "cutback": {
-                "num_components": [
-                    84,
-                    336,
-                    252,
-                    168
-                ],
-                "wg_anwg_2000": [
-                    48.12,
-                    191.49,
-                    144.38,
-                    96.73
-                ],
-                "wg_swg_410": [
-                    144.57,
-                    307.88,
-                    258.98,
-                    191.98
-                ],
-                "wg_swg_930": [
-                    368.08,
-                    1219.95,
-                    1752.52,
-                    368.08
-                ],
-                "swg_custom_bend_euler_r5": [
-                    86,
-                    88,
-                    88,
-                    86
-                ],
-                "swg_taper_410_930": [
-                    12,
-                    16,
-                    16,
-                    12
-                ]
-            },
-            "gdsfactory": {
-                "function": "si_anwg_transition",
-                "settings": {
-                    "name_si_nwg_transition": "VT_1_TE",
-                    "name_nwg_anwg_transition": "VT_2_TE",
-                    "length": 1,
-                    "width_in": null,
-                    "width_out": 2.0
-                }
-            },
-            "gc": [
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc"
-            ]
-        },
-        "TS08.1": {
-            "design_id": "wg_swg_410_mzi",
-            "dut_type": "mzi",
-            "analysis": [
-                "neff_au",
-                "ng_au"
-            ],
-            "pol": [
-                "te"
-            ],
-            "propagation_mode": [
-                "te"
-            ],
-            "cutback": {
-                "num_components": 1,
-                "high_order_mzi_length": 95.0535,
-                "low_order_mzi_length": 9.5054,
-                "m_neff": 18,
-                "m_ng": 180
-            },
-            "gdsfactory": {
-                "function": "mzis_test_group_and_effective_index",
-                "settings": {
-                    "low_order_mzi_length": 9.5054,
-                    "high_order_mzi_length": 95.0535,
-                    "splitter": "rib_mmi",
-                    "bend": "bend_euler_custom_width_a5f814d8",
-                    "grating_coupler": "tower_gc",
-                    "pitch_um": 127.0,
-                    "cross_section": null,
-                    "cross_section2": "xs_7dd44111",
-                    "extra_component": null
-                }
-            },
-            "gc": [
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc"
-            ]
-        },
-        "TS08.2": {
-            "design_id": "wg_rib_930_mzi",
-            "dut_type": "mzi",
-            "analysis": [
-                "neff_au",
-                "ng_au"
-            ],
-            "pol": [
-                "te"
-            ],
-            "propagation_mode": [
-                "te"
-            ],
-            "cutback": {
-                "num_components": 1,
-                "high_order_mzi_length": 80,
-                "low_order_mzi_length": 22.222,
-                "m_neff": 50,
-                "m_ng": 180
-            },
-            "gdsfactory": {
-                "function": "mzis_test_group_and_effective_index",
-                "settings": {
-                    "low_order_mzi_length": 22.222,
-                    "high_order_mzi_length": 80,
-                    "splitter": "rib_mmi",
-                    "bend": "bend_euler_custom_width_a5f814d8",
-                    "grating_coupler": "tower_gc",
-                    "pitch_um": 127.0,
-                    "cross_section": null,
-                    "cross_section2": "xs_eb275a15",
-                    "extra_component": "rib_taper_MR1p95_WRI0p4_9dca5112"
-                }
-            },
-            "gc": [
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc"
-            ]
-        },
-        "TS08.3": {
-            "design_id": "wg_anwg_2000_mzi",
-            "dut_type": "mzi",
-            "analysis": [
-                "neff_au",
-                "ng_au"
-            ],
-            "pol": [
-                "te"
-            ],
-            "propagation_mode": [
-                "te"
-            ],
-            "cutback": {
-                "num_components": 1,
-                "high_order_mzi_length": 115.932,
-                "low_order_mzi_length": 33.123,
-                "m_neff": 40,
-                "m_ng": 140
-            },
-            "gdsfactory": {
-                "function": "mzis_test_group_and_effective_index",
-                "settings": {
-                    "low_order_mzi_length": 33.123,
-                    "high_order_mzi_length": 115.932,
-                    "splitter": "rib_mmi",
-                    "bend": "bend_euler_custom_width_a5f814d8",
-                    "grating_coupler": "tower_gc",
-                    "pitch_um": 127.0,
-                    "cross_section": null,
-                    "cross_section2": "xs_26c47562",
-                    "extra_component": "si_anwg_transition_NSNT_01888caf"
-                }
-            },
-            "gc": [
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc"
-            ]
-        },
-        "TS08.4": {
-            "design_id": "wg_anwg_1500_mzi",
-            "dut_type": "mzi",
-            "analysis": [
-                "neff_au",
-                "ng_au"
-            ],
-            "pol": [
-                "te"
-            ],
-            "propagation_mode": [
-                "te"
-            ],
-            "cutback": {
-                "num_components": 1,
-                "high_order_mzi_length": 116.927,
-                "low_order_mzi_length": 33.408,
-                "m_neff": 40,
-                "m_ng": 140
-            },
-            "gdsfactory": {
-                "function": "mzis_test_group_and_effective_index",
-                "settings": {
-                    "low_order_mzi_length": 33.408,
-                    "high_order_mzi_length": 116.927,
-                    "splitter": "rib_mmi",
-                    "bend": "bend_euler_custom_width_a5f814d8",
-                    "grating_coupler": "tower_gc",
-                    "pitch_um": 127.0,
-                    "cross_section": null,
-                    "cross_section2": "nitride2",
-                    "extra_component": "si_anwg_transition_NSNT_1924cc9d"
-                }
-            },
-            "gc": [
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc"
-            ]
-        },
-        "TS08.5": {
-            "design_id": "wg_nwg_1000_mzi",
-            "dut_type": "mzi",
-            "analysis": [
-                "neff_au",
-                "ng_au"
-            ],
-            "pol": [
-                "te"
-            ],
-            "propagation_mode": [
-                "te"
-            ],
-            "cutback": {
-                "num_components": 1,
-                "high_order_mzi_length": 61.693,
-                "low_order_mzi_length": 30.846,
-                "m_neff": 40,
-                "m_ng": 80
-            },
-            "gdsfactory": {
-                "function": "mzis_test_group_and_effective_index",
-                "settings": {
-                    "low_order_mzi_length": 30.846,
-                    "high_order_mzi_length": 61.693,
-                    "splitter": "rib_mmi",
-                    "bend": "bend_euler_custom_width_a5f814d8",
-                    "grating_coupler": "tower_gc",
-                    "pitch_um": 127.0,
-                    "cross_section": null,
-                    "cross_section2": "xs_d37503c9",
-                    "extra_component": "si_nwg_transition_NVT_1_8ef1e6ad"
-                }
-            },
-            "gc": [
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc"
-            ]
-        },
-        "TS09.1": {
-            "design_id": "3d_crossing_swg_930_anwg_2000_below",
-            "dut_type": "crossing",
-            "analysis": [
-                "ilte_db"
-            ],
-            "pol": [
-                "te"
-            ],
-            "propagation_mode": [
-                "te"
-            ],
-            "cutback": {
-                "num_components": [
-                    3948,
-                    15960,
-                    11928,
-                    7980
-                ],
-                "wg_swg_410": [
-                    58.95,
-                    54.95,
-                    54.95,
-                    58.95
-                ],
-                "wg_swg_930": [
-                    12312.6,
-                    49398.76,
-                    37878.76,
-                    24408.6
-                ],
-                "swg_custom_bend_euler_r5": [
-                    86,
-                    88,
-                    88,
-                    86
-                ],
-                "swg_taper_410_930": [
-                    94,
-                    102,
-                    102,
-                    94
-                ]
-            },
-            "gdsfactory": {
-                "function": "crossing_3D",
-                "settings": {
-                    "cross_section1": "xs_eb275a15",
-                    "cross_section2": "xs_26c47562",
-                    "length1": 0,
-                    "length2": 5.0,
-                    "angle": 90
-                }
-            },
-            "gc": [
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc"
-            ]
-        },
-        "TS09.2": {
-            "design_id": "3d_crossing_swg_930_anwg_2000_above",
-            "dut_type": "crossing",
-            "analysis": [
-                "ilte_db"
-            ],
-            "pol": [
-                "te"
-            ],
-            "propagation_mode": [
-                "te"
-            ],
-            "cutback": {
-                "num_components": [
-                    3948,
-                    15960,
-                    11928,
-                    7980
-                ],
-                "wg_anwg_2000": [
-                    11970.0,
-                    48006.0,
-                    35910.0,
-                    24066.0
-                ],
-                "wg_swg_410": [
-                    100.95,
-                    96.95,
-                    96.95,
-                    100.95
-                ],
-                "wg_swg_930": [
-                    372.6,
-                    1913.56,
-                    2489.56,
-                    372.6
-                ],
-                "VT_1_2_TE": [
-                    84,
-                    84,
-                    84,
-                    84
-                ],
-                "swg_custom_bend_euler_r5": [
-                    86,
-                    88,
-                    88,
-                    86
-                ],
-                "swg_taper_410_930": [
-                    10,
-                    18,
-                    18,
-                    10
-                ]
-            },
-            "gdsfactory": {
-                "function": "crossing_3D",
-                "settings": {
-                    "cross_section1": "xs_26c47562",
-                    "cross_section2": "xs_eb275a15",
-                    "length1": 0,
-                    "length2": 9.8,
-                    "angle": 90
-                }
-            },
-            "gc": [
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc"
-            ]
-        },
-        "TS10.1": {
-            "design_id": "si_crossing_polaris_11_1560",
-            "dut_type": "crossing",
-            "analysis": [
-                "xtte_db"
-            ],
-            "pol": [
-                "te"
-            ],
-            "propagation_mode": [
-                "te"
-            ],
-            "cutback": {
-                "num_components": [
-                    1,
-                    2,
-                    3,
-                    4,
-                    5,
-                    6,
-                    7,
-                    8,
-                    9,
-                    10,
-                    11,
-                    12,
-                    13,
-                    14,
-                    15,
-                    16,
-                    16
-                ],
-                "wg_swg_410": [
-                    89.04,
-                    233.81,
-                    330.14,
-                    426.47,
-                    522.74,
-                    619.11,
-                    715.39,
-                    811.81,
-                    908.09,
-                    1004.53,
-                    1100.84,
-                    1197.2,
-                    1293.5,
-                    1389.84,
-                    1486.12,
-                    1582.54,
-                    1719.52
-                ],
-                "swg_custom_bend_euler_r5": [
-                    1,
-                    3,
-                    3,
-                    3,
-                    3,
-                    3,
-                    3,
-                    3,
-                    3,
-                    3,
-                    3,
-                    3,
-                    3,
-                    3,
-                    3,
-                    3,
-                    2
-                ],
-                "swg_taper_410_1560": [
-                    3,
-                    6,
-                    9,
-                    12,
-                    15,
-                    18,
-                    21,
-                    24,
-                    27,
-                    30,
-                    33,
-                    36,
-                    39,
-                    42,
-                    45,
-                    48,
-                    48
-                ]
-            },
-            "gdsfactory": {
-                "function": "crossing",
-                "settings": {
-                    "name": "polaris",
-                    "version": "60nm"
-                }
-            },
-            "gc": [
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc"
-            ]
-        },
-        "TS11.1": {
-            "design_id": "wg_swg_410",
-            "dut_type": "wg",
-            "analysis": [],
-            "pol": [
-                "te"
-            ],
-            "propagation_mode": [
-                "te"
-            ],
-            "cutback": {
-                "num_components": [
-                    117,
-                    117,
-                    117,
-                    117
-                ],
-                "swg_custom_bend_euler_r5": [
-                    2,
-                    2,
-                    2,
-                    2
-                ]
-            },
-            "gdsfactory": {
-                "function": "straight",
-                "settings": {
-                    "cross_section": "swg",
-                    "length": 0,
-                    "width": 0.41
-                }
-            },
-            "gc": [
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc"
-            ]
-        },
-        "TS11.2": {
-            "design_id": "wg_swg_410",
-            "dut_type": "wg",
-            "analysis": [],
-            "pol": [
-                "te"
-            ],
-            "propagation_mode": [
-                "te"
-            ],
-            "cutback": {
-                "num_components": [
-                    117,
-                    117,
-                    117,
-                    117
-                ],
-                "swg_custom_bend_euler_r5": [
-                    2,
-                    2,
-                    2,
-                    2
-                ]
-            },
-            "gdsfactory": {
-                "function": "straight",
-                "settings": {
-                    "cross_section": "swg",
-                    "length": 0,
-                    "width": 0.41
-                }
-            },
-            "gc": [
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc"
-            ]
-        },
-        "TS11.3": {
-            "design_id": "wg_swg_410",
-            "dut_type": "wg",
-            "analysis": [],
-            "pol": [
-                "te"
-            ],
-            "propagation_mode": [
-                "te"
-            ],
-            "cutback": {
-                "num_components": [
-                    117,
-                    117,
-                    117,
-                    117
-                ],
-                "swg_custom_bend_euler_r5": [
-                    2,
-                    2,
-                    2,
-                    2
-                ]
-            },
-            "gdsfactory": {
-                "function": "straight",
-                "settings": {
-                    "cross_section": "swg",
-                    "length": 0,
-                    "width": 0.41
-                }
-            },
-            "gc": [
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc"
-            ]
-        },
-        "TS11.4": {
-            "design_id": "wg_swg_410",
-            "dut_type": "wg",
-            "analysis": [],
-            "pol": [
-                "te"
-            ],
-            "propagation_mode": [
-                "te"
-            ],
-            "cutback": {
-                "num_components": [
-                    117,
-                    117,
-                    117,
-                    117
-                ],
-                "swg_custom_bend_euler_r5": [
-                    2,
-                    2,
-                    2,
-                    2
-                ]
-            },
-            "gdsfactory": {
-                "function": "straight",
-                "settings": {
-                    "cross_section": "swg",
-                    "length": 0,
-                    "width": 0.41
-                }
-            },
-            "gc": [
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc",
-                "tower_gc"
-            ]
-        },
-        "TS12.1": {
             "design_id": "wg_swg_410",
             "dut_type": "wg",
             "analysis": [],
@@ -1588,6 +228,378 @@
                 [
                     "rotator"
                 ]
+            ]
+        },
+        "TS03.1": {
+            "design_id": "wg_swg_930",
+            "dut_type": "wg",
+            "analysis": [
+                "propte_dbcm",
+                "xtte_db"
+            ],
+            "pol": [
+                "te"
+            ],
+            "propagation_mode": [
+                "te"
+            ],
+            "cutback": {
+                "num_components": [
+                    7.627,
+                    30.571,
+                    29.78,
+                    7.456
+                ],
+                "wg_swg_410": [
+                    311.35,
+                    335.36,
+                    346.72,
+                    316.35
+                ],
+                "swg_custom_bend_euler_r5": [
+                    146,
+                    146,
+                    146,
+                    146
+                ],
+                "swg_taper_410_930": [
+                    292,
+                    290,
+                    286,
+                    292
+                ]
+            },
+            "gdsfactory": {
+                "function": "straight",
+                "settings": {
+                    "cross_section": "swg",
+                    "length": 0,
+                    "width": 0.93
+                }
+            },
+            "gc": [
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc"
+            ]
+        },
+        "TS03.2": {
+            "design_id": "wg_swg_930",
+            "dut_type": "wg",
+            "analysis": [
+                "propte_dbcm",
+                "xtte_db"
+            ],
+            "pol": [
+                "te"
+            ],
+            "propagation_mode": [
+                "te"
+            ],
+            "cutback": {
+                "num_components": [
+                    15.273,
+                    22.857,
+                    22.28,
+                    14.923
+                ],
+                "wg_swg_410": [
+                    339.61,
+                    335.36,
+                    346.72,
+                    344.61
+                ],
+                "swg_custom_bend_euler_r5": [
+                    146,
+                    146,
+                    146,
+                    146
+                ],
+                "swg_taper_410_930": [
+                    288,
+                    290,
+                    286,
+                    288
+                ]
+            },
+            "gdsfactory": {
+                "function": "straight",
+                "settings": {
+                    "cross_section": "swg",
+                    "length": 0,
+                    "width": 0.93
+                }
+            },
+            "gc": [
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc"
+            ]
+        },
+        "TS04.1": {
+            "design_id": "wg_swg_410",
+            "dut_type": "wg",
+            "analysis": [
+                "propte_dbcm",
+                "xtte_db"
+            ],
+            "pol": [
+                "te"
+            ],
+            "propagation_mode": [
+                "te"
+            ],
+            "cutback": {
+                "num_components": [
+                    16.809,
+                    4.21,
+                    4.059,
+                    16.209
+                ],
+                "swg_custom_bend_euler_r5": [
+                    102,
+                    98,
+                    98,
+                    102
+                ]
+            },
+            "gdsfactory": {
+                "function": "straight",
+                "settings": {
+                    "cross_section": "swg",
+                    "length": 0,
+                    "width": 0.41
+                }
+            },
+            "gc": [
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc"
+            ]
+        },
+        "TS04.2": {
+            "design_id": "wg_swg_410",
+            "dut_type": "wg",
+            "analysis": [
+                "propte_dbcm",
+                "xtte_db"
+            ],
+            "pol": [
+                "te"
+            ],
+            "propagation_mode": [
+                "te"
+            ],
+            "cutback": {
+                "num_components": [
+                    12.76,
+                    8.363,
+                    8.081,
+                    12.336
+                ],
+                "swg_custom_bend_euler_r5": [
+                    102,
+                    98,
+                    98,
+                    102
+                ]
+            },
+            "gdsfactory": {
+                "function": "straight",
+                "settings": {
+                    "cross_section": "swg",
+                    "length": 0,
+                    "width": 0.41
+                }
+            },
+            "gc": [
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc"
+            ]
+        },
+        "TS05.1": {
+            "design_id": "wg_anwg_2000",
+            "dut_type": "wg",
+            "analysis": [
+                "propte_dbcm",
+                "xtte_db"
+            ],
+            "pol": [
+                "te"
+            ],
+            "propagation_mode": [
+                "te"
+            ],
+            "cutback": {
+                "num_components": [
+                    9.004,
+                    9.004,
+                    4.504,
+                    4.504
+                ],
+                "wg_swg_410": [
+                    8,
+                    32,
+                    32,
+                    8
+                ],
+                "wg_swg_930": [
+                    249.32,
+                    9247.29,
+                    5156.38,
+                    249.32
+                ],
+                "VT_1_2_TE": [
+                    2,
+                    2,
+                    2,
+                    2
+                ],
+                "anwg_taper_1284_2000": [
+                    92,
+                    92,
+                    92,
+                    92
+                ],
+                "anwg_variant_bend_bloss_r50": [
+                    46,
+                    46,
+                    46,
+                    46
+                ],
+                "swg_custom_bend_euler_r5": [
+                    2,
+                    6,
+                    6,
+                    2
+                ],
+                "swg_taper_410_930": [
+                    8,
+                    12,
+                    12,
+                    8
+                ]
+            },
+            "gdsfactory": {
+                "function": "straight",
+                "settings": {
+                    "cross_section": "anwg",
+                    "length": 0,
+                    "width": 2.0
+                }
+            },
+            "gc": [
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc"
+            ]
+        },
+        "TS05.2": {
+            "design_id": "wg_anwg_2000",
+            "dut_type": "wg",
+            "analysis": [
+                "propte_dbcm",
+                "xtte_db"
+            ],
+            "pol": [
+                "te"
+            ],
+            "propagation_mode": [
+                "te"
+            ],
+            "cutback": {
+                "num_components": [
+                    13.504,
+                    13.504,
+                    18.004,
+                    18.004
+                ],
+                "wg_swg_410": [
+                    103.1,
+                    139.18,
+                    127.1,
+                    103.1
+                ],
+                "wg_swg_930": [
+                    219.32,
+                    13315.72,
+                    17459.09,
+                    279.34
+                ],
+                "VT_1_2_TE": [
+                    2,
+                    2,
+                    2,
+                    2
+                ],
+                "anwg_taper_1284_2000": [
+                    92,
+                    92,
+                    92,
+                    92
+                ],
+                "anwg_variant_bend_bloss_r50": [
+                    46,
+                    46,
+                    46,
+                    46
+                ],
+                "swg_custom_bend_euler_r5": [
+                    6,
+                    10,
+                    10,
+                    6
+                ],
+                "swg_taper_410_930": [
+                    8,
+                    10,
+                    12,
+                    8
+                ]
+            },
+            "gdsfactory": {
+                "function": "straight",
+                "settings": {
+                    "cross_section": "anwg",
+                    "length": 0,
+                    "width": 2.0
+                }
+            },
+            "gc": [
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc"
             ]
         }
     }
