@@ -61,19 +61,12 @@ def component_placement(die: gf.Component) -> gf.Component:
 
     # Cross Section Definitions
     xs_swg = gf.get_cross_section("strip")
-    xs_swg_410 = gf.get_cross_section("strip", width=0.41)
-    xs_swg_930 = gf.get_cross_section("strip", width=0.93)
-    xs_nwg_1000 = gf.get_cross_section("nitride", width=1.00)
-    xs_awng_1500 = gf.get_cross_section("nitride2", width=1.50)
-    xs_awng_2000 = gf.get_cross_section("nitride2", width=2.00)
 
     #####################
     # COMPONENT CONTROL #
     #####################
     # Si
     routing_bend_Si = ipr.bend_euler_custom_width(cross_section="strip")
-    routing_bend_Si_TM = ipr.bend_euler_custom_width(cross_section="strip", radius=10)
-    routing_half_bend_Si = ipr.bend_euler_custom_width(cross_section="strip", angle=-45)
     taper_410_930 = ipr.rib_taper(cross_section=xs_swg, width_RIB_out=0.93)
     taper_410_1560 = ipr.rib_taper(cross_section=xs_swg, width_RIB_out=1.56)
     taper_1560_410 = ipr.rib_taper(
@@ -85,7 +78,6 @@ def component_placement(die: gf.Component) -> gf.Component:
     routing_strt = gf.partial(tps_410_swg_930_swg_lim, **routing_kwargs)
 
     routing_kwargs = {"bb1": taper_410_1560}
-    routing_strt_large = gf.partial(tps_410_swg_1560_swg_lim, **routing_kwargs)
 
     # SiN2
     routing_bend_anwg = ipr.bend_variant(
@@ -116,21 +108,8 @@ def component_placement(die: gf.Component) -> gf.Component:
         name_nwg_anwg_transition="VT_2_TE",
         width_out=2.0,
     )
-    vt_opt_te_group_index = ipr.si_anwg_transition(
-        name_si_nwg_transition="VT_1_TE",
-        name_nwg_anwg_transition="VT_2_TE",
-        width_out=1.5,
-    )
-    vt1_te_group_index = ipr.si_nwg_transition(name="VT_1_TE", width_out=1.0)
 
-    # Vertical transition polarization insensitive
-    vt_pi = ipr.si_anwg_transition(
-        name_si_nwg_transition="VT1_PI_D0_100",
-        name_nwg_anwg_transition="VT2_POLINS_D_02",
-        width_out=0.7,
-    )
-
-    # Grating coupler array
+    # Grating coupler array for regular structure
     gc_array = ipr.grating_coupler_array(
         grating_coupler=ipr.tower_gc,
         n=10,
@@ -138,6 +117,8 @@ def component_placement(die: gf.Component) -> gf.Component:
         cross_section=xs_swg,
         dx=5,
     )
+
+    # Grating coupler array without loopback
     gc_array_noloopbak = ipr.grating_coupler_array(
         grating_coupler=ipr.tower_gc,
         n=10,
@@ -145,82 +126,9 @@ def component_placement(die: gf.Component) -> gf.Component:
         cross_section=xs_swg
     )
 
-    # Grating coupler for TM is formed by rot + 3 si_ps_tw
-    # --- Add absorber to pol split
-    split = ipr.si_ps_tw()
-    rotator = ipr.rotator()
-    absorber = ipr.rib_absorber()
-    kwargs = {
-        "bbmul": split,
-        "bbadd": absorber,
-        "bbmul_list": ["o2", "o4"],
-        "bbadd_mirror": [False, False],
-    }
-    split_with_abs = ipr.bb_mul_bb(**kwargs)  # pol split + absorber
-    split_with_abs = change_port(split_with_abs, ["o1", "o3"], ["o1", "o2"])
-
-    # --- Add rotator to every port of the gc array first
-    rotator_inverted = change_port(rotator, ["o1", "o2"], ["o2", "o1"])
-    kwargs = {
-        "bbmul": gc_array,
-        "bbadd": rotator_inverted,
-        "bbmul_list": [f"o{idx}" for idx in range(1, 9)],
-    }
-    gc_array_rot = ipr.bb_mul_bb(**kwargs)  # gc + rotator, all ports
-
-    # ---- Now develop the 3x(pol split + absorber) part
-    n_rep = 3
-    sep_distance = 10
-    tot_size = sep_distance * (n_rep + 1) + split.xsize * n_rep + absorber.xsize
-    kwargs = {
-        "bb": split_with_abs,
-        "sep_distance": sep_distance,
-        "sep_variation": 0.141,
-        "n_bb": n_rep,
-        "straight": straight_410_swg,
-    }
-    split_with_abs_3 = ipr.nbb_straight(
-        **kwargs, length=tot_size
-    )  # 3(pol split + absorber)
-
-    # --- Add the 3(pol split + absorber) chain to only every other port of gc_array_rot
-    kwargs = {
-        "bbmul": gc_array_rot,
-        "bbadd": split_with_abs_3,
-        "bbmul_list": [f"o{2 * idx + 1}" for idx in range(4)],
-    }
-    gc_array_tm = ipr.bb_mul_bb(**kwargs)
-    gc_array_tm.name = "grating_coupler_array_tm"
-    for idx in range(1, 9):
-        if idx % 2 == 1:
-            gc_array_tm.info[f"gc_{idx}"] = ipr.combine_component_dict(
-                ipr.measure_component(ipr.tower_gc()), ipr.measure_component(rotator)
-            )
-
-            for _ in range(3):
-                gc_array_tm.info[f"gc_{idx}"] = ipr.combine_component_dict(
-                    gc_array_tm.info[f"gc_{idx}"], ipr.measure_component(split)
-                )
-        else:
-            gc_array_tm.info[f"gc_{idx}"] = ipr.combine_component_dict(
-                ipr.measure_component(ipr.tower_gc()), ipr.measure_component(rotator)
-            )
-
-    gc_array_long = ipr.grating_coupler_array(
-        grating_coupler=ipr.tower_gc,
-        n=20,
-        with_loopback=True,
-        cross_section=xs_swg,
-        dx=10,
-    )
-
-    # 2D Crossing
-    crossing_2D_ = ipr.crossing("polaris", version="60nm")
-    crossing_2D = component_with_transition(crossing_2D_)
-
-    # ################# #
+    #####################
     # STRUCTURE CONTROL #
-    # ################# #
+    #####################
     # DoE Json file (should not be necessary for T1)
     doe_json_filename = "src/ComplementaryFile/DoE_component_parameters.json"
     with open(doe_json_filename) as f:
@@ -337,9 +245,9 @@ def component_placement(die: gf.Component) -> gf.Component:
                 },
             )
 
-    # #############################################
-    # # N.3 Prop. Loss RIB 0.93 um Test Structure #
-    # #############################################
+    #############################################
+    # N.3 Prop. Loss RIB 0.93 um Test Structure #
+    #############################################
     if len(structure_only) == 0 or 3 in structure_only:
         print("\nCreation of N.3 Prop. Loss RIB 0.93 um Test Structure")
 
@@ -411,9 +319,9 @@ def component_placement(die: gf.Component) -> gf.Component:
                 extra_dict={"analysis": ["propte_dbcm", "xtte_db"]},
             )
 
-    # #############################################
-    # # N.4 Prop. Loss RIB 0.41 um Test Structure #
-    # #############################################
+    #############################################
+    # N.4 Prop. Loss RIB 0.41 um Test Structure #
+    #############################################
     if len(structure_only) == 0 or 4 in structure_only:
         print("\nCreation of N.4 Prop. Loss RIB 0.41 um Test Structure")
 
@@ -482,11 +390,11 @@ def component_placement(die: gf.Component) -> gf.Component:
                 extra_dict={"analysis": ["propte_dbcm", "xtte_db"]},
             )
 
-    # ##############################################
-    # # N.5 Prop. Loss AWNG 2.00 um Test Structure #
-    # ##############################################
+    ##############################################
+    # N.5 Prop. Loss AWNG 2.00 um Test Structure #
+    ##############################################
     if len(structure_only) == 0 or 5 in structure_only:
-        print("\nCreation of N.5 Prop. Loss Nitride2 um Test Structure")
+        print("\nCreation of N.5 Prop. Loss Nitride2 2.00 um Test Structure")
 
         # Parameters for the cell
         gap = 5
@@ -545,6 +453,53 @@ def component_placement(die: gf.Component) -> gf.Component:
                 structure_title="TS05.2",
                 structure=t2,
                 extra_dict={"analysis": ["propte_dbcm", "xtte_db"]},
+            )
+
+    ##############################################
+    # N.6 Prop. Loss AWNG 2.00 um Test Structure #
+    ##############################################
+    if len(structure_only) == 0 or 6 in structure_only:
+        print("\nCreation of N.6 XT Nitride2 2.00 um Test Structure")
+
+        # Parameters for the cell
+        sep = [5, 4, 3, 2]
+        n_bends = 150
+        comp_len = [5.0 * 10000,
+                    5.0 * 10000,
+                    5.0 * 10000,
+                    5.0 * 10000]
+
+        # Create the test structure 6.1
+        ts = "6.1"
+        t = die << ipr.test_spirals_from_calculation(
+            bend=bend_taper_wtaper,
+            bend_routing=routing_bend_Si,
+            blocks_distance=(30, 30),
+            block_gc_distance=30,
+            gc_array=gc_array,
+            n_bends=n_bends,
+            hv_ratios=0.1,
+            straight=straight_2000_anwg,
+            centralizes=1,
+            lengths=comp_len,
+            separations=sep,
+            spiral_termination=vt_opt_te,
+            straight_route=straight_410_swg,
+            structure_4_blocks= '2x2'
+        )
+
+        # Assign to the dictionary
+        structures[ts] = t
+        structures_text[ts] = f"{ts} XT LOSS AWNG 2.00 "
+
+        # Json Part
+        if create_json:
+            json_writer.structure_json(
+                component=gf.get_component(straight_2000_anwg(length=0)),
+                component_IO=gc_array,
+                structure_title=f"TS0{ts}",
+                structure=t,
+                extra_dict={"analysis": ["propte_dbcm"]},
             )
 
     # # #################################################
@@ -1257,7 +1212,8 @@ def component_placement(die: gf.Component) -> gf.Component:
     ]
     left_cen_structure = [
         "4.1",
-        "4.2"]
+        "4.2",
+        "6.1"]
     left_bot_structure = [
         "1.3",
         "5.1",
