@@ -92,6 +92,8 @@ def component_placement(die: gf.Component) -> gf.Component:
         npoints=100,
     )
 
+    # Taper
+
     bend_taper = ipr.rib_taper(
         cross_section="nitride2", width_RIB_in=1.28, width_RIB_out=2.00, length=12.72
     )
@@ -109,6 +111,9 @@ def component_placement(die: gf.Component) -> gf.Component:
         width_out=2.0,
     )
 
+    # Si Rotator
+    rotator = ipr.rotator()
+
     # Grating coupler array for regular structure
     gc_array = ipr.grating_coupler_array(
         grating_coupler=ipr.tower_gc,
@@ -124,6 +129,35 @@ def component_placement(die: gf.Component) -> gf.Component:
         n=10,
         with_loopback=False,
         cross_section=xs_swg
+    )
+
+    # Grating coupler for TM is formed by rot + 3 si_ps_tw
+    # --- Add absorber to pol split
+    split = ipr.si_ps_tw()
+    rotator = ipr.rotator()
+    absorber = ipr.rib_absorber()
+    kwargs = {
+        "bbmul": split,
+        "bbadd": absorber,
+        "bbmul_list": ["o2", "o4"],
+        "bbadd_mirror": [False, False],
+    }
+    split_with_abs = ipr.bb_mul_bb(**kwargs)  # pol split + absorber
+    split_with_abs = change_port(split_with_abs, ["o1", "o3"], ["o1", "o2"])
+
+    # ---- Now develop the 3x(pol split + absorber) part
+    n_rep = 3
+    sep_distance = 10
+    tot_size = sep_distance * (n_rep + 1) + split.xsize * n_rep + absorber.xsize
+    kwargs = {
+        "bb": split_with_abs,
+        "sep_distance": sep_distance,
+        "sep_variation": 0.141,
+        "n_bb": n_rep,
+        "straight": straight_410_swg,
+    }
+    split_with_abs_3 = ipr.nbb_straight(
+        **kwargs, length=tot_size
     )
 
     #####################

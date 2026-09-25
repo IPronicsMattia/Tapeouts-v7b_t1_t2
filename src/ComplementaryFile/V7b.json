@@ -601,6 +601,38 @@
                 "tower_gc",
                 "tower_gc"
             ]
+        },
+        "TS06.1": {
+            "design_id": "wg_anwg_2000",
+            "dut_type": "wg",
+            "analysis": [
+                "propte_dbcm"
+            ],
+            "pol": [
+                "te"
+            ],
+            "propagation_mode": [
+                "te"
+            ],
+            "cutback": {},
+            "gdsfactory": {
+                "function": "straight",
+                "settings": {
+                    "cross_section": "anwg",
+                    "length": 0,
+                    "width": 2.0
+                }
+            },
+            "gc": [
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc"
+            ]
         }
     }
 }
