@@ -585,7 +585,7 @@ def optical_routing(
 
         # Placing a taper to the MUA output to have in the correct cross-section
         tap_ref = die << taper
-        tap_ref.connect("o1", mua_out[1][i]["o2"])
+        tap_ref.connect("o1", mua_out[1][i]["o4"])
 
         gf.routing.route_single(
             die,
@@ -692,7 +692,9 @@ def optical_routing(
     muas = []
     mux_in = []
     for i in range(72):
-        muas.append(mua_out[0][i]["o1"])
+        tran_ref = die << taper
+        tran_ref.connect("o1", mua_out[0][i]["o2"])
+        muas.append(tran_ref["o2"])
         tran_ref = die << taper
         tran_ref.connect("o1", meshes[0][f"o{73 + i}"])
         mux_in.append(tran_ref["o2"])
@@ -716,7 +718,9 @@ def optical_routing(
     muas = []
     mux_in = []
     for i in range(72):
-        muas.append(mua_out[1][i]["o1"])
+        tran_ref = die << taper
+        tran_ref.connect("o1", mua_out[1][i]["o2"])
+        muas.append(tran_ref["o2"])
         tran_ref = die << taper
         tran_ref.connect("o1", meshes[1][f"o{73 + i}"])
         mux_in.append(tran_ref["o2"])

@@ -579,7 +579,6 @@ def mesh_72x72(
     # Inner Cores
     cores = []
     for i in range(6):
-        print(i)
         if numbered:
             core_ref = c << gf.get_component(
                 core(
@@ -595,7 +594,6 @@ def mesh_72x72(
             (0, -(core_ref.ysize + 26.35) * i),
         )
         cores.append(core_ref)
-    print("\nCreated Inner cores\n")
 
     # 3rd level DEMUX
     demux = []
@@ -654,8 +652,6 @@ def mesh_72x72(
 
         _rb([demux[i * 2][0]["o3"]], [cores[i * 2]["o1"]], separation=3.52)
         _rb([demux[1 + i * 2][-1]["o4"]], [cores[1 + i * 2]["o72"]], separation=3.52)
-
-    print("\nCreated 3rd level DEMUX\n")
 
     # 2nd Level DEMUX
     demux_to_core = 558
@@ -728,7 +724,6 @@ def mesh_72x72(
                     inputs.append(demux[j][k]["o2"])
         inputs.reverse()
         _route_each(sin_outs, inputs)
-    print("\nCreated 2nd level DEMUX\n")
 
     # 1st Level DEMUX
     demux_to_core = 558
@@ -801,7 +796,6 @@ def mesh_72x72(
                 inputs.append(demux[6 + i][j]["o2"])
     inputs.reverse()
     _route_each(sin_outs, inputs)
-    print("\nCreated 1st level DEMUX\n")
 
     # 3rd level MUX
     mux = []
@@ -862,7 +856,6 @@ def mesh_72x72(
 
         _rb([mux[i * 2][0]["o2"]], [cores[i * 2]["o144"]], separation=3.52)
         _rb([mux[1 + i * 2][-1]["o1"]], [cores[1 + i * 2]["o73"]], separation=3.52)
-    print("\nCreated 3rd level MUX\n")
 
     # 2nd Level MUX
     mux_to_core = 558
@@ -936,7 +929,6 @@ def mesh_72x72(
                 if not (j == 1 and k == 35):
                     inputs.append(mux[2 + i * 2 + j][k]["o4"])
         _route_each(sin_outs, inputs)
-    print("\nCreated 2nd level MUX\n")
 
     # 1st Level MUX
     mux_to_core = 558
@@ -1027,7 +1019,6 @@ def mesh_72x72(
             if not (i == 1 and j == 35):
                 inputs.append(mux[4 + i][j]["o4"])
     _route_each(sin_outs, inputs)
-    print("\nCreated 1st level MUX\n")
 
     for i in range(36):
         c.add_port(f"o{1 + i}", port=demux[-2][i]["o1"])

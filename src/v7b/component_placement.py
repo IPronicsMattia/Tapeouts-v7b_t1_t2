@@ -170,7 +170,7 @@ def component_placement(
     )
 
     mesh = mesh_72x72(core, puc, bend_r5, taper_410_930, xs, xs_w, xs_n, numbered)
-    print("\nCreated mesh\n")
+
     #############################
     # Edge Couplers             #
     #############################
