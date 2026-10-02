@@ -494,36 +494,94 @@ def component_placement(
 
     print("\nCreated MUA IN\n")
 
-    #############################
-    # Output aux straights      #
-    #############################
-    temps = []
-    for i in range(72):
-        st_ref = die << gf.c.straight(209.196, cross_section=xs_w)
-        st_ref.rotate(-90)
-        st_ref.move(
-            (st_ref.x, st_ref["o2"].y),
-            (
-                ec_ref2["o8"].x - 1800.583 + 90 * i,
-                ec_ref2["o1"].y + 1780.2,
-            ),
-        )
-        temps.append(st_ref)
-    mua_out.append(temps.copy())
-    temps.clear()
+    ###################
+    # Output MUA      #
+    ###################
+    for jdx in range(2):
+        temps = []
+        for i in range(74):
 
-    for i in range(72):
-        st_ref = die << gf.c.straight(209.196, cross_section=xs_w)
-        st_ref.rotate(-90)
-        st_ref.move(
-            (st_ref.x, st_ref["o2"].y),
-            (
-                ec_ref2["o82"].x - 28.355 + 90 * i,
-                ec_ref2["o1"].y + 1780.2,
-            ),
-        )
-        temps.append(st_ref)
-    mua_out.append(temps.copy())
+            #TODO: check numbering of MUA
+            if numbered:
+                puc_ref = die << gf.get_component(puc(puc_number=f"mua{1 + i - 2}"))
+            else:
+                puc_ref = die << gf.get_component(puc(puc_number="mua0"))
+
+            # Place the PUCs
+            puc_ref.rotate(-90)
+
+            if jdx == 0: # LEFT
+                puc_ref.move(
+                    (puc_ref.x, puc_ref["o1"].y),
+                    (
+                        ec_ref2["o8"].x - 1800.583 + 90 * i,
+                        ec_ref2["o1"].y + 1780.2,
+                    ),
+                )
+            else: # RIGHT
+                puc_ref.move(
+                    (puc_ref.x, puc_ref["o1"].y),
+                    (
+                        ec_ref2["o82"].x - 28.355 + 90 * i,
+                        ec_ref2["o1"].y + 1780.2,
+                    ),
+                )
+
+            temps.append(puc_ref)
+
+            # Place the PDs
+            st_ref = die << gf.c.straight(5, cross_section=xs)
+            st_ref.connect("o1", puc_ref["o1"])
+            bend_ref = die << bend_r5
+            bend_ref.connect("o1", st_ref["o2"])
+            st_ref = die << gf.c.straight(5, cross_section=xs)
+            st_ref.connect("o1", bend_ref["o2"])
+            bend_ref = die << bend_r5
+            bend_ref.connect("o1", st_ref["o2"], mirror=True)
+            st_ref = die << gf.c.straight(5, cross_section=xs)
+            st_ref.connect("o1", bend_ref["o2"])
+            if numbered:
+                # TODO: check numbering of PD
+                if i < 2:
+                    pd_aux = gf.get_component(
+                        photodetector(custom_name=f"pucmua{"73" if i == 0 else "74"}")
+                    )
+                else:
+                    pd_aux = gf.get_component(
+                        photodetector(custom_name=f"pucmua{1 + i - 2}")
+                    )
+            else:
+                pd_aux = photodetector
+            pd_ref = die << pd_aux
+            pd_ref.connect("o1", st_ref["o2"])
+
+            st_ref = die << gf.c.straight(5, cross_section=xs)
+            st_ref.connect("o1", puc_ref["o3"])
+            bend_ref = die << bend_r5
+            bend_ref.connect("o1", st_ref["o2"])
+            st_ref = die << gf.c.straight(5, cross_section=xs)
+            st_ref.connect("o1", bend_ref["o2"])
+            bend_ref = die << bend_r5
+            bend_ref.connect("o1", st_ref["o2"], mirror=True)
+            st_ref = die << gf.c.straight(5, cross_section=xs)
+            st_ref.connect("o1", bend_ref["o2"])
+            if numbered:
+                # TODO: check numbering of PD
+                if i < 2:
+                    pd_aux = gf.get_component(
+                        photodetector(custom_name=f"pucmua{"73" if i == 0 else "74"}")
+                    )
+                else:
+                    pd_aux = gf.get_component(
+                        photodetector(custom_name=f"pucmua{1 + i - 2}")
+                    )
+            else:
+                pd_aux = photodetector
+            pd_ref = die << pd_aux
+            pd_ref.connect("o1", st_ref["o2"])
+
+        mua_out.append(temps.copy())
+        temps.clear()
 
     print("\nCreated output aux straights\n")
 

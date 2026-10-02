@@ -37,7 +37,12 @@ def optical_routing(
     xs = gf.get_cross_section("strip", width=0.41, radius_min=3.0)
     xs_w = gf.get_cross_section("strip", width=0.93)
     xs_n1 = gf.get_cross_section("nitride", width=1)
-    xs_n = gf.get_cross_section("nitride2", width=2)
+    # xs_n = gf.get_cross_section("nitride2", width=2)
+    xs_n = gf.cross_section.cross_section(width=2,
+                                          radius=5,
+                                          radius_min=5,
+                                          layer=(259, 0),
+                                          main_section_name="anwgt")
 
     #############################
     # Definitions               #
@@ -577,10 +582,15 @@ def optical_routing(
             gf.partial(spaced_bend),
         )
         rib_comp.connect("o1", st_ref["o2"], mirror=True)
+
+        # Placing a taper to the MUA output to have in the correct cross-section
+        tap_ref = die << taper
+        tap_ref.connect("o1", mua_out[1][i]["o2"])
+
         gf.routing.route_single(
             die,
             rib_comp["o2"],
-            mua_out[1][i]["o2"],
+            tap_ref["o2"],
             cross_section=xs_w,
             auto_taper=False,
             bend=bend_r5,
@@ -593,8 +603,11 @@ def optical_routing(
     inp = []
     aux = []
     for i in range(72):
+        tap_ref = die << taper
+        tap_ref.connect("o1", mua_out[0][i]["o4"])
+
         st_ref = die << gf.c.straight(60, cross_section=xs_w)
-        st_ref.connect("o1", mua_out[0][i]["o2"])
+        st_ref.connect("o1", tap_ref["o2"])
 
         aux.append(st_ref["o2"])
 
