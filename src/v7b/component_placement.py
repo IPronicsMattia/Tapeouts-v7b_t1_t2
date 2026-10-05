@@ -502,10 +502,8 @@ def component_placement(
         for i in range(74):
 
             #TODO: check numbering of MUA
-            if numbered:
-                puc_ref = die << gf.get_component(puc(puc_number=f"mua{1 + i - 2}"))
-            else:
-                puc_ref = die << gf.get_component(puc(puc_number="mua0"))
+            puc_number = 1 + i - 2 if numbered else 0 if i < 72 else 73 + i
+            puc_ref = die << gf.get_component(puc(puc_number=f"mua{puc_number}"))
 
             # Place the PUCs
             puc_ref.rotate(-90)
@@ -515,7 +513,7 @@ def component_placement(
                     (puc_ref.x, puc_ref["o1"].y),
                     (
                         ec_ref2["o8"].x - 1800.583 + 90 * i,
-                        ec_ref2["o1"].y + 1780.2,
+                        ec_ref2["o1"].y + 1970.2,
                     ),
                 )
             else: # RIGHT
@@ -523,7 +521,7 @@ def component_placement(
                     (puc_ref.x, puc_ref["o1"].y),
                     (
                         ec_ref2["o82"].x - 28.355 + 90 * i,
-                        ec_ref2["o1"].y + 1780.2,
+                        ec_ref2["o1"].y + 1970.2,
                     ),
                 )
 

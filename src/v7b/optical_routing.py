@@ -1,4 +1,5 @@
 import gdsfactory as gf
+from gdsfactory.component import Route
 import iprlayout_tower as ipr
 import numpy as np
 
@@ -1089,7 +1090,9 @@ def optical_routing(
     search_area = (4761, -12539.66, 6100, -12048.73)
     lw_ec_matrix = v7b.build_matrix(die, "ec_main*", area=search_area)
     search_area = (6419.39, 9989.37, 6702.20, 10388.40)
-    mua_matrix = v7b.build_matrix(die, "pucmua*", area=search_area)
+    up_mua_matrix = v7b.build_matrix(die, "pucmua*", area=search_area)
+    search_area = (11200, -10370, 11400, -10070)
+    lw_mua_matrix = v7b.build_matrix(die, "pucmua*", area=search_area)
 
     for i in range(2):
         vt_ref1 = die << loop_sin_si_transition
@@ -1137,7 +1140,7 @@ def optical_routing(
 
     for i in range(2):
         st_ref = die << gf.c.straight(0, cross_section=xs)
-        st_ref.connect("o1", mua_matrix[0][i]["o2"])
+        st_ref.connect("o1", up_mua_matrix[0][i]["o2"])
         inp.append(st_ref["o2"])
 
     gf.routing.route_bundle(
@@ -1148,25 +1151,32 @@ def optical_routing(
         bend=bend_r5,
         min_straight_taper=1,
         cross_section="strip",
-        separation=4.53,
-        start_straight_length=167.85,
+        separation=3.52,
+        start_straight_length=164.85,
     )
     out.clear()
 
+    # Create auxiliary waveguides on the right side to help routing
     aux = []
     aux2 = []
     for i in range(5):
         st_ref = die << gf.c.straight(10, cross_section=xs_w)
         st_ref.rotate(-90)
-        st_ref.move((st_ref.x, st_ref.y), (11618 + 4.93 * i, 9780))
+        st_ref.move((st_ref.x, st_ref.y), (11615.69 + 3.93 * i, 9780))
+
+        # Top part
         aux.append(st_ref["o1"])
+
+        # Bot part
         aux2.append(st_ref["o2"])
 
+    # Output of the top MUA to be routed
     for i in range(2):
         tap_ref = die << taper
-        tap_ref.connect("o1", mua_matrix[0][i]["o4"])
+        tap_ref.connect("o1", up_mua_matrix[0][i]["o4"])
         out.append(tap_ref["o2"])
 
+    # Output of the top EC to be routed
     vt_ref = die << loop_sin_si_transition
     vt_ref.connect("o2", up_ec_matrix[0][1]["o1"])
     st_ref = die << gf.c.straight(1, cross_section=xs)
@@ -1199,7 +1209,7 @@ def optical_routing(
         aux[:2],
         bend=aux_bend,
         cross_section=xs_w,
-        separation=4,
+        separation=3,
         sort_ports=True,
         start_straight_length=40,
     )
@@ -1209,12 +1219,36 @@ def optical_routing(
         aux[2:],
         bend=aux_bend,
         cross_section=xs_w,
-        separation=4,
+        separation=3,
         sort_ports=True,
         start_straight_length=133.46,
     )
-    out.clear()
 
+    # Route from TOP to BOTTOM MUA
+    out = []
+    for idx in range(2):
+        tap_ref = die << taper
+        tap_ref.connect("o1", lw_mua_matrix[0][idx]["o2"])
+        out.append(tap_ref["o2"])
+
+    gf.routing.route_bundle(
+        die,
+        out,
+        aux2[:2],
+        bend=aux_bend,
+        separation=3,
+        cross_section=xs_w,
+        start_straight_length=21.624,
+    )
+
+    # Update the aux2 for the routed MUA
+    for idx in range(2):
+        tap_ref = die << taper
+        tap_ref.connect("o1", lw_mua_matrix[0][idx]["o4"])
+        aux2[idx] = tap_ref["o2"]
+
+    # Route BOTTOM MUA to EC
+    out = []
     for i in range(1):
         vt_ref = die << loop_sin_si_transition
         vt_ref.connect("o2", lw_ec_matrix[0][2 - i]["o1"])
@@ -1248,7 +1282,7 @@ def optical_routing(
         aux2,
         bend=aux_bend,
         cross_section=xs_w,
-        separation=4,
+        separation=3,
         sort_ports=True,
         start_straight_length=75,
     )

@@ -40,12 +40,12 @@ ec_in = []
 ec_out = []
 
 
-print("\n###############\nCOMPONENT PLACEMENT\n###############\n")
+print("\n##################\nCOMPONENT PLACEMENT\n##################\n")
 v7b.component_placement(die, meshes, mua_in, mua_out, ec_in, ec_out, numbered_pucs)
 
 print(f"\nelapsed time:{math.ceil(time.time() - start)} seconds\n")
 
-print("\n###############\nOPTICAL ROUTING\n###############\n")
+print("\n##################\nOPTICAL ROUTING\n##################\n")
 v7b.optical_routing(die, meshes, mua_in, mua_out, ec_in, ec_out)
 
 print(f"\nelapsed time:{math.ceil(time.time() - start)} seconds\n")
