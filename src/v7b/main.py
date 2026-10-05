@@ -50,22 +50,22 @@ v7b.optical_routing(die, meshes, mua_in, mua_out, ec_in, ec_out)
 
 print(f"\nelapsed time:{math.ceil(time.time() - start)} seconds\n")
 
-# print("\n###############\nNETLIST FLAT EXTRACTION\n###############\n")
-# gdspath = pathlib.Path("mesh_die_netlist")
-# nl_file = gdspath.with_suffix(".json")
+print("\n###############\nNETLIST FLAT EXTRACTION\n###############\n")
+gdspath = pathlib.Path("mesh_die_netlist")
+nl_file = gdspath.with_suffix(".json")
 
-# nl = v7b.get_netlist_flat(
-#     component=die,
-#     recursive_netlist=None,
-#     output_path=nl_file,
-# )
+nl = v7b.get_netlist_flat(
+    component=die,
+    recursive_netlist=None,
+    output_path=nl_file,
+)
 
-# print(f"Wrote netlist to '{nl_file}'")
-# print(
-#     f"  {nl['__states__']['paths']:,} routes over {nl['__states__']['pairs']:,} pairs"
-# )
+print(f"Wrote netlist to '{nl_file}'")
+print(
+    f"  {nl['__states__']['paths']:,} routes over {nl['__states__']['pairs']:,} pairs"
+)
 
-# print(f"\nelapsed time:{math.ceil(time.time() - start)} seconds\n")
+print(f"\nelapsed time:{math.ceil(time.time() - start)} seconds\n")
 
 # print("\n###############\nPAD PLACEMENT\n###############\n")
 # print("Mesh Pads + Daisy chain\n")

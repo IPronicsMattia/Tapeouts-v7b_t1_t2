@@ -10,11 +10,12 @@ dynamic = ["version"]
 authors = [{name="iPronics", email="support@ipronics.com"}]
 requires-python = ">=3.12"
 dependencies = [
-    'iprlayout-tower',
     #'iprlayout-tower @ git+ssh://git@github.com/iPronics/IPRLAYOUT_Tower.git@develop',
-    #'topolux @ git+ssh://git@github.com/iPronics/topolux.git',
+    'iprlayout-tower',
     'gdsfactory[cad]==9.12.0',
-    'openpyxl>=3.0.7'
+    'openpyxl>=3.0.7',
+    'orjson>=3.9',
+    'pytest==9.1.1',
 ]
 
 [tool.setuptools.packages.find]

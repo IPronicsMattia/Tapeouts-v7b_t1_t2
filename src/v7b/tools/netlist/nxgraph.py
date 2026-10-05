@@ -5,6 +5,7 @@ import json
 from collections import defaultdict
 from collections.abc import Sequence
 from dataclasses import dataclass, field
+from itertools import combinations
 from pathlib import Path
 from typing import Any
 
@@ -18,44 +19,7 @@ class _InternalConnection:
     data: dict[str, Any] | None = field(default_factory=dict)
 
 
-INTERNAL_CONNECTIONS: dict[str, Sequence[_InternalConnection]] = {
-    "straight": (_InternalConnection("o1", "o2"),),
-    "taper": (_InternalConnection("o1", "o2"),),
-    "bend": (_InternalConnection("o1", "o2"),),
-    "bend_modified_hermite": (_InternalConnection("o1", "o2"),),
-    "bend_s": (_InternalConnection("o1", "o2"),),
-    "puc": (
-        _InternalConnection("o1", "o3", {"puc_k": 1.0}),
-        _InternalConnection("o1", "o4", {"puc_k": 0.0}),
-        _InternalConnection("o2", "o3", {"puc_k": 0.0}),
-        _InternalConnection("o2", "o4", {"puc_k": 1.0}),
-    ),
-    "crossing_anwg_si": (
-        _InternalConnection("o1", "o3"),
-        _InternalConnection("o2", "o4"),
-    ),
-    "crossing": (
-        _InternalConnection("o1", "o3"),
-        _InternalConnection("o2", "o4"),
-    ),
-    "vertical_transition": (_InternalConnection("o1", "o2"),),
-    # The following elements may contain ports but are not related with the
-    # optical path in any way. (logos, test structures, ECs)
-    "edge_coupler": (),
-    "pbrs": (),
-    "rib_absorber": (),
-    "rectangle": (),
-    "photodiode": (),
-    "die": (),
-    "v7b_logo": (),
-    "ipronics_logo": (),
-    "circle": (),
-    "rounded_triangle": (),
-    "serie_thermistor": (),
-    "text": (),
-    "mmi": (),
-    "si_nwg_transition": (),
-}
+INTERNAL_CONNECTIONS: dict[str, Sequence[_InternalConnection]] = {}
 """Dict representing the internal connections in the netlist components."""
 
 
@@ -71,50 +35,45 @@ def get_component(netlist: dict[str, Any], name: str) -> str:
     Raises:
         KeyError if name is not known in netlist
     """
-    if name.split(",")[0] in netlist["instances"]:
-        return netlist["instances"][name.split(",")[0]]["component"]
-    else:
-        return ""
+
+    return netlist["instances"][name.split(",")[0]]["component"]
 
 
-def create_nxgraph(netlist: dict[str, Any]) -> nx.Graph:
-    """Create a :class:`networkx.Graph` from the given netlist file.
+def create_nxgraph(netlist) -> nx.Graph:
+    """Create a :class:`networkx.Graph` from the given netlist.
 
-    The created graph  edges correspond to the netlist connections plus the
-    required intra-component connections provided by the INTERNAL_CONNECTIONS
+    The created graph edges correspond to the netlist connections plus the
+    required intra-component connections provided by the netlist["__internal_connections__"]
     dict.
 
     Args:
-        netlist: netlist dict as created by :function:`gdsfactory.get_netlist()`.
+        netlist: netlist dict as created by :py:func:`gdsfactory.get_netlist()`.
 
     Returns:
         Graph representing the circuit defined by the netlist
     """
-    ret = nx.Graph()
+
+    ret: nx.Graph[str] = nx.Graph()
     # add inter-instance connections
     for u, vs in netlist["connections"].items():
-        for v in vs:
-            ret.add_edge(u, v)
-            ret.add_edge(v, u)
-
+        # TODO: CHECK ME, This change should be done in the SAX.  # noqa: TD002, TD003
+        if isinstance(vs, str):
+            ret.add_edge(u, vs)
+        else:
+            for v in vs:
+                ret.add_edge(u, v)
     # add intra-instance connections
     connected_instances = {(n.split(",")[0]) for n in ret.nodes}
     for instance in connected_instances:
-        # print(instance)
-        for conn in INTERNAL_CONNECTIONS[get_component(netlist, instance)]:
+        for conn in netlist.get("__internal_connections__", INTERNAL_CONNECTIONS)[
+            get_component(netlist, instance)
+        ]:
             ret.add_edge(
-                f"{instance.split(',')[0]},{conn.p1}",
-                f"{instance.split(',')[0]},{conn.p2}",
+                f"{instance},{conn['p1']}",
+                f"{instance},{conn['p2']}",
                 internal=True,
-                **conn.data,
+                **conn["data"],
             )
-            if "puc" not in instance:
-                ret.add_edge(
-                    f"{instance.split(',')[0]},{conn.p2}",
-                    f"{instance.split(',')[0]},{conn.p1}",
-                    internal=True,
-                    **conn.data,
-                )
     return ret
 
 
@@ -144,16 +103,22 @@ def get_contracted_graph(graph: nx.Graph, nodes_of_interest: Sequence[str]) -> n
     """  # noqa: E501
     ret = graph.copy()
     # contract edges
-    for node in nodes_of_interest:
-        while uninteresting_neighbors := [
-            n for n in nx.neighbors(ret, node) if n not in nodes_of_interest
-        ]:
-            for neighbor in uninteresting_neighbors:
-                ret = nx.contracted_edge(
-                    ret, (node, neighbor), self_loops=False, copy=False
-                )
-    # remove any remaining uninteresting nodes (some may remain in isolated subgraphs)
-    ret.remove_nodes_from([n for n in ret.nodes if n not in nodes_of_interest])
+    # for node in nodes_of_interest:
+    #     while uninteresting_neighbors := [
+    #         n for n in nx.neighbors(ret, node) if n not in nodes_of_interest
+    #     ]:
+    #         for neighbor in uninteresting_neighbors:
+    #             ret = nx.contracted_edge(
+    #                 ret, (node, neighbor), self_loops=False, copy=False
+    #             )
+    # # remove any remaining uninteresting nodes (some may remain in isolated subgraphs)
+    # ret.remove_nodes_from([n for n in ret.nodes if n not in nodes_of_interest])
+    for node in set(ret.nodes()) - set(nodes_of_interest):
+        neighbors = nx.all_neighbors(ret, node)
+
+        ret.remove_node(node)
+
+        ret.add_edges_from(combinations(neighbors, 2))
     return ret
 
 
@@ -214,36 +179,60 @@ if __name__ == "__main__":
 
     # This requires the .json file to be previously generated with `build_netlist.py`
     nl = json.loads((Path(__file__).parents[4] / "mesh_die_netlist.json").read_text())
+    internal_connections_file = (
+        Path(__file__).parents[0] / "internal_connections.json"
+    ).read_text()
+
+    internal_connections = json.loads(internal_connections_file)
+    nl["__internal_connections__"] = internal_connections
 
     print("components:")  # noqa: T201
     print({e["component"] for e in nl["instances"].values()})  # noqa: T201
 
     # create the "raw" graph
     g = create_nxgraph(nl)
-
-    # generate simplified graph containing only the "components of interest"
-    components_of_interest = {
-        # "si_psr_tw", "transition_si_sin2", "transition_sin_sin2", "crossing_anwg_si"
-        "puc",  # "crossing",
-    }
+    #  print(f"{g=}")
+    input_ports_pattern = r"In\d+"
+    output_ports_pattern = r"Out\d+"
     nodes_of_interest = {
-        n for n in g.nodes if get_component(nl, n) in components_of_interest
+        n
+        for n in g.nodes
+        # if get_component(nl, n) in ["puc", "edge_coupler"]
+        if get_component(nl, n) in ["puc", "pbrs"]
+        # or get_component(nl, n) == "vertical_transition"
     }
-    g_puc = get_contracted_graph(g, nodes_of_interest)
 
-    # plot the simplified graph
-    pos = {}
+    # Identify input and output ports
+    # input_ports: set[str] = set()
+    # output_ports: set[str] = set()
+    # for k, v in nl["ports"].items():
+    #     if re.fullmatch(input_ports_pattern, k):
+    #         input_ports.add(k)
+    #         g.add_edge(k, v)
 
-    for k in g.nodes:
-        if k.split(",")[0] in nl["placements"]:
-            pos.update(
-                {
-                    k: (
-                        nl["placements"][k.split(",")[0]]["x"],
-                        nl["placements"][k.split(",")[0]]["y"],
-                    )
-                }
-            )
+    #     elif re.fullmatch(output_ports_pattern, k):
+    #         output_ports.add(k)
+    #         g.add_edge(k, v)
 
-    nx.draw(g_puc, pos, with_labels=False)
+    # nodes_of_interest |= input_ports | output_ports
+
+    # select puc nodes as the only we are interested in
+
+    graph = get_contracted_graph(graph=g, nodes_of_interest=nodes_of_interest)
+    # for node in graph.nodes:
+    #     if (
+    #         "v6d~mua_array_mod_NP64_Ptow_064c9c68_10297502_441000_A180_M~monitoring_unit_PFpuc_n_7b98bf08_0_5040000~puc_mua0_0_0"
+    #         in node
+    #     ):
+    #         nn = nx.all_neighbors(graph, node)
+    #         print(list(nn))
+
+    pos = {
+        k: (
+            nl["placements"][k.split(",")[0]]["x"],
+            nl["placements"][k.split(",")[0]]["y"],
+        )
+        for k in graph.nodes
+    }
+    nx.draw(graph, pos, with_labels=False)
     plt.show()

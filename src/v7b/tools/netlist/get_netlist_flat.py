@@ -9,7 +9,7 @@ from typing import Any
 
 import gdsfactory as gf
 from gdsfactory.component import Component
-from v7b.tools.netlist.topolux_states import attach_states
+from v7b.tools.netlist.topolux_states import generate_states
 
 dict_components = {
     "bend_euler": "bend",
@@ -21,8 +21,9 @@ dict_components = {
     "anwg_ec_oband": "edge_coupler",
     "edge_coupler_array": "edge_coupler",
     "si_anwg_transition": "vertical_transition",
+    "si_nwg_transition": "vertical_transition",
     "si_psr_tw": "pbrs",
-    "v7b_puc": "puc",
+    "v7a_puc": "puc",
     "lateral_pd": "photodiode",
 }
 
@@ -30,11 +31,6 @@ dict_components = {
 def get_netlist_flat(
     component: Component,
     recursive_netlist: None,
-    *,
-    puc_map_path: str | Path = "puc_map.json",
-    output_path: str | Path | None = None,
-    n_io: int = 72,
-    states_kwargs: dict[str, Any] | None = None,
     **kwargs,
 ) -> dict[str, Any]:
     """Parses a recursive netlist for a component as if it was a single netlist \
@@ -43,17 +39,6 @@ def get_netlist_flat(
 
     Args:
         component: to extract flat netlist.
-        puc_map_path: the topolux selector map, used for
-            ``__pic_to_topolux_ids__`` and, when sweeping, for the mesh plane
-            tokens.  The only file this function reads.
-        output_path: where to *write* the netlist, including ``__states__``.
-            Nothing is read from it, and no netlist file has to exist
-            beforehand: the sweep runs on the netlist assembled above, in
-            memory.  None, the default, skips the sweep entirely and leaves
-            every existing caller unaffected.
-        n_io: number of input/output PSRs, when sweeping.
-        states_kwargs: passed through to ``topolux_states.add_states`` --
-            ``mode``, ``limit``, ``strict``, ``cutoff``, ``on_unmapped``.
 
     Keyword Args:
         component_suffix: suffix to append to each component name, useful if to save .
@@ -69,13 +54,8 @@ def get_netlist_flat(
         port: Dict portName: ComponentName,port.
         name: name of component.
         warnings: warning messages (disconnected pins).
-        __states__: with `output_path`, a summary of the sweep -- where the
-            file went and what it holds.  The states themselves are only in
-            that file: at roughly a gigabyte they cannot be carried in this
-            dict, so **do not dump the returned dict over `output_path`**, or
-            a summary would replace the payload it describes.  None when no
-            sweep ran.
     """
+
     if not recursive_netlist:
         recursive_netlist = component.get_netlist(
             recursive=True, exclude_port_types=["electrical"], **kwargs
@@ -137,6 +117,21 @@ def get_netlist_flat(
 
     import pathlib
 
+    import iprlayout_tower as ipr
+    from v7b.pdk import (
+        v7b_cells,
+    )
+
+    generic_pdk = gf.get_active_pdk()
+    generic_cells = generic_pdk.cells
+
+    pdk = ipr.get_pdk()
+    pdk.activate()
+    cells = pdk.cells
+    cells.update(v7b_cells)
+    cells.update(generic_cells)
+    pdk.cells = cells
+
     gdspath = pathlib.Path(f"{component.name}_recursive_netlist")
     nl_file = gdspath.with_suffix(".json")
     nl_file.write_text(json.dumps(recursive_netlist, indent=2))
@@ -169,21 +164,16 @@ def get_netlist_flat(
     for key, value in connections.items():
         connections_fix[key] = [value]
 
-    # ports = get_psr_ports(recursive_netlist, component)
-    ports = get_ports(recursive_netlist, component)
-
     # change component names to generic name
     for instance in instances:
         component_name = instances[instance]["component"]
         if component_name in dict_components:
             instances[instance]["component"] = dict_components[component_name]
 
+    # ports = get_psr_ports(recursive_netlist, component)
+    ports = get_ports(recursive_netlist, component)
     sorted_pic_to_elec_id = get_pic_to_elec_id(instances, placements)
-
-    # __pic_to_topolux_ids__
-    data = json.loads(Path(puc_map_path).read_text())
-    topo_te = data.get("TE", data)
-    topo_tm = data.get("TM", data)
+    sorted_topolux_id = generate_topolux_ids()
 
     netlist = {
         "name": recursive_netlist[top_level_name]["name"],
@@ -192,25 +182,18 @@ def get_netlist_flat(
         "instances": instances,
         "ports": ports,
         "__pic_to_elec_ids__": sorted_pic_to_elec_id,
-        "__pic_to_topolux_ids__": {"TE": topo_te, "TM": topo_tm},
+        "__pic_to_topolux_ids__": sorted_topolux_id,
     }
 
-    # __states__: every route of every (In, Out) pair, with the switch state
-    # each one needs.  Enumerated from the netlist just assembled above -- no
-    # earlier file, no separate run -- and streamed straight to disk rather
-    # than returned, because it is far larger than everything above it put
-    # together.
-    netlist["__states__"] = (
-        attach_states(
-            netlist,
-            data,
-            output_path,
-            n_io=n_io,
-            **(states_kwargs or {}),
-        )
-        if output_path
-        else None
+    internal_connections = json.loads(
+        Path(Path(__file__).parents[0] / "utils/internal_connections.json").read_text()
     )
+    netlist["__internal_connections__"] = internal_connections
+
+    generate_states(
+        netlist, print_errors=False, reverse_inputs=True, reverse_outputs=True
+    )
+
     return netlist
 
 
@@ -221,6 +204,32 @@ _PLACEMENT_SUFFIX = re.compile(r"_(m?\d+)_(m?\d+)(_[AMR]\d+)*$")
 _PUC = re.compile(r"^puc(?P<mua>mua)?(?P<n>\d+)$")
 _PD = re.compile(r"^lateral_pd_puc(?P<mua>mua)?(?P<n>\d+)$")
 _TH = re.compile(r"^serie_thermistor")
+
+
+def generate_topolux_ids() -> dict:
+    data = json.loads(
+        Path(Path(__file__).parents[0] / "utils/puc_map.json").read_text()
+    )
+    topo_te = data.get("TE", data)
+    topo_tm = data.get("TM", data)
+
+    sorted_ids_te = dict(
+        sorted(topo_te.items(), key=lambda kv: tuple(map(int, kv[1].split(","))))
+    )
+    sorted_ids_tm = dict(
+        sorted(topo_tm.items(), key=lambda kv: tuple(map(int, kv[1].split(","))))
+    )
+
+    sorted_ids = {}
+    for (k1, v1), (k2, v2) in zip(
+        sorted_ids_te.items(), sorted_ids_tm.items(), strict=True
+    ):
+        if v1 == v2:
+            sorted_ids[v1] = {"te": k1, "tm": k2}
+        else:
+            raise ValueError(f"Mismatch: TE {k1}={v1!r} vs TM {k2}={v2!r}")
+
+    return sorted_ids
 
 
 def get_pic_to_elec_id(
@@ -365,8 +374,8 @@ def get_ports(recursive_netlist, component):
         if "edge_coupler_array" in name and inst["settings"].get("n") == 88
     ]
 
-    num = 8
-    extra = 8
+    num = 7
+    extra = 7
     for i in range(74):
         if i not in [36, 37]:
             ports.update(
@@ -376,8 +385,8 @@ def get_ports(recursive_netlist, component):
             extra += 1
         num += 1
 
-    num = 8
-    extra = 8
+    num = 7
+    extra = 7
     for i in range(74):
         if i not in [36, 37]:
             ports.update(
@@ -468,7 +477,7 @@ def _cell(name: str) -> str:
 
     Args:
         name: full instance name, ``~``-separated, e.g.
-            ``v7b~mesh_72x72_CF..~inner_mesh_core_..~puc2100_5526055_m1067295``.
+            ``v7a~mesh_72x72_CF..~inner_mesh_core_..~puc2100_5526055_m1067295``.
 
     Returns:
         The leaf token with its placement suffix stripped, e.g. ``puc2100``.
