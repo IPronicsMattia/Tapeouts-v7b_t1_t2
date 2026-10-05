@@ -520,7 +520,7 @@ def component_placement(
                 puc_ref.move(
                     (puc_ref.x, puc_ref["o1"].y),
                     (
-                        ec_ref2["o82"].x - 28.355 + 90 * i,
+                        ec_ref2["o82"].x - 25.1 + 90 * i,
                         ec_ref2["o1"].y + 1970.2,
                     ),
                 )
