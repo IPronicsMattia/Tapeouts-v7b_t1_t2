@@ -1,3 +1,4 @@
+import json
 import math
 import pathlib
 import time
@@ -10,7 +11,10 @@ import v7b
 start = time.time()
 
 die_name = "v7b"
-numbered_pucs = False
+numbered_pucs = True
+#generate = ["passive", "netlist"]
+generate = ["netlist"] # Fill here the name of the part to be created
+path = pathlib.Path(__file__).parent.resolve() / "output"
 
 die = gf.Component(die_name)
 
@@ -40,32 +44,28 @@ ec_in = []
 ec_out = []
 
 
-print("\n##################\nCOMPONENT PLACEMENT\n##################\n")
-v7b.component_placement(die, meshes, mua_in, mua_out, ec_in, ec_out, numbered_pucs)
+if "passive" in generate:
+    print("\n##################\nCOMPONENT PLACEMENT\n##################\n")
+    v7b.component_placement(die, meshes, mua_in, mua_out, ec_in, ec_out, numbered_pucs)
 
-print(f"\nelapsed time:{math.ceil(time.time() - start)} seconds\n")
+    print(f"\nelapsed time:{math.ceil(time.time() - start)} seconds\n")
 
-print("\n##################\nOPTICAL ROUTING\n##################\n")
-v7b.optical_routing(die, meshes, mua_in, mua_out, ec_in, ec_out)
+    print("\n##################\nOPTICAL ROUTING\n##################\n")
+    v7b.optical_routing(die, meshes, mua_in, mua_out, ec_in, ec_out)
 
-print(f"\nelapsed time:{math.ceil(time.time() - start)} seconds\n")
+    print(f"\nelapsed time:{math.ceil(time.time() - start)} seconds\n")
+    die.write(path / "v7b_main_only_passive.oas")
+else:
+    die.delete()
+    die = gf.import_gds(path / "v7b_main_only_passive.oas")
 
-print("\n###############\nNETLIST FLAT EXTRACTION\n###############\n")
-gdspath = pathlib.Path("mesh_die_netlist")
-nl_file = gdspath.with_suffix(".json")
+if "netlist" in generate:
+    print("\n###############\nNETLIST FLAT EXTRACTION\n###############\n")
+    nl_file = path / "v7b_netlist.json"
+    nl = v7b.get_netlist_flat(component=die, recursive_netlist=None)
+    nl_file.write_text(json.dumps(nl, indent=2))
 
-nl = v7b.get_netlist_flat(
-    component=die,
-    recursive_netlist=None,
-    output_path=nl_file,
-)
-
-print(f"Wrote netlist to '{nl_file}'")
-print(
-    f"  {nl['__states__']['paths']:,} routes over {nl['__states__']['pairs']:,} pairs"
-)
-
-print(f"\nelapsed time:{math.ceil(time.time() - start)} seconds\n")
+    print(f"\nelapsed time:{math.ceil(time.time() - start)} seconds\n")
 
 # print("\n###############\nPAD PLACEMENT\n###############\n")
 # print("Mesh Pads + Daisy chain\n")

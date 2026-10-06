@@ -38,12 +38,7 @@ def optical_routing(
     xs = gf.get_cross_section("strip", width=0.41, radius_min=3.0)
     xs_w = gf.get_cross_section("strip", width=0.93)
     xs_n1 = gf.get_cross_section("nitride", width=1)
-    # xs_n = gf.get_cross_section("nitride2", width=2)
-    xs_n = gf.cross_section.cross_section(width=2,
-                                          radius=5,
-                                          radius_min=5,
-                                          layer=(259, 0),
-                                          main_section_name="anwgt")
+    xs_n = gf.get_cross_section("nitride2", width=2)
 
     #############################
     # Definitions               #
@@ -1049,7 +1044,7 @@ def optical_routing(
         cross_section=xs_w,
         separation=3,
         sort_ports=True,
-        start_straight_length=37.54,
+        start_straight_length=31.47,
     )
 
     # Route from TOP to BOTTOM MUA

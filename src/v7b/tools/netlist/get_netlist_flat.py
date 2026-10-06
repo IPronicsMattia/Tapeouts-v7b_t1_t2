@@ -132,7 +132,8 @@ def get_netlist_flat(
     cells.update(generic_cells)
     pdk.cells = cells
 
-    gdspath = pathlib.Path(f"{component.name}_recursive_netlist")
+    path = pathlib.Path(__file__).parent.parent.parent.resolve() / "output"
+    gdspath = path / f"{component.name}_recursive_netlist"
     nl_file = gdspath.with_suffix(".json")
     nl_file.write_text(json.dumps(recursive_netlist, indent=2))
     print(f"Wrote raw netlist to '{nl_file}'")

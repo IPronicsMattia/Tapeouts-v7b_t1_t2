@@ -351,20 +351,18 @@ def component_placement(
             puc_ref = die << gf.get_component(
                 puc(puc_number=f"mua{"73" if i == 0 else "74"}")
             )
-            extra = 10
         else:
             if numbered:
                 puc_ref = die << gf.get_component(puc(puc_number=f"mua{1 + i - 2}"))
             else:
                 puc_ref = die << gf.get_component(puc(puc_number="mua0"))
-            extra = 0
 
         puc_ref.rotate(-90)
         puc_ref.move(
             (puc_ref.x, puc_ref["o1"].y),
             (
                 ec_ref["o8"].x - 6671.9 + 90 * i,
-                ec_ref["o1"].y - 1790 + extra,
+                ec_ref["o1"].y - 1790,
             ),
         )
         if i > 1:
@@ -500,9 +498,17 @@ def component_placement(
     for jdx in range(2):
         temps = []
         for i in range(74):
+            if jdx == 0: # LEFT
+                if i > 1:
+                    puc_number = 75 + i - 2 if numbered else 0
+                else:
+                    puc_number = 147 + i
+            else: # RIGHT
+                if i < 72:
+                    puc_number = 75 + i if numbered else 0
+                else:
+                    puc_number = 147 - 72 + i
 
-            #TODO: check numbering of MUA
-            puc_number = 1 + i - 2 if numbered else 0 if i < 72 else 73 + i
             puc_ref = die << gf.get_component(puc(puc_number=f"mua{puc_number}"))
 
             # Place the PUCs
@@ -539,15 +545,7 @@ def component_placement(
             st_ref = die << gf.c.straight(5, cross_section=xs)
             st_ref.connect("o1", bend_ref["o2"])
             if numbered:
-                # TODO: check numbering of PD
-                if i < 2:
-                    pd_aux = gf.get_component(
-                        photodetector(custom_name=f"pucmua{"73" if i == 0 else "74"}")
-                    )
-                else:
-                    pd_aux = gf.get_component(
-                        photodetector(custom_name=f"pucmua{1 + i - 2}")
-                    )
+                pd_aux = gf.get_component(photodetector(custom_name=f"pucmua{puc_number}"))
             else:
                 pd_aux = photodetector
             pd_ref = die << pd_aux
@@ -564,15 +562,7 @@ def component_placement(
             st_ref = die << gf.c.straight(5, cross_section=xs)
             st_ref.connect("o1", bend_ref["o2"])
             if numbered:
-                # TODO: check numbering of PD
-                if i < 2:
-                    pd_aux = gf.get_component(
-                        photodetector(custom_name=f"pucmua{"73" if i == 0 else "74"}")
-                    )
-                else:
-                    pd_aux = gf.get_component(
-                        photodetector(custom_name=f"pucmua{1 + i - 2}")
-                    )
+                pd_aux = gf.get_component(photodetector(custom_name=f"pucmua{puc_number}"))
             else:
                 pd_aux = photodetector
             pd_ref = die << pd_aux
@@ -581,7 +571,7 @@ def component_placement(
         mua_out.append(temps.copy())
         temps.clear()
 
-    print("\nCreated output aux straights\n")
+    print("\nCreated MUA OUT\n")
 
     #############################
     # EC Trenches               #
