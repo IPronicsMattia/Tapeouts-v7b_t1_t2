@@ -2141,8 +2141,8 @@ def electrical_routing(
                 layer=LAYER.metal3,
                 port_type="electrical",
                 center=(
-                    puc[f"e{1+k}"].x / 1000 + 5.5 * shift,
-                    puc[f"e{1+k}"].y / 1000 + 5.5,
+                    puc[f"e{1 + k}"].x / 1000 + 5.5 * shift,
+                    puc[f"e{1 + k}"].y / 1000 + 5.5,
                 ),
                 orientation=90,
             )
@@ -2284,7 +2284,7 @@ def electrical_routing(
     for i in range(9):
         for k in range(2):
             tap_ref = die << th_taper
-            tap_ref.connect("e1", th_matrix[pairs[i][0]][pairs[i][1]][f"e{k+1}"])
+            tap_ref.connect("e1", th_matrix[pairs[i][0]][pairs[i][1]][f"e{k + 1}"])
             via_ref = die << via_m3_m1
             via_ref.connect("e1", tap_ref["e2"], allow_layer_mismatch=True)
             st_ref = die << gf.c.straight(50 if k == 0 else 15, cross_section=xs_m3_11)

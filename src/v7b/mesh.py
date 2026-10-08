@@ -484,7 +484,7 @@ def mesh_72x72(
         ge_length=14,
         ge_width=3,
         dop_plusplus_ge_separation=0.3,
-        metal2_via_n = 3,
+        metal2_via_n=3,
         forward_pin=True,
         cross_section=xs,
     )
@@ -2005,4 +2005,3 @@ if __name__ == "__main__":
     )
 
     gf.get_component(core).show()
-

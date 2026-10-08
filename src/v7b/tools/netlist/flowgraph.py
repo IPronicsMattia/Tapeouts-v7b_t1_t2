@@ -637,8 +637,8 @@ def assert_valid_path(g: nx.DiGraph, path: Sequence[Wg]) -> None:
         assert u[1] == f"{t['instance']},{t['inport']}"
         assert v[0] == f"{t['instance']},{t['outport']}"
     for a, b in zip(travs, travs[1:], strict=False):
-        assert (
-            a["instance"] != b["instance"]
-        ), f"consecutive traversal of {a['instance']}"
+        assert a["instance"] != b["instance"], (
+            f"consecutive traversal of {a['instance']}"
+        )
     keys = [_wg_key(n) for n in path]
     assert len(set(keys)) == len(keys), "waveguide reused"
