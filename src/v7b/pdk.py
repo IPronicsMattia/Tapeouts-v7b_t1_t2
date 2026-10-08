@@ -12,7 +12,7 @@ from gdsfactory.typings import ComponentSpec, CrossSectionSpec, LayerSpec
 from iprlayout_tower.tech import LAYER
 
 
-@gf.cell(set_name=False)
+@gf.cell
 def ipronics_logo() -> gf.Component:
     path = Path(__file__).resolve().parents[1] / "v7b" / "logo" / "ipronics_logo.gds"
 
@@ -24,7 +24,7 @@ def ipronics_logo() -> gf.Component:
     return c
 
 
-@gf.cell(set_name=False)
+@gf.cell
 def v7b_logo() -> gf.Component:
     path = Path(__file__).resolve().parents[1] / "v7b" / "logo" / "v7b_logo.gds"
 
@@ -1020,6 +1020,45 @@ def mzi_cell(
             )
 
     return c
+
+
+@gf.cell
+def mesh_72x72_mockup():
+    """
+    Create a rectangle with same dimension of the real mesh and just the ports for faster testing.
+    """
+
+    # Create the component
+    mesh_ = gf.Component()
+    mesh_ << gf.components.rectangle(size=(11318.714, 19413.650), layer=(1, 0))
+
+    # Cross section to be used
+    xs = gf.get_cross_section("strip", width=0.41, radius_min=3.0)
+
+    # Place the ports
+    for idx in range(72):
+        # Top left
+        mesh_.add_port(
+            name=f"o{idx + 1}",
+            center=(3.85, 19389.82 - 90 * idx),
+            width=0.41,
+            orientation=180,
+            cross_section=xs,
+            port_type="optical",
+        )
+
+        # Bot right
+        mesh_.add_port(
+            name=f"o{idx + 73}",
+            center=(11280.714, 46.33 + 90 * idx),
+            width=0.41,
+            orientation=0,
+            cross_section=xs,
+            port_type="optical",
+        )
+
+    mesh_.flatten()
+    return mesh_
 
 
 v7b_cells = get_cells(sys.modules[__name__])

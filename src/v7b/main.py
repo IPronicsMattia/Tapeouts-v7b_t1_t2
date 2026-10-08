@@ -4,18 +4,34 @@ import pathlib
 import time
 
 import gdsfactory as gf
+import iprlayout_tower as ipr
 import klayout.db as kdb
 
 import v7b
+from v7b.pdk import (
+    v7b_cells,
+)
 
+# Provide list of cell available for the current main design
+generic_pdk = gf.get_active_pdk()
+generic_cells = generic_pdk.cells
+
+pdk = ipr.get_pdk()
+pdk.activate()
+cells = pdk.cells
+cells.update(v7b_cells)
+cells.update(generic_cells)
+pdk.cells = cells
+
+# Initialize the time
 start = time.time()
 
+# Initial information
 die_name = "v7b"
 numbered_pucs = True
-#generate = ["passive", "netlist"]
-generate = ["netlist"] # Fill here the name of the part to be created
 path = pathlib.Path(__file__).parent.resolve() / "output"
 
+# Creation of the die of correct dimension
 die = gf.Component(die_name)
 
 die_border = die << gf.components.die(
@@ -43,10 +59,14 @@ mua_out = []
 ec_in = []
 ec_out = []
 
+# ["passive", "netlist"]
+generate = ["passive", "netlist"]  # Fill here the name of the part to be created
 
 if "passive" in generate:
     print("\n##################\nCOMPONENT PLACEMENT\n##################\n")
-    v7b.component_placement(die, meshes, mua_in, mua_out, ec_in, ec_out, numbered_pucs)
+    v7b.component_placement(
+        die, meshes, mua_in, mua_out, ec_in, ec_out, numbered_pucs, real_mesh=True
+    )
 
     print(f"\nelapsed time:{math.ceil(time.time() - start)} seconds\n")
 
