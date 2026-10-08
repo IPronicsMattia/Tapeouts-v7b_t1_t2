@@ -125,10 +125,7 @@ def component_placement(die: gf.Component) -> gf.Component:
 
     # Grating coupler array without loopback
     gc_array_noloopbak = ipr.grating_coupler_array(
-        grating_coupler=ipr.tower_gc,
-        n=10,
-        with_loopback=False,
-        cross_section=xs_swg
+        grating_coupler=ipr.tower_gc, n=10, with_loopback=False, cross_section=xs_swg
     )
 
     # Grating coupler for TM is formed by rot + 3 si_ps_tw
@@ -156,9 +153,7 @@ def component_placement(die: gf.Component) -> gf.Component:
         "n_bb": n_rep,
         "straight": straight_410_swg,
     }
-    split_with_abs_3 = ipr.nbb_straight(
-        **kwargs, length=tot_size
-    )
+    split_with_abs_3 = ipr.nbb_straight(**kwargs, length=tot_size)
 
     #####################
     # STRUCTURE CONTROL #
@@ -289,10 +284,12 @@ def component_placement(die: gf.Component) -> gf.Component:
         gap = 3 + 0.93 - 0.41
         sep = 10.95
         n_bends = 144
-        comp_len = [69000,  #less than 75000 because of routing
-                    146000, #less than 150000 because of routing
-                    225000,
-                    300000]
+        comp_len = [
+            69000,  # less than 75000 because of routing
+            146000,  # less than 150000 because of routing
+            225000,
+            300000,
+        ]
 
         # Create the test structure 3.1
         ts = "3.1"
@@ -434,10 +431,7 @@ def component_placement(die: gf.Component) -> gf.Component:
         gap = 5
         sep = 17
         n_bends = 50
-        comp_len = [4.5 * 10000,
-                    9.0 * 10000,
-                    13.5 * 10000,
-                    18.0 * 10000]
+        comp_len = [4.5 * 10000, 9.0 * 10000, 13.5 * 10000, 18.0 * 10000]
 
         # Create the test structure 5.1 and 5.2 simultaneusly
         t_ref = xt_sin_function(
@@ -460,14 +454,15 @@ def component_placement(die: gf.Component) -> gf.Component:
         t1 = t_ref.copy()
         t2 = t_ref.copy()
         for idx in range(4):
-            t1.info.model_extra.pop(f"Block {idx+5}", None)
-            t2.info.model_extra.pop(f"Block {idx+1}", None)
+            t1.info.model_extra.pop(f"Block {idx + 5}", None)
+            t2.info.model_extra.pop(f"Block {idx + 1}", None)
 
         # Assign to the dictionary
-        ts = '5.1'
+        ts = "5.1"
         structures[ts] = t
-        structures_text[ts] = f"{ts} PROP LOSS XT AWNG 2.00 " + " " * 778 + \
-                               "5.2 PROP LOSS XT AWNG 2.00"
+        structures_text[ts] = (
+            f"{ts} PROP LOSS XT AWNG 2.00 " + " " * 778 + "5.2 PROP LOSS XT AWNG 2.00"
+        )
 
         # Json Part
         if create_json:
@@ -498,10 +493,7 @@ def component_placement(die: gf.Component) -> gf.Component:
         # Parameters for the cell
         sep = [5, 4, 3, 2]
         n_bends = 150
-        comp_len = [5.0 * 10000,
-                    5.0 * 10000,
-                    5.0 * 10000,
-                    5.0 * 10000]
+        comp_len = [5.0 * 10000, 5.0 * 10000, 5.0 * 10000, 5.0 * 10000]
 
         # Create the test structure 6.1
         ts = "6.1"
@@ -519,7 +511,7 @@ def component_placement(die: gf.Component) -> gf.Component:
             separations=sep,
             spiral_termination=vt_opt_te,
             straight_route=straight_410_swg,
-            structure_4_blocks= '2x2'
+            structure_4_blocks="2x2",
         )
 
         # Assign to the dictionary
@@ -1233,8 +1225,6 @@ def component_placement(die: gf.Component) -> gf.Component:
     #             extra_dict={"analysis": ["xtte_db"]},
     #         )
 
-
-
     #########################################################
     #########################################################
     #########################################################
@@ -1244,16 +1234,8 @@ def component_placement(die: gf.Component) -> gf.Component:
         "3.2",
         "1.2",
     ]
-    left_cen_structure = [
-        "4.1",
-        "4.2",
-        "6.1"]
-    left_bot_structure = [
-        "1.3",
-        "5.1",
-        "2.1",
-        "1.4"
-    ]
+    left_cen_structure = ["4.1", "4.2", "6.1"]
+    left_bot_structure = ["1.3", "5.1", "2.1", "1.4"]
     right_structure = []
 
     # Place only structure complain with structure_only

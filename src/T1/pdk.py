@@ -1026,8 +1026,10 @@ def xt_sin_function(
             {"dx": bend_radius},
             {"dy": -2 * bend_radius - 5},
             {"dx": -2 * bend_radius - 5 - gc_array.xsize},
-            {"dy": abs(gc_array_left["o9"].y - gc_array_left["o0"].y) + \
-                   + 2 * (2 * bend_radius + 5)},
+            {
+                "dy": abs(gc_array_left["o9"].y - gc_array_left["o0"].y)
+                + +2 * (2 * bend_radius + 5)
+            },
             {"dx": 2 * bend_radius + 5 + gc_array.xsize},
             {"dy": -2 * bend_radius - 5},
         ],
@@ -1047,13 +1049,13 @@ def xt_sin_function(
         route_width=xs_041.width,
         bend=ipr.bend_euler_custom_width,
         auto_taper=False,
-        start_straight_length=5
+        start_straight_length=5,
     )
 
     # Place the gc_array going back
     port_out = []
-    for idx in range(len(gc_array_right.ports)-2):
-        port = gc_array_right[f"o{idx+1}"]
+    for idx in range(len(gc_array_right.ports) - 2):
+        port = gc_array_right[f"o{idx + 1}"]
         # Going back is formed by bend straight bend straight
         bend1 = c << bend_Si
         bend1.mirror_y()
@@ -1120,37 +1122,53 @@ def xt_sin_function(
 
             # Decide the start_straight_length depending on the case
             if jdx == 0 and idx == 2:
-                steps = [{"y": sp1.ymax + bend_radius},
-                         {"x": gc_ports[tdx].x + bend_radius * 4},
-                         {"y": gc_ports[tdx].y}]
+                steps = [
+                    {"y": sp1.ymax + bend_radius},
+                    {"x": gc_ports[tdx].x + bend_radius * 4},
+                    {"y": gc_ports[tdx].y},
+                ]
             elif jdx == 0 and idx == 3:
-                steps = [{"y": sp1.ymax + bend_radius + rout_safe_dist},
-                         {"x": gc_ports[tdx].x + bend_radius * 2},
-                         {"y": gc_ports[tdx].y}]
+                steps = [
+                    {"y": sp1.ymax + bend_radius + rout_safe_dist},
+                    {"x": gc_ports[tdx].x + bend_radius * 2},
+                    {"y": gc_ports[tdx].y},
+                ]
             elif jdx == 1 and idx == 2:
-                steps = [{"y": sp2.ymin - bend_radius},
-                         {"x": gc_ports[tdx].x + bend_radius * 4},
-                         {"y": gc_ports[tdx].y}]
+                steps = [
+                    {"y": sp2.ymin - bend_radius},
+                    {"x": gc_ports[tdx].x + bend_radius * 4},
+                    {"y": gc_ports[tdx].y},
+                ]
             elif jdx == 1 and idx == 3:
-                steps = [{"y": sp2.ymin - bend_radius - rout_safe_dist},
-                         {"x": gc_ports[tdx].x + bend_radius * 2},
-                         {"y": gc_ports[tdx].y}]
+                steps = [
+                    {"y": sp2.ymin - bend_radius - rout_safe_dist},
+                    {"x": gc_ports[tdx].x + bend_radius * 2},
+                    {"y": gc_ports[tdx].y},
+                ]
             elif jdx == 2 and idx == 0:
-                steps = [{"y": sp3.ymin - bend_radius},
-                         {"x": gc_ports[tdx].x - bend_radius * 4},
-                         {"y": gc_ports[tdx].y}]
+                steps = [
+                    {"y": sp3.ymin - bend_radius},
+                    {"x": gc_ports[tdx].x - bend_radius * 4},
+                    {"y": gc_ports[tdx].y},
+                ]
             elif jdx == 2 and idx == 1:
-                steps = [{"y": sp3.ymin - bend_radius - rout_safe_dist},
-                         {"x": gc_ports[tdx].x - bend_radius * 2},
-                         {"y": gc_ports[tdx].y}]
+                steps = [
+                    {"y": sp3.ymin - bend_radius - rout_safe_dist},
+                    {"x": gc_ports[tdx].x - bend_radius * 2},
+                    {"y": gc_ports[tdx].y},
+                ]
             elif jdx == 3 and idx == 0:
-                steps = [{"y": sp4.ymax + bend_radius},
-                         {"x": gc_ports[tdx].x - bend_radius * 4},
-                         {"y": gc_ports[tdx].y}]
+                steps = [
+                    {"y": sp4.ymax + bend_radius},
+                    {"x": gc_ports[tdx].x - bend_radius * 4},
+                    {"y": gc_ports[tdx].y},
+                ]
             elif jdx == 3 and idx == 1:
-                steps = [{"y": sp4.ymax + bend_radius + rout_safe_dist},
-                         {"x": gc_ports[tdx].x - bend_radius * 2},
-                         {"y": gc_ports[tdx].y}]
+                steps = [
+                    {"y": sp4.ymax + bend_radius + rout_safe_dist},
+                    {"x": gc_ports[tdx].x - bend_radius * 2},
+                    {"y": gc_ports[tdx].y},
+                ]
             else:
                 steps = []
 
@@ -1163,39 +1181,55 @@ def xt_sin_function(
                 straight=routing_straight,
                 bend=bend_Si,
                 auto_taper=False,
-                steps=steps
+                steps=steps,
             )
             if jdx == 0 and idx < 2:
                 for temp_dict in temp_dicts:
-                    sp1_outer_dict = ipr.combine_component_dict(sp1_outer_dict, temp_dict)
+                    sp1_outer_dict = ipr.combine_component_dict(
+                        sp1_outer_dict, temp_dict
+                    )
                 routes_sp1_outer.append(route)
             elif jdx == 0 and idx >= 2:
                 for temp_dict in temp_dicts:
-                    sp1_inner_dict = ipr.combine_component_dict(sp1_inner_dict, temp_dict)
+                    sp1_inner_dict = ipr.combine_component_dict(
+                        sp1_inner_dict, temp_dict
+                    )
                 routes_sp1_inner.append(route)
             elif jdx == 1 and idx < 2:
                 for temp_dict in temp_dicts:
-                    sp2_outer_dict = ipr.combine_component_dict(sp2_outer_dict, temp_dict)
+                    sp2_outer_dict = ipr.combine_component_dict(
+                        sp2_outer_dict, temp_dict
+                    )
                 routes_sp2_outer.append(route)
             elif jdx == 1 and idx >= 2:
                 for temp_dict in temp_dicts:
-                    sp2_inner_dict = ipr.combine_component_dict(sp2_inner_dict, temp_dict)
+                    sp2_inner_dict = ipr.combine_component_dict(
+                        sp2_inner_dict, temp_dict
+                    )
                 routes_sp2_inner.append(route)
             elif jdx == 2 and idx < 2:
                 for temp_dict in temp_dicts:
-                    sp3_inner_dict = ipr.combine_component_dict(sp3_inner_dict, temp_dict)
+                    sp3_inner_dict = ipr.combine_component_dict(
+                        sp3_inner_dict, temp_dict
+                    )
                 routes_sp3_inner.append(route)
             elif jdx == 2 and idx >= 2:
                 for temp_dict in temp_dicts:
-                    sp3_outer_dict = ipr.combine_component_dict(sp3_outer_dict, temp_dict)
+                    sp3_outer_dict = ipr.combine_component_dict(
+                        sp3_outer_dict, temp_dict
+                    )
                 routes_sp3_outer.append(route)
             elif jdx == 3 and idx < 2:
                 for temp_dict in temp_dicts:
-                    sp4_inner_dict = ipr.combine_component_dict(sp4_inner_dict, temp_dict)
+                    sp4_inner_dict = ipr.combine_component_dict(
+                        sp4_inner_dict, temp_dict
+                    )
                 routes_sp4_inner.append(route)
             elif jdx == 3 and idx >= 2:
                 for temp_dict in temp_dicts:
-                    sp4_outer_dict = ipr.combine_component_dict(sp4_outer_dict, temp_dict)
+                    sp4_outer_dict = ipr.combine_component_dict(
+                        sp4_outer_dict, temp_dict
+                    )
                 routes_sp4_outer.append(route)
 
     # Update route information for left part
@@ -1222,25 +1256,33 @@ def xt_sin_function(
             temp_dict = ipr.measure_component(inst.cell, scale=1 / 1000)
             sp3_inner_dict = ipr.combine_component_dict(sp3_inner_dict, temp_dict)
         for right_input_dict in right_input_dicts:
-            sp3_inner_dict = ipr.combine_component_dict(sp3_inner_dict, right_input_dict)
+            sp3_inner_dict = ipr.combine_component_dict(
+                sp3_inner_dict, right_input_dict
+            )
     for route in routes_sp3_outer:
         for inst in route.instances:
             temp_dict = ipr.measure_component(inst.cell, scale=1 / 1000)
             sp3_outer_dict = ipr.combine_component_dict(sp3_outer_dict, temp_dict)
         for right_input_dict in right_input_dicts:
-            sp3_outer_dict = ipr.combine_component_dict(sp3_outer_dict, right_input_dict)
+            sp3_outer_dict = ipr.combine_component_dict(
+                sp3_outer_dict, right_input_dict
+            )
     for route in routes_sp4_inner:
         for inst in route.instances:
             temp_dict = ipr.measure_component(inst.cell, scale=1 / 1000)
             sp4_inner_dict = ipr.combine_component_dict(sp4_inner_dict, temp_dict)
         for right_input_dict in right_input_dicts:
-            sp4_inner_dict = ipr.combine_component_dict(sp4_inner_dict, right_input_dict)
+            sp4_inner_dict = ipr.combine_component_dict(
+                sp4_inner_dict, right_input_dict
+            )
     for route in routes_sp4_outer:
         for inst in route.instances:
             temp_dict = ipr.measure_component(inst.cell, scale=1 / 1000)
             sp4_outer_dict = ipr.combine_component_dict(sp4_outer_dict, temp_dict)
         for right_input_dict in right_input_dicts:
-            sp4_outer_dict = ipr.combine_component_dict(sp4_outer_dict, right_input_dict)
+            sp4_outer_dict = ipr.combine_component_dict(
+                sp4_outer_dict, right_input_dict
+            )
 
     # Read and save the final result
     c.info["Block 1"] = sp2_outer_dict

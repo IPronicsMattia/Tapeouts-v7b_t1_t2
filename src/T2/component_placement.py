@@ -1074,8 +1074,7 @@ def component_placement(die: gf.Component) -> gf.Component:
                     extra_dict={
                         "nepoxy": [1, 1.428],
                         "analysis": ["ilte_db", "iltm_db"],
-                        "edge_coupler": ["ec_main",
-                                         "ec_main"],
+                        "edge_coupler": ["ec_main", "ec_main"],
                         "cutback": mc,
                     },
                 )
