@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 import re
 from collections.abc import Iterable
 from functools import lru_cache
@@ -19,11 +20,11 @@ dict_components = {
     "3d_crossing": "crossing_anwg_si",
     "crossing_3D": "crossing_anwg_si",
     "anwg_ec_oband": "edge_coupler",
-    "edge_coupler_array": "edge_coupler",
+    "ec_main": "edge_coupler",
     "si_anwg_transition": "vertical_transition",
     "si_nwg_transition": "vertical_transition",
     "si_psr_tw": "pbrs",
-    "v7a_puc": "puc",
+    "v7b_puc": "puc",
     "lateral_pd": "photodiode",
 }
 
@@ -56,14 +57,15 @@ def get_netlist_flat(
         warnings: warning messages (disconnected pins).
     """
 
+    # Generate the recursive netlist if not provided
     if not recursive_netlist:
         recursive_netlist = component.get_netlist(
             recursive=True, exclude_port_types=["electrical"], **kwargs
         )
-        # recursive_netlist[k]["nets"] = new_nets2
+
         for k in recursive_netlist.keys():
             nets = list(recursive_netlist[k]["nets"])
-            # print(nets)
+
             if "warnings" in recursive_netlist[k]:
                 if "optical" in recursive_netlist[k]["warnings"]:
                     if (
@@ -115,24 +117,8 @@ def get_netlist_flat(
     else:
         print("Netlist as a parameter")
 
-    import pathlib
-
-    import iprlayout_tower as ipr
-    from v7b.pdk import (
-        v7b_cells,
-    )
-
-    generic_pdk = gf.get_active_pdk()
-    generic_cells = generic_pdk.cells
-
-    pdk = ipr.get_pdk()
-    pdk.activate()
-    cells = pdk.cells
-    cells.update(v7b_cells)
-    cells.update(generic_cells)
-    pdk.cells = cells
-
-    path = pathlib.Path(__file__).parent.parent.parent.resolve() / "output"
+    # Transform the recursive netlist into the correct one
+    path = Path(__file__).parent.parent.parent.resolve() / "output"
     gdspath = path / f"{component.name}_recursive_netlist"
     nl_file = gdspath.with_suffix(".json")
     nl_file.write_text(json.dumps(recursive_netlist, indent=2))
@@ -149,9 +135,11 @@ def get_netlist_flat(
             hierarchical_instance, top_level_name, recursive_netlist, nets_index
         )
         for key, value in c.items():
+            # skip empty lists
             if len(value) == 0:
-                continue  # skip empty lists
+                continue
             target = value[0]
+
             # Check if key or its mirror already exists
             if key not in connections and connections.get(target) != key:
                 connections[key] = target
@@ -171,17 +159,16 @@ def get_netlist_flat(
         if component_name in dict_components:
             instances[instance]["component"] = dict_components[component_name]
 
-    # ports = get_psr_ports(recursive_netlist, component)
     ports = get_ports(recursive_netlist, component)
     sorted_pic_to_elec_id = get_pic_to_elec_id(instances, placements)
     sorted_topolux_id = generate_topolux_ids()
 
     netlist = {
-        "name": recursive_netlist[top_level_name]["name"],
         "connections": connections_fix,
         "placements": placements,
         "instances": instances,
         "ports": ports,
+        "name": recursive_netlist[top_level_name]["name"],
         "__pic_to_elec_ids__": sorted_pic_to_elec_id,
         "__pic_to_topolux_ids__": sorted_topolux_id,
     }
@@ -372,30 +359,26 @@ def get_ports(recursive_netlist, component):
     ecs = [
         name
         for name, inst in instances.items()
-        if "edge_coupler_array" in name and inst["settings"].get("n") == 88
+        if "edge_coupler_array" in name and inst["settings"].get("n") == 96
     ]
 
-    num = 7
-    extra = 7
+    num = 10
+    skip = 1
     for i in range(74):
         if i not in [36, 37]:
-            ports.update(
-                {f"Out{num - extra + 1}": f"{component.name}~{ecs[0]}~ec_{num},o2"}
-            )
+            ports.update({f"Out{i + 2 - skip}": f"{component.name}~{ecs[0]}~ec_{i + skip + num},o2"})
         else:
-            extra += 1
-        num += 1
+            skip += 1
+            num -= 1
 
-    num = 7
-    extra = 7
+    num = 10
+    skip = 1
     for i in range(74):
         if i not in [36, 37]:
-            ports.update(
-                {f"In{num - extra + 1}": f"{component.name}~{ecs[1]}~ec_{num},o2"}
-            )
+            ports.update({f"In{i + 2 - skip}": f"{component.name}~{ecs[1]}~ec_{i + skip + num},o2"})
         else:
-            extra += 1
-        num += 1
+            skip += 1
+            num -= 1
 
     return ports
 
@@ -415,16 +398,6 @@ def get_psr_ports(recursive_netlist, component):
     ys = [_parse_xy(p)[1] for p in all_psrs]
     mid_y = (min(ys) + max(ys)) / 2
 
-    # # In: left half, top-left first (x asc, y desc)
-    # in_psrs = sorted(
-    #     (p for p in all_psrs if _parse_xy(p)[0] < mid_x),
-    #     key=lambda name: (_parse_xy(name)[0], -_parse_xy(name)[1]),
-    # )
-    # # Out: right half, top-right first (x desc, y desc)
-    # out_psrs = sorted(
-    #     (p for p in all_psrs if _parse_xy(p)[0] >= mid_x),
-    #     key=lambda name: (-_parse_xy(name)[0], -_parse_xy(name)[1]),
-    # )
     # In: top half, left first (x asc)
     in_psrs = sorted(
         (p for p in all_psrs if _parse_xy(p)[1] > mid_y),
@@ -626,26 +599,41 @@ def _map_connections_ports(
     return connections, ports
 
 
-def _accumulate_placements(
-    hierarchy,
-    all_netlists,
-):
-    """Iterate through hierarchy tuples, accumulating placement information."""
-    placements = dict.fromkeys(["x", "y", "mirror", "rotation"], 0)
-    for (higher_component, _higher_instance), (_lower_component, lower_instance) in zip(
-        hierarchy[:-1], hierarchy[1:]
-    ):
-        for key in ["x", "y", "mirror", "rotation"]:
-            value = (
-                all_netlists.get(higher_component, {})
-                .get("placements", {})
-                .get(lower_instance, {})
-                .get(key, None)
-            )
-            if value is not None:
-                placements[key] += value
+def _accumulate_placements(hierarchy, all_netlists):
+    """Compose placement transforms down the hierarchy into one global transform."""
+    x, y, rot, mirror = 0.0, 0.0, 0.0, False
 
-    return {_flat_name(hierarchy): placements}
+    for (higher_component, _), (_, lower_instance) in zip(hierarchy[:-1], hierarchy[1:]):
+        p = (
+            all_netlists.get(higher_component, {})
+            .get("placements", {})
+            .get(lower_instance, {})
+        )
+        cx = p.get("x", 0) or 0
+        cy = p.get("y", 0) or 0
+        crot = p.get("rotation", 0) or 0
+        cmirror = bool(p.get("mirror", False))
+
+        # Transform the child offset by the accumulated parent transform:
+        # mirror (y -> -y), then rotate, then translate.
+        if mirror:
+            cy = -cy
+        a = math.radians(rot)
+        x += cx * math.cos(a) - cy * math.sin(a)
+        y += cx * math.sin(a) + cy * math.cos(a)
+
+        # Compose orientation: a mirrored parent reverses the child's rotation sense.
+        rot = (rot + (-crot if mirror else crot)) % 360
+        mirror = mirror ^ cmirror
+
+    return {
+        _flat_name(hierarchy): {
+            "x": round(x, 6),
+            "y": round(y, 6),
+            "rotation": rot,
+            "mirror": int(mirror),
+        }
+    }
 
 
 def _flatten_str_list(xs):

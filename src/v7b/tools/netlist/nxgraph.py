@@ -14,12 +14,50 @@ import networkx as nx
 
 @dataclass
 class _InternalConnection:
-    p1: str
-    p2: str
+    p1: str | int
+    p2: str | int
     data: dict[str, Any] | None = field(default_factory=dict)
 
+    def __getitem__(self, key):
+        return getattr(self, key)
 
-INTERNAL_CONNECTIONS: dict[str, Sequence[_InternalConnection]] = {}
+
+INTERNAL_CONNECTIONS: dict[str, Sequence[_InternalConnection]] = {
+    "bend": (_InternalConnection("o1", "o2"),),
+    "bend_s": (_InternalConnection("o1", "o2"),),
+    "straight": (_InternalConnection("o1", "o2"),),
+    "taper": (_InternalConnection("o1", "o2"),),
+    "puc": (
+        _InternalConnection("o1", "o3"),
+        _InternalConnection("o1", "o4"),
+        _InternalConnection("o2", "o3"),
+        _InternalConnection("o2", "o4"),
+    ),
+    "mmi": (
+        _InternalConnection("o1", "o3"),
+        _InternalConnection("o1", "o4"),
+        _InternalConnection("o2", "o3"),
+        _InternalConnection("o2", "o4"),
+    ),
+    "crossing": (_InternalConnection("o1", "o3"), _InternalConnection("o2", "o4")),
+    "crossing_anwg_si": (
+        _InternalConnection("o1", "o3"),
+        _InternalConnection("o2", "o4"),
+    ),
+    "photodiode": (),
+    "pbrs": (
+        _InternalConnection("o1", "o3"),
+        _InternalConnection("o1", "o2"),
+    ),
+    "edge_coupler": (_InternalConnection("o1", "o2"),),
+    "rib_absorber": (),
+    "slab_absorber": (),
+    "rounded_corner": (),
+    "serie_thermistor": (),
+    "rectangle": (),
+    "mesh_72x72_mockup": (),
+    "vertical_transition": (_InternalConnection("o1", "o2"),),
+}
 """Dict representing the internal connections in the netlist components."""
 
 
@@ -103,16 +141,6 @@ def get_contracted_graph(graph: nx.Graph, nodes_of_interest: Sequence[str]) -> n
     """  # noqa: E501
     ret = graph.copy()
     # contract edges
-    # for node in nodes_of_interest:
-    #     while uninteresting_neighbors := [
-    #         n for n in nx.neighbors(ret, node) if n not in nodes_of_interest
-    #     ]:
-    #         for neighbor in uninteresting_neighbors:
-    #             ret = nx.contracted_edge(
-    #                 ret, (node, neighbor), self_loops=False, copy=False
-    #             )
-    # # remove any remaining uninteresting nodes (some may remain in isolated subgraphs)
-    # ret.remove_nodes_from([n for n in ret.nodes if n not in nodes_of_interest])
     for node in set(ret.nodes()) - set(nodes_of_interest):
         neighbors = nx.all_neighbors(ret, node)
 
@@ -178,54 +206,21 @@ if __name__ == "__main__":
     import matplotlib.pyplot as plt
 
     # This requires the .json file to be previously generated with `build_netlist.py`
-    nl = json.loads((Path(__file__).parents[4] / "mesh_die_netlist.json").read_text())
-    internal_connections_file = (
-        Path(__file__).parents[0] / "internal_connections.json"
-    ).read_text()
-
-    internal_connections = json.loads(internal_connections_file)
-    nl["__internal_connections__"] = internal_connections
+    nl = json.loads((Path(__file__).parents[2] / "output/v7b_netlist.json").read_text())
 
     print("components:")  # noqa: T201
     print({e["component"] for e in nl["instances"].values()})  # noqa: T201
 
     # create the "raw" graph
     g = create_nxgraph(nl)
-    #  print(f"{g=}")
-    input_ports_pattern = r"In\d+"
-    output_ports_pattern = r"Out\d+"
     nodes_of_interest = {
         n
         for n in g.nodes
-        # if get_component(nl, n) in ["puc", "edge_coupler"]
-        if get_component(nl, n) in ["puc", "pbrs"]
-        # or get_component(nl, n) == "vertical_transition"
+        if get_component(nl, n) in ["puc", "edge_coupler"]
     }
 
-    # Identify input and output ports
-    # input_ports: set[str] = set()
-    # output_ports: set[str] = set()
-    # for k, v in nl["ports"].items():
-    #     if re.fullmatch(input_ports_pattern, k):
-    #         input_ports.add(k)
-    #         g.add_edge(k, v)
-
-    #     elif re.fullmatch(output_ports_pattern, k):
-    #         output_ports.add(k)
-    #         g.add_edge(k, v)
-
-    # nodes_of_interest |= input_ports | output_ports
-
     # select puc nodes as the only we are interested in
-
     graph = get_contracted_graph(graph=g, nodes_of_interest=nodes_of_interest)
-    # for node in graph.nodes:
-    #     if (
-    #         "v6d~mua_array_mod_NP64_Ptow_064c9c68_10297502_441000_A180_M~monitoring_unit_PFpuc_n_7b98bf08_0_5040000~puc_mua0_0_0"
-    #         in node
-    #     ):
-    #         nn = nx.all_neighbors(graph, node)
-    #         print(list(nn))
 
     pos = {
         k: (
@@ -236,3 +231,7 @@ if __name__ == "__main__":
     }
     nx.draw(graph, pos, with_labels=False)
     plt.show()
+
+    print("connections:")  # noqa: T201
+    for a, b in sorted(graph.edges):
+        print(f"{a}-{b}")

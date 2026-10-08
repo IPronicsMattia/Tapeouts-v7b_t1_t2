@@ -1,0 +1,127 @@
+import json
+from collections import Counter
+from pathlib import Path
+
+import networkx as nx
+import pandas as pd
+from v7b.tools.netlist.nxgraph import create_nxgraph
+
+
+def pairwise(iterable):
+    a = iter(iterable)
+    return zip(a, a, strict=False)
+
+
+netlist = json.loads(
+    (Path(__file__).parents[2] / "output/v7b_netlist.json").read_text()
+)
+
+# create graph from the netlist
+circuit_graph = create_nxgraph(netlist)
+
+# get the ports from the netlist
+ports = netlist["ports"]
+inputs = []
+outputs = []
+tapers = []
+bends = []
+bends_45 = []
+crossings = []
+crossings2 = []
+pucs = []
+lenghts_041 = []
+lenghts_150 = []
+pbrs = []
+path_puc = []
+count = 0
+straight_150_diff = []
+straight_041_diff = []
+
+
+for i in range(72):
+    for j in range(1):
+        # print(f"IN{i}")
+        # print(f"OUT{j}")
+        input_port = ports[f"In{i + 1}"]
+        # output_port = ports[f"Out{j+1}"]
+        output_port = f"v7b~pucmua{i + 1}_m{11271545 - i * 90000}_10999644_A270,o2"
+        paths = nx.all_simple_paths(circuit_graph, input_port, output_port)
+        straights = []
+        count = 0
+
+        for path in paths:
+            count += 1
+            path_components = []
+            length_15 = 0
+            length_41 = 0
+            bend45 = 0
+            bend = 0
+            pucs_array = []
+            for x, y in pairwise(path):
+                component_label, inport = x.split(",")
+                component_label, outport = y.split(",")
+                path_components.append(
+                    netlist["instances"][component_label]["component"]
+                )
+                if "puc" in netlist["instances"][component_label]["component"]:
+                    pucs_array.append(component_label.split("~")[-1])
+                if "straight" in netlist["instances"][component_label]["component"]:
+                    width = netlist["instances"][component_label]["info"]["width"]
+                    scale = 1 if "gdsfactory" in component_label else 1000
+                    length_info = netlist["instances"][component_label]["info"][
+                        "length"
+                    ]
+                    if width == 0.93:
+                        length_15 += length_info / scale
+                    else:
+                        length_41 = length_41 + length_info / scale
+                elif "bend" in netlist["instances"][component_label]["component"]:
+                    # angle = netlist["instances"][component_label]["settings"]["angle"]
+                    # if abs(angle) == 45:
+                    #     bend45 += 1
+                    # else:
+                    bend += 1
+
+            element_counts = Counter(path_components)
+            inputs.append(f"IN{i}")
+            # outputs.append(f"OUT{j}")
+            outputs.append(f"OUT{i}")
+            tapers.append(element_counts["taper"])
+            bends.append(bend)
+            bends_45.append(bend45)
+            crossings.append(element_counts["crossing"])
+            crossings2.append(element_counts["crossing_anwg_si"])
+            pucs.append(element_counts["puc"])
+            pbrs.append(element_counts["pbrs"])
+            lenghts_041.append(length_41)
+            lenghts_150.append(length_15)
+            if count == 1:
+                straight_150_diff.append(0)
+                straight_041_diff.append(0)
+            else:
+                straight_150_diff.append(abs(lenghts_150[-2] - lenghts_150[-1]))
+                straight_041_diff.append(abs(lenghts_041[-2] - lenghts_041[-1]))
+
+df = pd.DataFrame(
+    {
+        "Input": inputs,
+        "Output": outputs,
+        "pucs": pucs,
+        "pbrs": pbrs,
+        "crossing monolayer": crossings,
+        "crossing duolayer": crossings2,
+        "bends": bends,
+        "bends 45": bends_45,
+        "tapers": tapers,
+        "Lenght 0.41um": lenghts_041,
+        "Lenght 1.5um": lenghts_150,
+        "L041 diff": straight_041_diff,
+        "L150 diff": straight_150_diff,
+    }
+)
+print(df)
+df.to_csv(Path(__file__).parents[2] / "output" / "v7b_paths_simplified.csv")
+# writer = pd.ExcelWriter(Path(__file__).parents[2] / "output" /"v7b_paths_simplified.xlsx", engine="openpyxl")
+# wb = writer.book
+# df.to_excel(writer, index=False)
+# wb.save(Path(__file__).parents[2] / "output" /"v7b_paths_simplified.xlsx")
