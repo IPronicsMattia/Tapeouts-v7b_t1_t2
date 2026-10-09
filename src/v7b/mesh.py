@@ -946,24 +946,8 @@ def mesh_72x72(
                 (mux[6][0].xmax + mux_to_core, cores[i + 4][f"o{1 + 2 * j}"].y),
             )
 
-            st_ref = c << gf.c.straight(1, cross_section=xs)
-            st_ref.connect("o1", puc_ref["o4"])
-            bend_ref = c << bend
-            bend_ref.connect("o1", st_ref["o2"], mirror=True)
-            st_ref = c << gf.c.straight(5, cross_section=xs)
-            st_ref.connect("o1", bend_ref["o2"])
-            bend_ref = c << bend
-            bend_ref.connect("o1", st_ref["o2"])
-            st_ref = c << gf.c.straight(1, cross_section=xs)
-            st_ref.connect("o1", bend_ref["o2"])
-            if numbered:
-                pd_aux = gf.get_component(
-                    photodetector(custom_name=f"puc{i * 36 + j + 2592}")
-                )
-            else:
-                pd_aux = photodetector
-            pd_ref = c << pd_aux
-            pd_ref.connect("o1", st_ref["o2"])
+            abs_ref = c << absorber
+            abs_ref.connect("o1", puc_ref["o4"])
 
             if not (i == 0 and j == 0):
                 outputs.append(puc_ref["o2"])

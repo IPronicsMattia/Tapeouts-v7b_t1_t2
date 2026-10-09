@@ -364,20 +364,23 @@ def optical_routing(
             tap_ref_out = die << taper
             if jdx == 0:
                 tap_ref_out.connect("o1", meshes[jdx][f"o{i+1}"])
+                dx1 = -21 - 3.93 * i
+                y1 = meshes[jdx].ymax + 200 + 3.93 * i
             else:
                 tap_ref_out.connect("o1", meshes[jdx][f"o{i+73}"])
-            inputs.append(tap_ref_out["o2"])
-            outputs.append(tap_ref2["o2"])
+                y1 = meshes[jdx].ymin - 200 - 3.93 * i
+                dx1 = 21 + 3.93 * i
 
-        # Route MUA to mesh
-        gf.routing.route_bundle(
-            die,
-            inputs,
-            outputs,
-            bend=aux_bend, cross_section=xs_w,
-            separation=3,
-            start_straight_length=1,
-        )
+            # Route MUA to mesh
+            gf.routing.route_single(
+                die,
+                tap_ref_out["o2"],
+                tap_ref2["o2"],
+                bend=aux_bend, cross_section=xs_w,
+                steps = [{"dx":dx1},
+                         {"y": y1},
+                         {"x": tap_ref2["o2"].x}]
+            )
         # ((Distance wvg wvg + wvg large width) * 2  - random diff) * n_bends / (n_bends - 1)
         comp = ((3 + 0.93) * 2 - 0.037) * 5 / 4
 

@@ -29,6 +29,10 @@ def component_placement(
     """This function places the components in the DIE"""
 
     die = gf.get_component(die)
+    die_xmin = die.xmin
+    die_xmax = die.xmax
+    die_ymin = die.ymin
+    die_ymax = die.ymax
     generic_pdk = gf.get_active_pdk()
     generic_cells = generic_pdk.cells
 
@@ -290,20 +294,17 @@ def component_placement(
     #############################
     # Cores                     #
     #############################
-    x_separation = die.xmin + (die.xsize - mesh.xsize * 2) / 2
-    inner_spacing = -235.62
     for i in range(2):
         mesh_ref = die << mesh
-        mesh_ref.move(
-            (mesh_ref.xmin, mesh_ref.y),
-            (x_separation + i * mesh_ref.xsize - inner_spacing / 2, 0),
-        )
         if i == 0:
-            mesh_ref.movex(-3.18)
+            mesh_ref.movex(mesh_ref["o1"].x, die_xmin + 1300)
+            mesh_ref.movey(mesh_ref["o1"].y, die_ymax - 2903.255)
         else:
-            mesh_ref.movex(73.725)
+            mesh_ref.movex(mesh_ref["o73"].x, die_xmax - 1300)
+            mesh_ref.movey(mesh_ref["o73"].y, die_ymin + 2903.255)
+
         meshes.append(mesh_ref)
-        inner_spacing *= -1
+
     print("\nCreated Meshes\n")
 
     #############################
