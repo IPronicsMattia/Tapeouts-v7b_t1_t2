@@ -142,7 +142,7 @@ def get_contracted_graph(graph: nx.Graph, nodes_of_interest: Sequence[str]) -> n
     ret = graph.copy()
     # contract edges
     for node in set(ret.nodes()) - set(nodes_of_interest):
-        neighbors = nx.all_neighbors(ret, node)
+        neighbors = set(nx.all_neighbors(ret, node))  # materialise before mutating
 
         ret.remove_node(node)
 

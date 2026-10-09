@@ -44,7 +44,7 @@ for i in range(72):
         # print(f"OUT{j}")
         input_port = ports[f"In{i + 1}"]
         # output_port = ports[f"Out{j+1}"]
-        output_port = f"v7b~pucmua{i + 1}_m{11271545 - i * 90000}_10999644_A270,o2"
+        output_port = f"v7b~mesh_72x72_mockup_m11204084_m9706825,o{72-i}"
         paths = nx.all_simple_paths(circuit_graph, input_port, output_port)
         straights = []
         count = 0
@@ -83,24 +83,25 @@ for i in range(72):
                     bend += 1
 
             element_counts = Counter(path_components)
-            inputs.append(f"IN{i}")
-            # outputs.append(f"OUT{j}")
-            outputs.append(f"OUT{i}")
-            tapers.append(element_counts["taper"])
-            bends.append(bend)
-            bends_45.append(bend45)
-            crossings.append(element_counts["crossing"])
-            crossings2.append(element_counts["crossing_anwg_si"])
-            pucs.append(element_counts["puc"])
-            pbrs.append(element_counts["pbrs"])
-            lenghts_041.append(length_41)
-            lenghts_150.append(length_15)
-            if count == 1:
-                straight_150_diff.append(0)
-                straight_041_diff.append(0)
-            else:
-                straight_150_diff.append(abs(lenghts_150[-2] - lenghts_150[-1]))
-                straight_041_diff.append(abs(lenghts_041[-2] - lenghts_041[-1]))
+            if element_counts["puc"] == 2 and element_counts["pbrs"] == 2:
+                inputs.append(f"IN{i}")
+                # outputs.append(f"OUT{j}")
+                outputs.append(f"OUT{i}")
+                tapers.append(element_counts["taper"])
+                bends.append(bend)
+                bends_45.append(bend45)
+                crossings.append(element_counts["crossing"])
+                crossings2.append(element_counts["crossing_anwg_si"])
+                pucs.append(element_counts["puc"])
+                pbrs.append(element_counts["pbrs"])
+                lenghts_041.append(length_41)
+                lenghts_150.append(length_15)
+                if len(straight_150_diff) < 1:
+                    straight_150_diff.append(0)
+                    straight_041_diff.append(0)
+                else:
+                    straight_150_diff.append(lenghts_150[-2] - lenghts_150[-1])
+                    straight_041_diff.append(lenghts_041[-2] - lenghts_041[-1])
 
 df = pd.DataFrame(
     {

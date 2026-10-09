@@ -5,6 +5,7 @@ import v7b
 from v7b.mesh import inner_mesh_core, mesh_72x72
 from v7b.pdk import (
     ipronics_logo,
+    mesh_72x72_mockup,
     phase_shifter_cassette,
     spaced_bend,
     v7b_cells,
@@ -13,19 +14,6 @@ from v7b.pdk import (
 )
 
 DRC_FRIENDLY = False
-# ipr.crossing()
-# ## IMPORTANT: IF DRC_FRIENDLY IS TRUE THE FOLLOWING LINES MUST BE ADDED
-# ## TO CROSSINGS.PY def add_ports IN IPRLAYOUT BEFORE RETURNING THE COMPONENT
-# for port in c.ports:
-#     orientation = round(port.orientation)
-#     if orientation == 0:
-#         port.center = (port.center[0] - 0.001, port.center[1])
-#     elif orientation == 90:
-#         port.center = (port.center[0], port.center[1] - 0.001)
-#     elif orientation == 180:
-#         port.center = (port.center[0] + 0.001, port.center[1])
-#     elif orientation == 270:
-#         port.center = (port.center[0], port.center[1] + 0.001)
 
 
 def component_placement(
@@ -36,6 +24,7 @@ def component_placement(
     ec_in: list,
     ec_out: list,
     numbered: bool,
+    real_mesh: bool = True,
 ) -> None:
     """This function places the components in the DIE"""
 
@@ -169,13 +158,16 @@ def component_placement(
         drc_friendly=DRC_FRIENDLY,
     )
 
-    mesh = mesh_72x72(core, puc, bend_r5, taper_410_930, xs, xs_w, xs_n, numbered)
+    if real_mesh:
+        mesh = mesh_72x72(core, puc, bend_r5, taper_410_930, xs, xs_w, xs_n, numbered)
+    else:
+        mesh = mesh_72x72_mockup()
 
     #############################
     # Edge Couplers             #
     #############################
     ec_ref = die << gf.c.edge_coupler_array(
-        pitch=-127, n=88, edge_coupler=ec_component, text=None
+        pitch=-127, n=96, edge_coupler=ec_component, text=None
     )
     ec_ref.rotate(-90)
     ec_ref.mirror_x()
@@ -183,48 +175,11 @@ def component_placement(
     ec_ref.movey(ec_ref.ymax, die.ymax - 75)
 
     ec_ref2 = die << gf.c.edge_coupler_array(
-        pitch=-127, n=88, edge_coupler=ec_component, text=None
+        pitch=-127, n=96, edge_coupler=ec_component, text=None
     )
     ec_ref2.rotate(90)
     ec_ref2.movex(ec_ref2.x, 31.75)
     ec_ref2.movey(ec_ref2.ymin, die.ymin + 75)
-
-    #############################
-    # Extra ECs                 #
-    #############################
-    # NOTE that ECs should be included in upper sections but are included here due to
-    # review requests since adding them up in the code will be too time consuming now
-    # due to dependencies in the posterior routing
-
-    ec_ref_aux = die << gf.c.edge_coupler_array(
-        pitch=-127, n=4, edge_coupler=ec_component, text=None
-    )
-    ec_ref_aux.rotate(-90)
-    ec_ref_aux.mirror_x()
-    ec_ref_aux.movex(ec_ref_aux.xmax, ec_ref.xmin - 63)
-    ec_ref_aux.movey(ec_ref_aux.ymax, die.ymax - 75)
-
-    ec_ref_aux = die << gf.c.edge_coupler_array(
-        pitch=-127, n=4, edge_coupler=ec_component, text=None
-    )
-    ec_ref_aux.rotate(-90)
-    ec_ref_aux.mirror_x()
-    ec_ref_aux.movex(ec_ref_aux.xmin, ec_ref.xmax + 63)
-    ec_ref_aux.movey(ec_ref_aux.ymax, die.ymax - 75)
-
-    ec_ref2_aux = die << gf.c.edge_coupler_array(
-        pitch=-127, n=4, edge_coupler=ec_component, text=None
-    )
-    ec_ref2_aux.rotate(90)
-    ec_ref2_aux.movex(ec_ref2_aux.xmax, ec_ref2.xmin - 63)
-    ec_ref2_aux.movey(ec_ref2_aux.ymin, die.ymin + 75)
-
-    ec_ref2_aux = die << gf.c.edge_coupler_array(
-        pitch=-127, n=4, edge_coupler=ec_component, text=None
-    )
-    ec_ref2_aux.rotate(90)
-    ec_ref2_aux.movex(ec_ref2_aux.xmin, ec_ref2.xmax + 63)
-    ec_ref2_aux.movey(ec_ref2_aux.ymin, die.ymin + 75)
 
     #############################
     # VT + PSR                  #
@@ -237,15 +192,19 @@ def component_placement(
         "o5",
         "o6",
         "o7",
-        "o44",
-        "o45",
-        "o82",
-        "o83",
-        "o84",
-        "o85",
-        "o86",
-        "o87",
+        "o8",
+        "o9",
+        "o48",
+        "o49",
         "o88",
+        "o89",
+        "o90",
+        "o91",
+        "o92",
+        "o93",
+        "o94",
+        "o95",
+        "o96",
     }
 
     upper_te = []
@@ -269,6 +228,9 @@ def component_placement(
             ac_ref = die << ac
             ac_ref.connect("o1", psr_ref["o4"])
             upper_tm.append(ac_ref["o2"])
+        else:
+            upper_te.append(port)
+            upper_tm.append(port)
 
     ec_in.extend((upper_tm, upper_te))
 
@@ -293,13 +255,16 @@ def component_placement(
             ac_ref = die << ac
             ac_ref.connect("o1", psr_ref["o3"], mirror=True)
             lower_te.append(ac_ref["o2"])
+        else:
+            lower_tm.append(port)
+            lower_te.append(port)
 
     ec_out.extend((lower_tm, lower_te))
 
     vt_ref1 = die << sin_si_transition
-    vt_ref1.connect("o2", ec_ref["o44"])
+    vt_ref1.connect("o2", ec_ref["o48"])
     vt_ref2 = die << sin_si_transition
-    vt_ref2.connect("o2", ec_ref["o45"])
+    vt_ref2.connect("o2", ec_ref["o49"])
     gf.routing.route_single(
         die,
         vt_ref1["o1"],
@@ -310,9 +275,9 @@ def component_placement(
     )
 
     vt_ref1 = die << sin_si_transition
-    vt_ref1.connect("o2", ec_ref2["o44"])
+    vt_ref1.connect("o2", ec_ref2["o48"])
     vt_ref2 = die << sin_si_transition
-    vt_ref2.connect("o2", ec_ref2["o45"])
+    vt_ref2.connect("o2", ec_ref2["o49"])
     gf.routing.route_single(
         die,
         vt_ref1["o1"],
@@ -344,12 +309,14 @@ def component_placement(
     #############################
     # MUA IN                    #
     #############################
+    mua_dx = 5300
+    mua_dy = 1000
     temps = []
     for i in range(74):
         if i < 2:
             # 73 => TE & 74 => TM
             puc_ref = die << gf.get_component(
-                puc(puc_number=f"mua{"73" if i == 0 else "74"}")
+                puc(puc_number=f"mua{'73' if i == 0 else '74'}")
             )
         else:
             if numbered:
@@ -361,8 +328,8 @@ def component_placement(
         puc_ref.move(
             (puc_ref.x, puc_ref["o1"].y),
             (
-                ec_ref["o8"].x - 6671.9 + 90 * i,
-                ec_ref["o1"].y - 1790,
+                ec_ref["o1"].x - mua_dx + 90 * i,
+                ec_ref["o1"].y - mua_dy,
             ),
         )
         if i > 1:
@@ -382,7 +349,7 @@ def component_placement(
             # 73 => TE & 74 => TM
             if i < 2:
                 pd_aux = gf.get_component(
-                    photodetector(custom_name=f"pucmua{"73" if i == 0 else "74"}")
+                    photodetector(custom_name=f"pucmua{'73' if i == 0 else '74'}")
                 )
             else:
                 pd_aux = gf.get_component(
@@ -407,7 +374,7 @@ def component_placement(
             # 73 => TE & 74 => TM
             if i < 2:
                 pd_aux = gf.get_component(
-                    photodetector(custom_name=f"pucmua{"73" if i == 0 else "74"}")
+                    photodetector(custom_name=f"pucmua{'73' if i == 0 else '74'}")
                 )
             else:
                 pd_aux = gf.get_component(
@@ -425,7 +392,7 @@ def component_placement(
         # 73 => TE & 74 => TM
         if i > 71:
             puc_ref = die << gf.get_component(
-                puc(puc_number=f"mua{"73" if i == 72 else "74"}")
+                puc(puc_number=f"mua{'73' if i == 72 else '74'}")
             )
         else:
             if numbered:
@@ -436,8 +403,8 @@ def component_placement(
         puc_ref.move(
             (puc_ref.x, puc_ref["o1"].y),
             (
-                ec_ref["o82"].x - 4730.092 + 90 * i,
-                ec_ref["o1"].y - 1790,
+                ec_ref["o96"].x - mua_dx + 90 * (i - 6),
+                ec_ref["o1"].y - mua_dy,
             ),
         )
         if i < 72:
@@ -456,7 +423,7 @@ def component_placement(
             # 73 => TE & 74 => TM
             if i > 71:
                 pd_aux = gf.get_component(
-                    photodetector(custom_name=f"pucmua{"73" if i == 72 else "74"}")
+                    photodetector(custom_name=f"pucmua{'73' if i == 72 else '74'}")
                 )
             else:
                 pd_aux = gf.get_component(photodetector(custom_name=f"pucmua{1 + i}"))
@@ -479,7 +446,7 @@ def component_placement(
             # 73 => TE & 74 => TM
             if i > 71:
                 pd_aux = gf.get_component(
-                    photodetector(custom_name=f"pucmua{"73" if i == 72 else "74"}")
+                    photodetector(custom_name=f"pucmua{'73' if i == 72 else '74'}")
                 )
             else:
                 pd_aux = gf.get_component(photodetector(custom_name=f"pucmua{1 + i}"))
@@ -498,12 +465,12 @@ def component_placement(
     for jdx in range(2):
         temps = []
         for i in range(74):
-            if jdx == 0: # LEFT
+            if jdx == 0:  # LEFT
                 if i > 1:
                     puc_number = 75 + i - 2 if numbered else 0
                 else:
                     puc_number = 147 + i
-            else: # RIGHT
+            else:  # RIGHT
                 if i < 72:
                     puc_number = 75 + i if numbered else 0
                 else:
@@ -514,20 +481,20 @@ def component_placement(
             # Place the PUCs
             puc_ref.rotate(-90)
 
-            if jdx == 0: # LEFT
+            if jdx == 0:  # LEFT
                 puc_ref.move(
-                    (puc_ref.x, puc_ref["o1"].y),
+                    (puc_ref.x, puc_ref["o3"].y),
                     (
-                        ec_ref2["o8"].x - 1800.583 + 90 * i,
-                        ec_ref2["o1"].y + 1970.2,
+                        ec_ref2["o1"].x + mua_dx - 90 * (i - 6),
+                        ec_ref2["o1"].y + mua_dy,
                     ),
                 )
-            else: # RIGHT
+            else:  # RIGHT
                 puc_ref.move(
-                    (puc_ref.x, puc_ref["o1"].y),
+                    (puc_ref.x, puc_ref["o3"].y),
                     (
-                        ec_ref2["o82"].x - 25.1 + 90 * i,
-                        ec_ref2["o1"].y + 1970.2,
+                        ec_ref2["o96"].x + mua_dx - 90 * i,
+                        ec_ref2["o1"].y + mua_dy,
                     ),
                 )
 
@@ -545,7 +512,9 @@ def component_placement(
             st_ref = die << gf.c.straight(5, cross_section=xs)
             st_ref.connect("o1", bend_ref["o2"])
             if numbered:
-                pd_aux = gf.get_component(photodetector(custom_name=f"pucmua{puc_number}"))
+                pd_aux = gf.get_component(
+                    photodetector(custom_name=f"pucmua{puc_number}")
+                )
             else:
                 pd_aux = photodetector
             pd_ref = die << pd_aux
@@ -562,7 +531,9 @@ def component_placement(
             st_ref = die << gf.c.straight(5, cross_section=xs)
             st_ref.connect("o1", bend_ref["o2"])
             if numbered:
-                pd_aux = gf.get_component(photodetector(custom_name=f"pucmua{puc_number}"))
+                pd_aux = gf.get_component(
+                    photodetector(custom_name=f"pucmua{puc_number}")
+                )
             else:
                 pd_aux = photodetector
             pd_ref = die << pd_aux
@@ -691,11 +662,11 @@ def component_placement(
     # Labels                    #
     #############################
     for i in range(96):
-        text_ref = die << gf.c.text(f"EC_{i+1}", 30, layer=(28, 0))
+        text_ref = die << gf.c.text(f"EC_{i + 1}", 30, layer=(28, 0))
         text_ref.rotate(-90)
         text_ref.move((text_ref.x, text_ref.y), (-6000.75 + 127 * i, 12177))
 
-        text_ref = die << gf.c.text(f"EC_{i+1}", 30, layer=(28, 0))
+        text_ref = die << gf.c.text(f"EC_{i + 1}", 30, layer=(28, 0))
         text_ref.rotate(-90)
         text_ref.move((text_ref.x, text_ref.y), (-5937.25 + 127 * i, -12177))
 
