@@ -366,7 +366,11 @@ def get_ports(recursive_netlist, component):
     skip = 1
     for i in range(74):
         if i not in [36, 37]:
-            ports.update({f"Out{i + 2 - skip}": f"{component.name}~{ecs[0]}~ec_{i + skip + num},o2"})
+            ports.update(
+                {
+                    f"Out{i + 2 - skip}": f"{component.name}~{ecs[0]}~ec_{i + skip + num},o2"
+                }
+            )
         else:
             skip += 1
             num -= 1
@@ -375,7 +379,11 @@ def get_ports(recursive_netlist, component):
     skip = 1
     for i in range(74):
         if i not in [36, 37]:
-            ports.update({f"In{i + 2 - skip}": f"{component.name}~{ecs[1]}~ec_{i + skip + num},o2"})
+            ports.update(
+                {
+                    f"In{i + 2 - skip}": f"{component.name}~{ecs[1]}~ec_{i + skip + num},o2"
+                }
+            )
         else:
             skip += 1
             num -= 1
@@ -603,7 +611,9 @@ def _accumulate_placements(hierarchy, all_netlists):
     """Compose placement transforms down the hierarchy into one global transform."""
     x, y, rot, mirror = 0.0, 0.0, 0.0, False
 
-    for (higher_component, _), (_, lower_instance) in zip(hierarchy[:-1], hierarchy[1:]):
+    for (higher_component, _), (_, lower_instance) in zip(
+        hierarchy[:-1], hierarchy[1:]
+    ):
         p = (
             all_netlists.get(higher_component, {})
             .get("placements", {})

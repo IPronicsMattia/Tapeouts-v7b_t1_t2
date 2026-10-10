@@ -214,9 +214,7 @@ if __name__ == "__main__":
     # create the "raw" graph
     g = create_nxgraph(nl)
     nodes_of_interest = {
-        n
-        for n in g.nodes
-        if get_component(nl, n) in ["puc", "edge_coupler"]
+        n for n in g.nodes if get_component(nl, n) in ["puc", "edge_coupler"]
     }
 
     # select puc nodes as the only we are interested in

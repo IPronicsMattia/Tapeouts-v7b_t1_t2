@@ -310,8 +310,8 @@ def component_placement(
     #############################
     # MUA IN                    #
     #############################
-    mua_dx = 5300
-    mua_dy = 1000
+    mua_dx = 5370
+    mua_dy = 1770
     temps = []
     for i in range(74):
         if i < 2:
@@ -333,8 +333,7 @@ def component_placement(
                 ec_ref["o1"].y - mua_dy,
             ),
         )
-        if i > 1:
-            temps.append(puc_ref)
+        temps.append(puc_ref)
 
         st_ref = die << gf.c.straight(5, cross_section=xs)
         st_ref.connect("o1", puc_ref["o1"])
@@ -408,8 +407,7 @@ def component_placement(
                 ec_ref["o1"].y - mua_dy,
             ),
         )
-        if i < 72:
-            temps.append(puc_ref)
+        temps.append(puc_ref)
         st_ref = die << gf.c.straight(5, cross_section=xs)
         st_ref.connect("o1", puc_ref["o1"])
         bend_ref = die << bend_r5
