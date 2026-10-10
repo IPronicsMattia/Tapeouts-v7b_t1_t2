@@ -396,7 +396,9 @@ def optical_routing(
 
             # Place the compensation
             rib_comp = die << ipr.spiral_compensation(
-                gf.c.straight(n_bends + extra1 + comp * (i - 71) + extra, cross_section=xs_w),
+                gf.c.straight(
+                    n_bends + extra1 + comp * (i - 71) + extra, cross_section=xs_w
+                ),
                 n_bends,
                 0,
                 0,
@@ -406,11 +408,11 @@ def optical_routing(
 
             # Connect it
             rib_comp.mirror_x()
-            rib_comp.connect("o1", strt_bot_array[71-i]["o2"])
+            rib_comp.connect("o1", strt_bot_array[71 - i]["o2"])
 
             gf.routing.route_single(
                 die,
-                strt_top_array[71-i]["o1"],
+                strt_top_array[71 - i]["o1"],
                 rib_comp["o2"],
                 bend=aux_bend,
                 cross_section=xs_w,
@@ -447,14 +449,14 @@ def optical_routing(
             # Taper to the MUA
             if jdx == 0:
                 tap_ref1 = die << sp_taper
-                tap_ref1.connect("o1", mua_in[1][71-i]["o2"])
+                tap_ref1.connect("o1", mua_in[1][71 - i]["o2"])
                 tap_ref2 = die << sp_taper
-                tap_ref2.connect("o1", mua_in[1][71-i]["o4"])
+                tap_ref2.connect("o1", mua_in[1][71 - i]["o4"])
             else:
                 tap_ref1 = die << sp_taper
-                tap_ref1.connect("o1", mua_out[0][71-i]["o4"])
+                tap_ref1.connect("o1", mua_out[0][71 - i]["o4"])
                 tap_ref2 = die << sp_taper
-                tap_ref2.connect("o1", mua_out[0][71-i]["o2"])
+                tap_ref2.connect("o1", mua_out[0][71 - i]["o2"])
 
             # Route it MUA and straight
             gf.routing.route_single(
@@ -470,20 +472,20 @@ def optical_routing(
                 strt_top["o2"],
                 bend=aux_bend,
                 cross_section=xs_w,
-                start_straight_length=3.93 * i
+                start_straight_length=3.93 * i,
             )
 
             # Taper to the mesh
             if jdx == 0:
                 tap_ref_out = die << taper
-                tap_ref_out.connect("o1", meshes[1-jdx][f"o{i + 1}"])
+                tap_ref_out.connect("o1", meshes[1 - jdx][f"o{i + 1}"])
                 dx1 = -21 - 3.93 * i
-                y1 = meshes[1-jdx].ymax + 60 + 3.93 * i
+                y1 = meshes[1 - jdx].ymax + 60 + 3.93 * i
             else:
                 tap_ref_out = die << taper
-                tap_ref_out.connect("o1", meshes[1-jdx][f"o{i + 73}"])
+                tap_ref_out.connect("o1", meshes[1 - jdx][f"o{i + 73}"])
                 dx1 = 21 + 3.93 * i
-                y1 = meshes[1-jdx].ymin - 60 - 3.93 * i
+                y1 = meshes[1 - jdx].ymin - 60 - 3.93 * i
 
             # Routing between the two
             gf.routing.route_single(
@@ -519,11 +521,11 @@ def optical_routing(
 
             # Connect it
             rib_comp.mirror_x()
-            rib_comp.connect("o1", strt_bot_array[71-i]["o2"])
+            rib_comp.connect("o1", strt_bot_array[71 - i]["o2"])
 
             gf.routing.route_single(
                 die,
-                strt_top_array[71-i]["o1"],
+                strt_top_array[71 - i]["o1"],
                 rib_comp["o2"],
                 bend=aux_bend,
                 cross_section=xs_w,
@@ -548,9 +550,9 @@ def optical_routing(
     for i in range(4):
         mzi = mzi1 if i < 2 else mzi2
         abs_ref = die << absorber
-        abs_ref.connect("o1", mzi[f"o{3 + i % 2 }"], mirror=i % 2 == 0)
+        abs_ref.connect("o1", mzi[f"o{3 + i % 2}"], mirror=i % 2 == 0)
         vt_ref1 = die << loop_sin_si_transition
-        vt_ref1.connect("o2", ec_in[0][i+4])
+        vt_ref1.connect("o2", ec_in[0][i + 4])
         out.append(vt_ref1["o1"])
 
     for i, start in enumerate(out):
@@ -589,9 +591,9 @@ def optical_routing(
     for i in range(4):
         mzi = mzi1 if i < 2 else mzi2
         abs_ref = die << absorber
-        abs_ref.connect("o1", mzi[f"o{3 + i % 2 }"], mirror=i % 2 == 0)
+        abs_ref.connect("o1", mzi[f"o{3 + i % 2}"], mirror=i % 2 == 0)
         vt_ref1 = die << loop_sin_si_transition
-        vt_ref1.connect("o2", ec_in[0][88+i])
+        vt_ref1.connect("o2", ec_in[0][88 + i])
         out.append(vt_ref1["o1"])
 
     for i, start in enumerate(out):
@@ -628,9 +630,9 @@ def optical_routing(
     for i in range(4):
         mzi = mzi1 if i < 2 else mzi2
         abs_ref = die << absorber
-        abs_ref.connect("o1", mzi[f"o{3 + i % 2 }"], mirror=i % 2 == 0)
+        abs_ref.connect("o1", mzi[f"o{3 + i % 2}"], mirror=i % 2 == 0)
         vt_ref1 = die << loop_sin_si_transition
-        vt_ref1.connect("o2", ec_out[0][i+4])
+        vt_ref1.connect("o2", ec_out[0][i + 4])
         out.append(vt_ref1["o1"])
 
     for i, start in enumerate(out):
@@ -667,9 +669,9 @@ def optical_routing(
     for i in range(4):
         mzi = mzi1 if i < 2 else mzi2
         abs_ref = die << absorber
-        abs_ref.connect("o1", mzi[f"o{3 + i % 2 }"], mirror=i % 2 == 0)
+        abs_ref.connect("o1", mzi[f"o{3 + i % 2}"], mirror=i % 2 == 0)
         vt_ref1 = die << loop_sin_si_transition
-        vt_ref1.connect("o2", ec_out[0][i+88])
+        vt_ref1.connect("o2", ec_out[0][i + 88])
         out.append(vt_ref1["o1"])
 
     for i, start in enumerate(out):
@@ -799,7 +801,7 @@ def optical_routing(
     out = []
     for i in range(2):
         tap_ref = die << taper
-        tap_ref.connect("o1", mua_out[0][73-i]["o2"])
+        tap_ref.connect("o1", mua_out[0][73 - i]["o2"])
         out.append(tap_ref["o2"])
 
     gf.routing.route_bundle(
@@ -815,8 +817,8 @@ def optical_routing(
     # Update the aux2 for the routed MUA
     for i in range(2):
         tap_ref = die << taper
-        tap_ref.connect("o1", mua_out[0][73-i]["o4"])
-        aux2[3+i] = tap_ref["o2"]
+        tap_ref.connect("o1", mua_out[0][73 - i]["o4"])
+        aux2[3 + i] = tap_ref["o2"]
 
     # Route BOTTOM MUA to EC
     out = []
@@ -845,7 +847,6 @@ def optical_routing(
         sort_ports=True,
         start_straight_length=100,
     )
-
 
     # Right side
     for i in range(2):
@@ -885,7 +886,7 @@ def optical_routing(
         tap_ref.connect("o1", ec_in[i][85])
         inp.append(tap_ref["o2"])
         tap_ref = die << taper
-        tap_ref.connect("o1", mua_in[1][72+i]["o2"])
+        tap_ref.connect("o1", mua_in[1][72 + i]["o2"])
         out.append(tap_ref["o2"])
 
     gf.routing.route_bundle(
@@ -919,7 +920,7 @@ def optical_routing(
     inp = []
     for i in range(2):
         tap_ref = die << taper
-        tap_ref.connect("o1", mua_in[1][72+i]["o4"])
+        tap_ref.connect("o1", mua_in[1][72 + i]["o4"])
         out.append(tap_ref["o2"])
 
     # Output of the top EC to be routed
@@ -962,7 +963,7 @@ def optical_routing(
     out = []
     for idx in range(2):
         tap_ref = die << taper
-        tap_ref.connect("o1", mua_out[1][1-idx]["o2"])
+        tap_ref.connect("o1", mua_out[1][1 - idx]["o2"])
         out.append(tap_ref["o2"])
 
     gf.routing.route_bundle(

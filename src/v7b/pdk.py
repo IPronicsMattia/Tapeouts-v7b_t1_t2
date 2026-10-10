@@ -505,11 +505,11 @@ def spaced_bend(angle: int = 90, width: float = 0.41) -> gf.Component:
     c.info["length"] = bend.cell.info["length"] + 1
     return c
 
+
 @gf.cell
 def spaced_taper(taper, straight) -> gf.Component:
     c = gf.Component()
-    kwargs = {'bb2': taper,
-              'straight': straight}
+    kwargs = {"bb2": taper, "straight": straight}
     tp = c << ipr.bb_straight_bb(length=1, **kwargs)
     for port in tp:
         c.add_port(name=port.name, port=port)
