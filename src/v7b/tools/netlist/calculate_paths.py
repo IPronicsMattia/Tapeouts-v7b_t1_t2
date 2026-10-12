@@ -31,6 +31,7 @@ crossings2 = []
 pucs = []
 lenghts_041 = []
 lenghts_150 = []
+lengths_si2 = []
 pbrs = []
 path_puc = []
 count = 0
@@ -38,22 +39,30 @@ straight_150_diff = []
 straight_041_diff = []
 
 
-for i in range(72):
-    for j in range(1):
-        # print(f"IN{i}")
-        # print(f"OUT{j}")
-        input_port = ports[f"In{i + 1}"]
-        # output_port = ports[f"Out{j+1}"]
-        output_port = f"v7b~mesh_72x72_mockup_m11204084_m9706825,o{72-i}"
+for j in range(2):
+    for i in range(72):
+        if j == 0:
+            input_port = ports[f"In{i + 1}"]
+        else:
+            input_port = ports[f"Out{i + 1}"]
+        print(input_port)
+        if j == 0:
+            output_port = f"v7b~mesh_72x72_mockup_m11203850_m9718075,o{72 - i}"
+            # output_port = f"v7b~mesh_72x72_mockup_m80714_m9718075,o{72-i}"
+            # output_port = f"v7b~mesh_72x72_CFinner_mesh_e69a7c48_m5566564_9695575~puc{71 - i}_m5535080_m{6397870 - 90000 * i},o1"
+        else:
+            output_port = f"v7b~mesh_72x72_mockup_m80714_m9718075,o{73 + i}"
+            # output_port = f"v7b~mesh_72x72_mockup_m11203850_m9718075,o{73+i}"
+            # output_port = f"v7b~mesh_72x72_CFinner_mesh_e69a7c48_5556565_9695575~puc{2663 - i}_5550195_m{19357870 - 90000 * i},o3"
         paths = nx.all_simple_paths(circuit_graph, input_port, output_port)
         straights = []
         count = 0
-
         for path in paths:
             count += 1
             path_components = []
             length_15 = 0
             length_41 = 0
+            length_si2 = 0
             bend45 = 0
             bend = 0
             pucs_array = []
@@ -67,14 +76,16 @@ for i in range(72):
                     pucs_array.append(component_label.split("~")[-1])
                 if "straight" in netlist["instances"][component_label]["component"]:
                     width = netlist["instances"][component_label]["info"]["width"]
-                    scale = 1 if "gdsfactory" in component_label else 1000
+                    scale = 1
                     length_info = netlist["instances"][component_label]["info"][
                         "length"
                     ]
                     if width == 0.93:
                         length_15 += length_info / scale
+                    elif width == 2.00:
+                        length_si2 += length_info / scale
                     else:
-                        length_41 = length_41 + length_info / scale
+                        length_41 += length_info / scale
                 elif "bend" in netlist["instances"][component_label]["component"]:
                     # angle = netlist["instances"][component_label]["settings"]["angle"]
                     # if abs(angle) == 45:
@@ -84,9 +95,12 @@ for i in range(72):
 
             element_counts = Counter(path_components)
             if element_counts["puc"] == 2 and element_counts["pbrs"] == 2:
-                inputs.append(f"IN{i}")
-                # outputs.append(f"OUT{j}")
-                outputs.append(f"OUT{i}")
+                if j == 0:
+                    inputs.append(f"IN{i}")
+                    outputs.append(f"MESH{i}")
+                else:
+                    inputs.append(f"OUT{i}")
+                    outputs.append(f"MESH{i}")
                 tapers.append(element_counts["taper"])
                 bends.append(bend)
                 bends_45.append(bend45)
@@ -96,6 +110,7 @@ for i in range(72):
                 pbrs.append(element_counts["pbrs"])
                 lenghts_041.append(length_41)
                 lenghts_150.append(length_15)
+                lengths_si2.append(length_si2)
                 if len(straight_150_diff) < 1:
                     straight_150_diff.append(0)
                     straight_041_diff.append(0)
@@ -116,6 +131,7 @@ df = pd.DataFrame(
         "tapers": tapers,
         "Lenght 0.41um": lenghts_041,
         "Lenght 1.5um": lenghts_150,
+        "Length Si2": lengths_si2,
         "L041 diff": straight_041_diff,
         "L150 diff": straight_150_diff,
     }

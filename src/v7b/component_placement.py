@@ -465,15 +465,15 @@ def component_placement(
         temps = []
         for i in range(74):
             if jdx == 0:  # LEFT
+                if i < 72:
+                    puc_number = 75 + i if numbered else 0
+                else:
+                    puc_number = 75 + i
+            else:  # RIGHT
                 if i > 1:
                     puc_number = 75 + i - 2 if numbered else 0
                 else:
                     puc_number = 147 + i
-            else:  # RIGHT
-                if i < 72:
-                    puc_number = 75 + i if numbered else 0
-                else:
-                    puc_number = 147 - 72 + i
 
             puc_ref = die << gf.get_component(puc(puc_number=f"mua{puc_number}"))
 

@@ -204,8 +204,8 @@ def build_flow_graph(
             unknown[comp] = unknown.get(comp, 0) + 1
             continue
         for chan in channels:
-            state = (chan.data or {}).get("puc_k")
-            for a, b in ((chan.p1, chan.p2), (chan.p2, chan.p1)):
+            state = (chan["data"] or {}).get("puc_k")
+            for a, b in ((chan["p1"], chan["p2"]), (chan["p2"], chan["p1"])):
                 pa, pb = f"{inst},{a}", f"{inst},{b}"
                 if pa not in peer or pb not in peer:
                     dangling.extend(p for p in (pa, pb) if p not in peer)
@@ -221,7 +221,7 @@ def build_flow_graph(
                     pucs=(f"{short_name(inst)}, {a}",) if comp == "puc" else (),
                     puc_states=((inst, float(state)),) if state is not None else (),
                     traversals=1,
-                    **(chan.data or {}),
+                    **(chan["data"] or {}),
                 )
 
     report = {

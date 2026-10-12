@@ -22,43 +22,9 @@ class _InternalConnection:
         return getattr(self, key)
 
 
-INTERNAL_CONNECTIONS: dict[str, Sequence[_InternalConnection]] = {
-    "bend": (_InternalConnection("o1", "o2"),),
-    "bend_s": (_InternalConnection("o1", "o2"),),
-    "straight": (_InternalConnection("o1", "o2"),),
-    "taper": (_InternalConnection("o1", "o2"),),
-    "puc": (
-        _InternalConnection("o1", "o3"),
-        _InternalConnection("o1", "o4"),
-        _InternalConnection("o2", "o3"),
-        _InternalConnection("o2", "o4"),
-    ),
-    "mmi": (
-        _InternalConnection("o1", "o3"),
-        _InternalConnection("o1", "o4"),
-        _InternalConnection("o2", "o3"),
-        _InternalConnection("o2", "o4"),
-    ),
-    "crossing": (_InternalConnection("o1", "o3"), _InternalConnection("o2", "o4")),
-    "crossing_anwg_si": (
-        _InternalConnection("o1", "o3"),
-        _InternalConnection("o2", "o4"),
-    ),
-    "photodiode": (),
-    "pbrs": (
-        _InternalConnection("o1", "o3"),
-        _InternalConnection("o1", "o2"),
-    ),
-    "edge_coupler": (_InternalConnection("o1", "o2"),),
-    "rib_absorber": (),
-    "slab_absorber": (),
-    "rounded_corner": (),
-    "serie_thermistor": (),
-    "rectangle": (),
-    "mesh_72x72_mockup": (),
-    "vertical_transition": (_InternalConnection("o1", "o2"),),
-}
-"""Dict representing the internal connections in the netlist components."""
+INTERNAL_CONNECTIONS = json.loads(
+    Path(Path(__file__).parents[0] / "utils/internal_connections.json").read_text()
+)
 
 
 def get_component(netlist: dict[str, Any], name: str) -> str:

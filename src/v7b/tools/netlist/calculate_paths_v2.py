@@ -304,6 +304,7 @@ def main(
     contract: bool = True,
 ) -> None:
     netlist = json.loads(netlist_path.read_text())
+
     g, report = build_flow_graph(netlist, INTERNAL_CONNECTIONS)
     print(
         f"flow graph: {report['nodes']:,} waveguides, {report['edges']:,} traversals "
@@ -349,14 +350,13 @@ def main(
 
 
 if __name__ == "__main__":
-    # c:\Users\AlvaroLebrun\Desktop\Repos\Tapeouts\.venv\Scripts\python.exe
-    # c:/Users/AlvaroLebrun/Desktop/Repos/Tapeouts/src/V7b/tools/netlist/calculate_paths_v2.py
-    # mesh_die_netlist.json -n 72
     import argparse
 
     ap = argparse.ArgumentParser()
-    ap.add_argument("netlist", type=Path)
-    ap.add_argument("-o", "--out", type=Path, default=Path("V7b_paths.xlsx"))
+    path = Path(__file__).parent.parent.parent.resolve() / "output"
+
+    ap.add_argument("--netlist", type=Path, default=path / "v7b_netlist.json")
+    ap.add_argument("-o", "--out", type=Path, default=path / "v7b_paths.xlsx")
     ap.add_argument("-n", "--n-io", type=int, default=72)
     ap.add_argument("--expect", type=int, default=None, help="expected routes per pair")
     ap.add_argument("--no-contract", action="store_true")
