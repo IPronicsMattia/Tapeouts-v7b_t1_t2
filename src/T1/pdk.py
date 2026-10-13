@@ -1842,3 +1842,82 @@ def mmi_splitter_il_extractor(
         c.info[f"Block {idx}"] = block_dict
     c.mirror_y()
     return c
+
+@gf.cell
+def taper_doe(bend: ComponentSpec,
+              gc_array: ComponentSpec,
+              straight_list:list[ComponentSpec]):
+    # Generate component
+    c = gf.Component()
+
+    # Place the gc
+    gc_ref = c << gc_array
+    gc_ref.rotate(180)
+
+    # Geometrical parameter definition
+    radius = bend["o2"].x - bend["o1"].x
+    dx = radius # Distance between lines is 2*dx
+    Dx = 60     # Distance of going back for top GC
+    dy = 510    # Should be enough to place a taper
+
+    # Initialize the dictionary with cutback info
+    block1_dict = {}
+    block2_dict = {}
+    block3_dict = {}
+    block4_dict = {}
+
+    for idx, straight in enumerate(straight_list):
+        # Place a straight to get info
+        sr = straight(length=0)
+        xs = sr["o1"].cross_section
+
+        if idx != 3:
+            steps = [
+                {"x": gc_ref[idx*2+1].x+dx*(13 - idx * 4)},
+                {"dy": dy+2*dx},
+                {"dx":-2*dx},
+                {"y":gc_ref[idx*2+2].y}
+            ]
+
+        else:
+            steps = [
+                {"x": gc_ref[idx*2+1].x+dx},
+                {"y": gc_ref[idx*2+1].y+3*dx},
+                {"dx":-Dx},
+                {"dy": -dy-2*dx},
+                {"dx":-2*dx},
+                {"y":gc_ref[idx*2+2].y+3*dx},
+                {"dx":Dx+2*dx},
+                {"y":gc_ref[idx*2+2].y}
+            ]
+
+         # Place a route
+        route = gf.routing.route_single(
+            c,
+            port1=gc_ref[idx*2+1],
+            port2=gc_ref[idx*2+2],
+            cross_section=xs,
+            straight=straight,
+            bend=bend,
+            auto_taper=False,
+            steps=steps)
+
+        # Update the dictionary
+        for inst in route.instances:
+            temp_dict = ipr.measure_component(inst.cell, scale=1 / 1000)
+            if idx == 0:
+                block1_dict = ipr.combine_component_dict(block1_dict, temp_dict)
+            elif idx == 1:
+                block2_dict = ipr.combine_component_dict(block2_dict, temp_dict)
+            elif idx == 2:
+                block3_dict = ipr.combine_component_dict(block3_dict, temp_dict)
+            else:
+                block4_dict = ipr.combine_component_dict(block4_dict, temp_dict)
+
+        c.info["Block 1"] = block1_dict
+        c.info["Block 2"] = block2_dict
+        c.info["Block 3"] = block3_dict
+        c.info["Block 4"] = block4_dict
+
+    return c
+

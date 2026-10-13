@@ -20,6 +20,7 @@ from T1.pdk import (
     straight_2000_anwg,
     straigth_with_3d_cross_shallow,
     straigth_with_3d_cross_strip,
+    taper_doe,
     tps_410_swg_930_swg_lim,
     tps_410_swg_1560_swg_lim,
     triangle_round,
@@ -144,6 +145,13 @@ def component_placement(die: gf.Component) -> gf.Component:
         cross_section=xs_swg,
         dx=5,
     )
+    gc_array_tp = ipr.grating_coupler_array(
+            grating_coupler=ipr.tower_gc,
+            n=10,
+            with_loopback=True,
+            cross_section=xs_swg,
+            dx=35,
+        )
 
     # Grating coupler array without loopback
     gc_array_noloopbak = ipr.grating_coupler_array(
@@ -424,7 +432,7 @@ def component_placement(die: gf.Component) -> gf.Component:
         n_bends = 96
         comp_len = [4 * 10000, 8 * 10000, 12 * 10000, 16 * 10000]
 
-        # Create the test structure 1.1
+        # Create the test structure
         ts = f"{current_ts}.1"
         t = die << ipr.test_double_spirals_from_calculation(
             bend=routing_bend_Si,
@@ -453,7 +461,7 @@ def component_placement(die: gf.Component) -> gf.Component:
             extra_dict={"analysis": ["propte_dbcm", "xtte_db"]},
         )
 
-        # Create the test structure 1.2
+        # Create the test structure
         ts = f"{current_ts}.2"
         t = die << ipr.test_double_spirals_from_calculation(
             bend=routing_bend_Si,
@@ -1141,6 +1149,66 @@ def component_placement(die: gf.Component) -> gf.Component:
                 )
     current_ts += 1
 
+    ################################################
+    # N.12 Insertion Loss DoE Taper Test Structure #
+    ################################################
+    if len(structure_only) == 0 or 12 in structure_only:
+        print(f"\nCreation of N.{current_ts} Insertion Loss Rib Taper Test Structure")
+
+        # Divide the wanted tapers in group of 4
+        tapers = []
+        for idx, name in enumerate(doe_json_dict[f"{current_ts}.0"]["comp"]):
+            comp = sim_filename_json[doe_json_dict[f"{current_ts}.0"]["comp"][idx]]
+            name = comp["function"].split(".")[-1].rstrip("()")
+            func = getattr(ipr, name)
+            taper = func(**comp["settings"])
+            tapers.append(taper)
+
+        tapers = np.array(tapers).reshape(-1, 4)
+
+        # Create a test structure for each group
+        for ts_idx, taper_list in enumerate(tapers):
+            # Repeat for all wanted taper
+            ts = f"{current_ts}.{ts_idx+1}"
+
+            # Prepare the straight dict
+            feature_rib_taper = {}
+            rib_taper_strts = []
+            for idx in range(4):
+                ft = {
+                    "bb": taper_list[idx],
+                    "straight": straight_930_swg,
+                    "straight_btw": straight_410_swg,
+                    "sep_variation": bb_variation,
+                    "bb_extra_variation": bb_variation,
+                    "sep_distance": 1.00,
+                    "bb_extra_length": 1.00}
+
+                rib_taper_strt = gf.partial(ipr.n_tps_tps, **ft)
+                rib_taper_strts.append(rib_taper_strt)
+
+            t = die << taper_doe(
+                bend=routing_bend_Si,
+                straight_list=rib_taper_strts,
+                gc_array=gc_array_tp
+            )
+
+            # Assign to the dictionary
+            structures[ts] = t
+            structures_text[ts] = f"R{ts} \nTAPER DOE"
+
+            # Json Part
+            if create_json:
+                json_writer.structure_json(
+                    component=taper_list.tolist(),
+                    component_IO=gc_array_tp,
+                    structure_title=f"TS{ts}",
+                    structure=t.cell,
+                    extra_dict={"analysis": ["ilte_db"]},
+                )
+
+    current_ts += 1
+
     # # ##################################
     # # # N.9 3D Crossing Test Structure #
     # # ##################################
@@ -1301,7 +1369,7 @@ def component_placement(die: gf.Component) -> gf.Component:
     left_top_structure = ["1.1", "3.1", "3.2", "8.1", "8.2",
                           "11.1", "11.2", "11.3", "11.4", "11.5", "11.6", "11.7", "11.8", "11.9", "11.10", "11.11", "11.12",
                           "1.2"]
-    left_cen_structure = ["4.1", "4.2", "6.1", "7.1",  "9.1"]
+    left_cen_structure = ["4.1", "4.2", "6.1", "7.1", "9.1", "12.1", "12.2", "12.3"]
     left_bot_structure = ["1.3", "5.1", "10.1", "10.2", "10.3", "2.1", "1.4"]
     right_structure = []
 

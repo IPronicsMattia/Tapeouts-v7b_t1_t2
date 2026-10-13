@@ -3012,6 +3012,24 @@
             "loss": null
         }
     },
+    "rib_taper_MR1p95_WRI0p4_ec53feca":{
+        "design_id": "swg_taper_410_930_l250",
+        "dut_type": "taper",
+        "function": "rib_taper",
+        "settings":{
+            "m_RIB": 1.95,
+            "width_RIB_in": 0.41,
+            "width_RIB_out": 0.93,
+            "width1": null,
+            "width2": null,
+            "length": 250,
+            "access": false,
+            "length_access": 10.0,
+            "npoints": 100,
+            "cross_section": "strip",
+            "loss": null
+        }
+    },
     "rib_taper_MR1p95_WRI0p4_60535fa6":{
         "design_id": "swg_taper_410_460", 
         "dut_type": "taper", 

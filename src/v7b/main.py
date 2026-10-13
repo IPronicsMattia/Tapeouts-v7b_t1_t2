@@ -60,7 +60,7 @@ ec_in = []
 ec_out = []
 
 # ["passive", "netlist"]
-generate = ["passive", "netlist"]  # Fill here the name of the part to be created
+generate = ["netlist"]  # Fill here the name of the part to be created
 
 if "passive" in generate:
     print("\n##################\nCOMPONENT PLACEMENT\n##################\n")

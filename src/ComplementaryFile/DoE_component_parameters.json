@@ -1,5 +1,22 @@
 {   
     "T1": {
+        "12.0":
+        {
+            "comp":["rib_taper_MR1p95_WRI0p4_ec53feca",
+                    "rib_taper_MR1p95_WRI0p4_9dca5112",
+                    "rib_taper_MR1p95_WRI0p4_ec53feca",
+                    "rib_taper_MR1p95_WRI0p4_ec53feca",
+
+                    "rib_taper_MR1p95_WRI0p4_ec53feca",
+                    "rib_taper_MR1p95_WRI0p4_ec53feca",
+                    "rib_taper_MR1p95_WRI0p4_9dca5112",
+                    "rib_taper_MR1p95_WRI0p4_ec53feca",
+
+                    "rib_taper_MR1p95_WRI0p4_ec53feca",
+                    "rib_taper_MR1p95_WRI0p4_ec53feca",
+                    "rib_taper_MR1p95_WRI0p4_ec53feca",
+                    "rib_taper_MR1p95_WRI0p4_9dca5112"]
+        }
     },
     
     "T2": {
