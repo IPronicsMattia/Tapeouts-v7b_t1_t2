@@ -205,3 +205,7 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# netlist
+src/v7b/output/v7b_netlist.json
+src/v7b/output/v7b_recursive_netlist.json
