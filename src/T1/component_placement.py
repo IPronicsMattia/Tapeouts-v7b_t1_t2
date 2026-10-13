@@ -61,12 +61,21 @@ def component_placement(die: gf.Component) -> gf.Component:
 
     # Cross Section Definitions
     xs_swg = gf.get_cross_section("strip")
+    xs_swg_410 = gf.get_cross_section("strip", width=0.41)
+    xs_swg_930 = gf.get_cross_section("strip", width=0.93)
+    xs_nwg_1000 = gf.get_cross_section("nitride", width=1.00)
+    xs_awng_1500 = gf.get_cross_section("nitride2", width=1.50)
+    xs_awng_2000 = gf.get_cross_section("nitride2", width=2.00)
 
     #####################
     # COMPONENT CONTROL #
     #####################
-    # Si
+    # Si bends
     routing_bend_Si = ipr.bend_euler_custom_width(cross_section="strip")
+    routing_half_bend_Si = ipr.bend_euler_custom_width(cross_section="strip", angle=-45)
+    routing_bend_Si_TM = ipr.bend_euler_custom_width(cross_section="strip", radius=10)
+
+    # Si tapers
     taper_410_930 = ipr.rib_taper(cross_section=xs_swg, width_RIB_out=0.93)
     taper_410_1560 = ipr.rib_taper(cross_section=xs_swg, width_RIB_out=1.56)
     taper_1560_410 = ipr.rib_taper(
@@ -78,6 +87,7 @@ def component_placement(die: gf.Component) -> gf.Component:
     routing_strt = gf.partial(tps_410_swg_930_swg_lim, **routing_kwargs)
 
     routing_kwargs = {"bb1": taper_410_1560}
+    routing_strt_large = gf.partial(tps_410_swg_1560_swg_lim, **routing_kwargs)
 
     # SiN2
     routing_bend_anwg = ipr.bend_variant(
@@ -93,7 +103,6 @@ def component_placement(die: gf.Component) -> gf.Component:
     )
 
     # Taper
-
     bend_taper = ipr.rib_taper(
         cross_section="nitride2", width_RIB_in=1.28, width_RIB_out=2.00, length=12.72
     )
@@ -110,6 +119,19 @@ def component_placement(die: gf.Component) -> gf.Component:
         name_nwg_anwg_transition="VT_2_TE",
         width_out=2.0,
     )
+
+    # Vertical transition polarization insensitive
+    vt_pi = ipr.si_anwg_transition(
+        name_si_nwg_transition="VT1_PI_D0_100",
+        name_nwg_anwg_transition="VT2_POLINS_D_02",
+        width_out=0.7,
+    )
+    vt_opt_te_group_index = ipr.si_anwg_transition(
+        name_si_nwg_transition="VT_1_TE",
+        name_nwg_anwg_transition="VT_2_TE",
+        width_out=1.5,
+    )
+    vt1_te_group_index = ipr.si_nwg_transition(name="VT_1_TE", width_out=1.0)
 
     # Si Rotator
     rotator = ipr.rotator()
@@ -142,6 +164,15 @@ def component_placement(die: gf.Component) -> gf.Component:
     split_with_abs = ipr.bb_mul_bb(**kwargs)  # pol split + absorber
     split_with_abs = change_port(split_with_abs, ["o1", "o3"], ["o1", "o2"])
 
+    # --- Add rotator to every port of the gc array first
+    rotator_inverted = change_port(rotator, ["o1", "o2"], ["o2", "o1"])
+    kwargs = {
+        "bbmul": gc_array,
+        "bbadd": rotator_inverted,
+        "bbmul_list": [f"o{idx}" for idx in range(1, 9)],
+    }
+    gc_array_rot = ipr.bb_mul_bb(**kwargs)  # gc + rotator, all ports
+
     # ---- Now develop the 3x(pol split + absorber) part
     n_rep = 3
     sep_distance = 10
@@ -154,6 +185,33 @@ def component_placement(die: gf.Component) -> gf.Component:
         "straight": straight_410_swg,
     }
     split_with_abs_3 = ipr.nbb_straight(**kwargs, length=tot_size)
+
+     # --- Add the 3(pol split + absorber) chain to only every other port of gc_array_rot
+    kwargs = {
+        "bbmul": gc_array_rot,
+        "bbadd": split_with_abs_3,
+        "bbmul_list": [f"o{2 * idx + 1}" for idx in range(4)],
+    }
+    gc_array_tm = ipr.bb_mul_bb(**kwargs)
+    gc_array_tm.name = "grating_coupler_array_tm"
+    for idx in range(1, 9):
+        if idx % 2 == 1:
+            gc_array_tm.info[f"gc_{idx}"] = ipr.combine_component_dict(
+                ipr.measure_component(ipr.tower_gc()), ipr.measure_component(rotator)
+            )
+
+            for _ in range(3):
+                gc_array_tm.info[f"gc_{idx}"] = ipr.combine_component_dict(
+                    gc_array_tm.info[f"gc_{idx}"], ipr.measure_component(split)
+                )
+        else:
+            gc_array_tm.info[f"gc_{idx}"] = ipr.combine_component_dict(
+                ipr.measure_component(ipr.tower_gc()), ipr.measure_component(rotator)
+            )
+
+    # 2D Crossing
+    crossing_2D_ = ipr.crossing("polaris", version="60nm")
+    crossing_2D = component_with_transition(crossing_2D_)
 
     #####################
     # STRUCTURE CONTROL #
@@ -180,16 +238,17 @@ def component_placement(die: gf.Component) -> gf.Component:
     structures = {}
     structures_text = {}
     structure_only = []  # If void draw all structures, otherwise only the one present here
+    current_ts = 1
 
     ##################
     # 1.0 ALIGNMENT #
     ##################
     if len(structure_only) == 0 or 1 in structure_only:
-        print("\nCreation of N.1 Alignment Test Structure")
+        print(f"\nCreation of N.{current_ts} Alignment Test Structure")
 
         for idx in range(4):
             # Create the test structure name
-            ts = f"1.{idx + 1}"
+            ts = f"{current_ts}.{idx + 1}"
 
             t = die << grating_array_test_structure(
                 components_grating_coupler=[ipr.tower_gc] * 10,
@@ -209,15 +268,16 @@ def component_placement(die: gf.Component) -> gf.Component:
                     structure_title=f"TS0{ts}",
                     structure=t.cell,
                 )
+    current_ts += 1
 
     ##################
     # 2.0 CUSTOM GC #
     ##################
     if len(structure_only) == 0 or 2 in structure_only:
-        print("\nCreation of N.2 Custom GC Test Structure")
+        print(f"\nCreation of N.{current_ts} Custom GC Test Structure")
 
         # Create the test structure name
-        ts = "2.1"
+        ts = f"{current_ts}.1"
 
         # Build the single gc composed
         kwargs = {"bbmul": rotator, "bbadd": ipr.tower_gc(), "bbmul_list": ["o2"]}
@@ -273,12 +333,13 @@ def component_placement(die: gf.Component) -> gf.Component:
                     ],
                 },
             )
+    current_ts += 1
 
     #############################################
     # N.3 Prop. Loss RIB 0.93 um Test Structure #
     #############################################
     if len(structure_only) == 0 or 3 in structure_only:
-        print("\nCreation of N.3 Prop. Loss RIB 0.93 um Test Structure")
+        print(f"\nCreation of N.{current_ts} Prop. Loss RIB 0.93 um Test Structure")
 
         # Parameters for the cell
         gap = 3 + 0.93 - 0.41
@@ -291,8 +352,8 @@ def component_placement(die: gf.Component) -> gf.Component:
             300000,
         ]
 
-        # Create the test structure 3.1
-        ts = "3.1"
+        # Create the test structure
+        ts = f"{current_ts}.1"
         t = die << ipr.test_double_spirals_from_calculation(
             bend=routing_bend_Si,
             blocks_distance=(50, 0),
@@ -320,8 +381,8 @@ def component_placement(die: gf.Component) -> gf.Component:
             extra_dict={"analysis": ["propte_dbcm", "xtte_db"]},
         )
 
-        # Create the test structure 1.2
-        ts = "3.2"
+        # Create the test structure
+        ts = f"{current_ts}.2"
         t = die << ipr.test_double_spirals_from_calculation(
             bend=routing_bend_Si,
             blocks_distance=(50, 0),
@@ -349,12 +410,13 @@ def component_placement(die: gf.Component) -> gf.Component:
                 structure=t.cell,
                 extra_dict={"analysis": ["propte_dbcm", "xtte_db"]},
             )
+    current_ts += 1
 
     #############################################
     # N.4 Prop. Loss RIB 0.41 um Test Structure #
     #############################################
     if len(structure_only) == 0 or 4 in structure_only:
-        print("\nCreation of N.4 Prop. Loss RIB 0.41 um Test Structure")
+        print(f"\nCreation of N.{current_ts} Prop. Loss RIB 0.41 um Test Structure")
 
         # Parameters for the cell
         gap = 3
@@ -363,7 +425,7 @@ def component_placement(die: gf.Component) -> gf.Component:
         comp_len = [4 * 10000, 8 * 10000, 12 * 10000, 16 * 10000]
 
         # Create the test structure 1.1
-        ts = "4.1"
+        ts = f"{current_ts}.1"
         t = die << ipr.test_double_spirals_from_calculation(
             bend=routing_bend_Si,
             blocks_distance=(50, 0),
@@ -392,7 +454,7 @@ def component_placement(die: gf.Component) -> gf.Component:
         )
 
         # Create the test structure 1.2
-        ts = "4.2"
+        ts = f"{current_ts}.2"
         t = die << ipr.test_double_spirals_from_calculation(
             bend=routing_bend_Si,
             blocks_distance=(50, 0),
@@ -420,12 +482,13 @@ def component_placement(die: gf.Component) -> gf.Component:
                 structure=t.cell,
                 extra_dict={"analysis": ["propte_dbcm", "xtte_db"]},
             )
+    current_ts += 1
 
     ##############################################
     # N.5 Prop. Loss AWNG 2.00 um Test Structure #
     ##############################################
     if len(structure_only) == 0 or 5 in structure_only:
-        print("\nCreation of N.5 Prop. Loss Nitride2 2.00 um Test Structure")
+        print(f"\nCreation of N.{current_ts} Prop. Loss Nitride2 2.00 um Test Structure")
 
         # Parameters for the cell
         gap = 5
@@ -458,37 +521,38 @@ def component_placement(die: gf.Component) -> gf.Component:
             t2.info.model_extra.pop(f"Block {idx + 1}", None)
 
         # Assign to the dictionary
-        ts = "5.1"
+        ts = f"{current_ts}.1"
         structures[ts] = t
         structures_text[ts] = (
-            f"{ts} PROP LOSS XT AWNG 2.00 " + " " * 778 + "5.2 PROP LOSS XT AWNG 2.00"
+            f"{ts} PROP LOSS XT AWNG 2.00 "
         )
 
         # Json Part
         if create_json:
-            # TS05.1
+            # TS.1
             json_writer.structure_json(
                 component=gf.get_component(straight_2000_anwg(length=0)),
                 component_IO=gc_array,
-                structure_title="TS05.1",
+                structure_title=f"TS0{current_ts}.1",
                 structure=t1,
                 extra_dict={"analysis": ["propte_dbcm", "xtte_db"]},
             )
 
-            # TS05.2
+            # TS.2
             json_writer.structure_json(
                 component=gf.get_component(straight_2000_anwg(length=0)),
                 component_IO=gc_array,
-                structure_title="TS05.2",
+                structure_title=f"TS0{current_ts}.2",
                 structure=t2,
                 extra_dict={"analysis": ["propte_dbcm", "xtte_db"]},
             )
+    current_ts += 1
 
     ##############################################
     # N.6 Prop. Loss AWNG 2.00 um Test Structure #
     ##############################################
     if len(structure_only) == 0 or 6 in structure_only:
-        print("\nCreation of N.6 XT Nitride2 2.00 um Test Structure")
+        print(f"\nCreation of N.{current_ts} XT Nitride2 2.00 um Test Structure")
 
         # Parameters for the cell
         sep = [5, 4, 3, 2]
@@ -496,7 +560,7 @@ def component_placement(die: gf.Component) -> gf.Component:
         comp_len = [5.0 * 10000, 5.0 * 10000, 5.0 * 10000, 5.0 * 10000]
 
         # Create the test structure 6.1
-        ts = "6.1"
+        ts = f"{current_ts}.1"
         t = die << ipr.test_spirals_from_calculation(
             bend=bend_taper_wtaper,
             bend_routing=routing_bend_Si,
@@ -527,549 +591,555 @@ def component_placement(die: gf.Component) -> gf.Component:
                 structure=t,
                 extra_dict={"analysis": ["propte_dbcm"]},
             )
+    current_ts += 1
 
-    # # #################################################
-    # # # N.4 Insertion Loss Si Bend 90° Test Structure #
-    # # #################################################
-    # if len(structure_only) == 0 or 4 in structure_only:
-    #     print("\nCreation of N.4 Insertion Loss Si Bend 90° Test Structure")
+    #################################################
+    # N.7 Insertion Loss Si Bend 90° Test Structure #
+    #################################################
+    if len(structure_only) == 0 or 7 in structure_only:
+        print(f"\nCreation of N.{current_ts} Insertion Loss Si Bend 90° Test Structure")
 
-    #     n_bbs = [1500, 1500 * 2, 1500 * 3, 1500 * 4]
+        n_bbs = [1650, 1650 * 2, 1650 * 3, 1650 * 4]
 
-    #     # Calculate the size of the bends involved
-    #     bend_rotate = routing_bend_Si.copy()
-    #     beta = routing_half_bend_Si["o2"].orientation
-    #     bend_rotate.rotate(beta)
-    #     bend_sep_size = 1.5
-    #     bend_io_size = routing_half_bend_Si["o2"].x - routing_half_bend_Si["o1"].x
+        # Calculate the size of the bends involved
+        bend_rotate = routing_bend_Si.copy()
+        beta = routing_half_bend_Si["o2"].orientation
+        bend_rotate.rotate(beta)
+        bend_sep_size = 1.5
+        bend_io_size = routing_half_bend_Si["o2"].x - routing_half_bend_Si["o1"].x
 
-    #     # Feature to be used for the bends
-    #     feature_bend = {
-    #         "straight": straight_410_swg,
-    #         "sep_variation": 0.141,
-    #         "bb": routing_bend_Si,
-    #         "bb_io": routing_half_bend_Si,
-    #         # For length calculations
-    #         "2_bb": bend_rotate,
-    #         "2_io_length": bend_io_size,
-    #     }
+        # Feature to be used for the bends
+        feature_bend = {
+            "straight": straight_410_swg,
+            "sep_variation": 0.141,
+            "bb": routing_bend_Si,
+            "bb_io": routing_half_bend_Si,
+            # For length calculations
+            "2_bb": bend_rotate,
+            "2_io_length": bend_io_size,
+        }
 
-    #     straights_bend = []
-    #     fbs = []
-    #     for idx in range(4):
-    #         fb = feature_bend.copy()
-    #         fb["sep_distance"] = [4.5, 2.3, 1.19, 1][idx] * bend_sep_size
-    #         fb["bb_extra_length"] = [4.5, 2.3, 1.19, 1][idx] * bend_sep_size
-    #         fb["2_sep_distance"] = (
-    #             [4.5, 2.3, 1.19, 1][idx] * bend_sep_size * np.cos(beta * np.pi / 180)
-    #         )
-    #         fb["2_bb_extra_length"] = (
-    #             [4.5, 2.3, 1.19, 1][idx] * bend_sep_size * np.cos(beta * np.pi / 180)
-    #         )
-    #         fbs.append(fb)
-    #         straight_bend = gf.partial(ipr.nbends_angled_straight, **fb)
-    #         straights_bend.append(straight_bend)
+        straights_bend = []
+        fbs = []
+        for idx in range(4):
+            fb = feature_bend.copy()
+            fb["sep_distance"] = [4.5, 2.3, 1.19, 1][idx] * bend_sep_size
+            fb["bb_extra_length"] = [4.5, 2.3, 1.19, 1][idx] * bend_sep_size
+            fb["2_sep_distance"] = (
+                [4.5, 2.3, 1.19, 1][idx] * bend_sep_size * np.cos(beta * np.pi / 180)
+            )
+            fb["2_bb_extra_length"] = (
+                [4.5, 2.3, 1.19, 1][idx] * bend_sep_size * np.cos(beta * np.pi / 180)
+            )
+            fbs.append(fb)
+            straight_bend = gf.partial(ipr.nbends_angled_straight, **fb)
+            straights_bend.append(straight_bend)
 
-    #     # Create the test structure 4.1
-    #     ts = "4.1"
+        # Create the test structure
+        ts = f"{current_ts}.1"
 
-    #     # Function to generate dummy
-    #     dummy_adder = gf.partial(T1_dummy_adder, distance_metal=5, distane_wvg=10)
-    #     t = die << ipr.test_serpentines_from_calculation(
-    #         bend=routing_bend_Si,
-    #         blocks_distance=(15, 15),
-    #         block_gc_distance=30,
-    #         dummy_adder=dummy_adder,
-    #         gc_array=gc_array,
-    #         max_height=1150,
-    #         straight=straights_bend,
-    #         lengths=fbs,
-    #         n_bbs=n_bbs,
-    #         separations=0,
-    #         n_rows_pitch=9,
-    #         separations_pitch=50,
-    #         straight_route=straight_410_swg,
-    #         structure_4_blocks="2x2",
-    #     )
+        # Function to generate dummy
+        dummy_adder = gf.partial(T1_dummy_adder, distance_metal=5, distane_wvg=10)
+        t = die << ipr.test_serpentines_from_calculation(
+            bend=routing_bend_Si,
+            blocks_distance=(15, 15),
+            block_gc_distance=30,
+            dummy_adder=dummy_adder,
+            gc_array=gc_array,
+            max_height=1150,
+            straight=straights_bend,
+            lengths=fbs,
+            n_bbs=n_bbs,
+            separations=0,
+            n_rows_pitch=9,
+            separations_pitch=50,
+            straight_route=straight_410_swg,
+            structure_4_blocks="2x2",
+        )
 
-    #     # Assign to the dictionary
-    #     structures[ts] = t
-    #     structures_text[ts] = f"{ts} EULER SI BEND 0.41"
+        # Assign to the dictionary
+        structures[ts] = t
+        structures_text[ts] = f"{ts} EULER SI BEND 0.41"
 
-    #     # Json Part
-    #     if create_json:
-    #         json_writer.structure_json(
-    #             component=routing_bend_Si,
-    #             component_IO=gc_array,
-    #             structure_title=f"TS0{ts}",
-    #             structure=t.cell,
-    #             extra_dict={"analysis": ["ilte_db"]},
-    #         )
+        # Json Part
+        if create_json:
+            json_writer.structure_json(
+                component=routing_bend_Si,
+                component_IO=gc_array,
+                structure_title=f"TS0{ts}",
+                structure=t.cell,
+                extra_dict={"analysis": ["ilte_db"]},
+            )
+    current_ts += 1
 
-    # # ###############################################
-    # # # N.5 Insertion Loss Rib Taper Test Structure #
-    # # ###############################################
-    # if len(structure_only) == 0 or 5 in structure_only:
-    #     print("\nCreation of N.5 Insertion Loss Rib Taper Test Structure")
+    ###############################################
+    # N.8 Insertion Loss Rib Taper Test Structure #
+    ###############################################
+    if len(structure_only) == 0 or 8 in structure_only:
+        print(f"\nCreation of N.{current_ts} Insertion Loss Rib Taper Test Structure")
 
-    #     n_bbs = [2000, 4000, 6000, 8000]
+        n_bbs = [2000, 4000, 6000, 8000]
 
-    #     # Create the test structure 5.1
-    #     ts = "5.1"
+        # Create the test structure
+        ts = f"{current_ts}.1"
 
-    #     # Prepare the straight dict
-    #     feature_rib_taper = {
-    #         "bb": taper_410_930,
-    #         "straight": straight_930_swg,
-    #         "straight_btw": straight_410_swg,
-    #         "sep_variation": bb_variation,
-    #         "bb_extra_variation": bb_variation,
-    #     }
+        # Prepare the straight dict
+        feature_rib_taper = {
+            "bb": taper_410_930,
+            "straight": straight_930_swg,
+            "straight_btw": straight_410_swg,
+            "sep_variation": bb_variation,
+            "bb_extra_variation": bb_variation,
+        }
 
-    #     rib_taper_strts = []
-    #     fts = []
-    #     for idx in range(4):
-    #         ft = feature_rib_taper.copy()
-    #         ft["sep_distance"] = [3.30, 1.84, 1.32, 1.00][idx]
-    #         ft["bb_extra_length"] = [7.50, 3.23, 1.60, 1.00][idx]
-    #         fts.append(ft)
-    #         rib_taper_strt = gf.partial(ipr.n_tps_tps, **ft)
-    #         rib_taper_strts.append(rib_taper_strt)
+        rib_taper_strts = []
+        fts = []
+        for idx in range(4):
+            ft = feature_rib_taper.copy()
+            ft["sep_distance"] = [3.30, 1.84, 1.32, 1.00][idx]
+            ft["bb_extra_length"] = [7.50, 3.23, 1.60, 1.00][idx]
+            fts.append(ft)
+            rib_taper_strt = gf.partial(ipr.n_tps_tps, **ft)
+            rib_taper_strts.append(rib_taper_strt)
 
-    #     t = die << ipr.test_spirals_from_calculation(
-    #         bend=routing_bend_Si,
-    #         blocks_distance=(50, 0),
-    #         block_gc_distance=30,
-    #         gc_array=gc_array,
-    #         straight=rib_taper_strts,
-    #         lengths=fts,
-    #         n_bbs=n_bbs,
-    #         hv_ratios=[0.5, 0.93, 0.8, 0.6],
-    #         separations=7,
-    #         n_bends=115,
-    #         straight_route=routing_strt,
-    #         structure_4_blocks="hor",
-    #     )
+        t = die << ipr.test_spirals_from_calculation(
+            bend=routing_bend_Si,
+            blocks_distance=(50, 0),
+            block_gc_distance=30,
+            gc_array=gc_array,
+            straight=rib_taper_strts,
+            lengths=fts,
+            n_bbs=n_bbs,
+            hv_ratios=[0.5, 0.93, 0.8, 0.6],
+            separations=7,
+            n_bends=115,
+            straight_route=routing_strt,
+            structure_4_blocks="hor",
+        )
 
-    #     # Assign to the dictionary
-    #     structures[ts] = t
-    #     structures_text[ts] = f"{ts} RIB TAPER 0.41 0.93"
+        # Assign to the dictionary
+        structures[ts] = t
+        structures_text[ts] = f"{ts} RIB TAPER 0.41 0.93"
 
-    #     # Json Part
-    #     if create_json:
-    #         json_writer.structure_json(
-    #             component=taper_410_930,
-    #             component_IO=gc_array,
-    #             structure_title=f"TS0{ts}",
-    #             structure=t.cell,
-    #             extra_dict={"analysis": ["ilte_db"]},
-    #         )
+        # Json Part
+        if create_json:
+            json_writer.structure_json(
+                component=taper_410_930,
+                component_IO=gc_array,
+                structure_title=f"TS0{ts}",
+                structure=t.cell,
+                extra_dict={"analysis": ["ilte_db"]},
+            )
 
-    #     # Create the test structure 5.2
-    #     ts = "5.2"
+        # Create the test structure
+        ts = f"{current_ts}.2"
 
-    #     # Prepare the straight dict
-    #     feature_rib_taper = {
-    #         "bb": taper_410_1560,
-    #         "straight": straight_1560_swg,
-    #         "straight_btw": straight_410_swg,
-    #         "sep_variation": bb_variation,
-    #         "bb_extra_variation": bb_variation,
-    #     }
+        # Prepare the straight dict
+        feature_rib_taper = {
+            "bb": taper_410_1560,
+            "straight": straight_1560_swg,
+            "straight_btw": straight_410_swg,
+            "sep_variation": bb_variation,
+            "bb_extra_variation": bb_variation,
+        }
 
-    #     rib_taper_strts = []
-    #     fts = []
-    #     for idx in range(4):
-    #         ft = feature_rib_taper.copy()
-    #         ft["sep_distance"] = [3.30, 1.84, 1.32, 1.00][idx]
-    #         ft["bb_extra_length"] = [7.50, 3.23, 1.60, 1.00][idx]
-    #         fts.append(ft)
-    #         rib_taper_strt = gf.partial(ipr.n_tps_tps, **ft)
-    #         rib_taper_strts.append(rib_taper_strt)
+        rib_taper_strts = []
+        fts = []
+        for idx in range(4):
+            ft = feature_rib_taper.copy()
+            ft["sep_distance"] = [3.30, 1.84, 1.32, 1.00][idx]
+            ft["bb_extra_length"] = [7.50, 3.23, 1.60, 1.00][idx]
+            fts.append(ft)
+            rib_taper_strt = gf.partial(ipr.n_tps_tps, **ft)
+            rib_taper_strts.append(rib_taper_strt)
 
-    #     t = die << ipr.test_spirals_from_calculation(
-    #         bend=routing_bend_Si,
-    #         blocks_distance=(50, 0),
-    #         block_gc_distance=30,
-    #         gc_array=gc_array,
-    #         straight=rib_taper_strts,
-    #         lengths=fts,
-    #         n_bbs=n_bbs,
-    #         hv_ratios=[0.5, 0.93, 0.8, 0.6],
-    #         separations=7,
-    #         n_bends=115,
-    #         straight_route=routing_strt_large,
-    #         structure_4_blocks="hor",
-    #     )
+        t = die << ipr.test_spirals_from_calculation(
+            bend=routing_bend_Si,
+            blocks_distance=(50, 0),
+            block_gc_distance=30,
+            gc_array=gc_array,
+            straight=rib_taper_strts,
+            lengths=fts,
+            n_bbs=n_bbs,
+            hv_ratios=[0.5, 0.93, 0.8, 0.6],
+            separations=7,
+            n_bends=115,
+            straight_route=routing_strt_large,
+            structure_4_blocks="hor",
+        )
 
-    #     # Assign to the dictionary
-    #     structures[ts] = t
-    #     structures_text[ts] = f"{ts} RIB TAPER 0.41 1.56"
+        # Assign to the dictionary
+        structures[ts] = t
+        structures_text[ts] = f"{ts} RIB TAPER 0.41 1.56"
 
-    #     # Json Part
-    #     if create_json:
-    #         json_writer.structure_json(
-    #             component=taper_410_1560,
-    #             component_IO=gc_array,
-    #             structure_title=f"TS0{ts}",
-    #             structure=t.cell,
-    #             extra_dict={"analysis": ["ilte_db"]},
-    #         )
+        # Json Part
+        if create_json:
+            json_writer.structure_json(
+                component=taper_410_1560,
+                component_IO=gc_array,
+                structure_title=f"TS0{ts}",
+                structure=t.cell,
+                extra_dict={"analysis": ["ilte_db"]},
+            )
+    current_ts += 1
 
-    # # ######################################################
-    # # # N.6 Insertion Loss Polaris Crossing Test Structure #
-    # # ######################################################
-    # if len(structure_only) == 0 or 6 in structure_only:
-    #     print("\nCreation of N.6 Polaris Crossing Test Structure")
+    ######################################################
+    # N.9 Insertion Loss Polaris Crossing Test Structure #
+    ######################################################
+    if len(structure_only) == 0 or 9 in structure_only:
+        print(f"\nCreation of N.{current_ts} Polaris Crossing Test Structure")
 
-    #     n_bbs = [1250, 2500, 3750, 5000]
+        n_bbs = [800, 1600, 2400, 3200]
 
-    #     # Create the test structure 6.1
-    #     ts = "6.1"
+        # Create the test structure
+        ts = f"{current_ts}.1"
 
-    #     cross_kwargs = {
-    #         "bbmul": crossing_2D,
-    #         "bbadd": taper_1560_410,
-    #         "bbmul_list": ["o2", "o4"],
-    #     }  # Add taper
-    #     cross_tp = ipr.bb_mul_bb(**cross_kwargs)
-    #     cross_kwargs = {
-    #         "bbmul": cross_tp,
-    #         "bbadd": absorber,
-    #         "bbmul_list": ["o2", "o4"],
-    #         "bbadd_mirror": [True, False],
-    #     }  # Add absorber
-    #     cross_with_abs = ipr.bb_mul_bb(**cross_kwargs)
-    #     cross_with_abs = change_port(
-    #         cross_with_abs,  # Invert ports
-    #         ["o1", "o3"],
-    #         ["o1", "o2"],
-    #         flatten=False,
-    #     )
+        cross_kwargs = {
+            "bbmul": crossing_2D,
+            "bbadd": taper_1560_410,
+            "bbmul_list": ["o2", "o4"],
+        }  # Add taper
+        cross_tp = ipr.bb_mul_bb(**cross_kwargs)
+        cross_kwargs = {
+            "bbmul": cross_tp,
+            "bbadd": absorber,
+            "bbmul_list": ["o2", "o4"],
+            "bbadd_mirror": [True, False],
+        }  # Add absorber
+        cross_with_abs = ipr.bb_mul_bb(**cross_kwargs)
+        cross_with_abs = change_port(
+            cross_with_abs,  # Invert ports
+            ["o1", "o3"],
+            ["o1", "o2"],
+            flatten=False,
+        )
 
-    #     # N crossing
-    #     feature_cross = {
-    #         "1_bb": cross_with_abs,
-    #         "1_straight": straight_1560_swg,
-    #         "1_straight_btw": straight_1560_swg,
-    #         "1_sep_variation": bb_variation,
-    #         "straight": ipr.nbb_straight,
-    #         "straight_limited": straight_410_swg,
-    #         "bb1": taper_410_1560,
-    #         "bb2": taper_410_1560,
-    #         "bb2_rev": True,
-    #         "io_length": taper_410_1560.xsize,
-    #     }
+        # N crossing
+        feature_cross = {
+            "1_bb": cross_with_abs,
+            "1_straight": straight_1560_swg,
+            "1_straight_btw": straight_1560_swg,
+            "1_sep_variation": bb_variation,
+            "straight": ipr.nbb_straight,
+            "straight_limited": straight_410_swg,
+            "bb1": taper_410_1560,
+            "bb2": taper_410_1560,
+            "bb2_rev": True,
+            "io_length": taper_410_1560.xsize,
+        }
 
-    #     straights_cross_tp = []
-    #     fcs = []
-    #     for idx in range(4):
-    #         fc = feature_cross.copy()
-    #         fc["1_sep_distance"] = [12.8, 6.50, 2.90, 2.50][idx]
-    #         fc["2_bb_extra_length"] = [13.05, 6.58, 2.93, 3.50][idx]
-    #         fcs.append(fc)
-    #         straight_cross_tp = gf.partial(ipr.bb_straight_bb_limited, **fc)
-    #         straights_cross_tp.append(straight_cross_tp)
+        straights_cross_tp = []
+        fcs = []
+        for idx in range(4):
+            fc = feature_cross.copy()
+            fc["1_sep_distance"] = [12.20, 6.23, 2.95, 2.50][idx]
+            fc["2_bb_extra_length"] = [12.65, 6.36, 3.01, 2.54][idx]
+            fcs.append(fc)
+            straight_cross_tp = gf.partial(ipr.bb_straight_bb_limited, **fc)
+            straights_cross_tp.append(straight_cross_tp)
 
-    #     # Function to generate dummy
-    #     dummy_adder = gf.partial(
-    #         T1_dummy_adder,
-    #         distance_metal=12,
-    #         distane_wvg=12,
-    #         delta_hor_ver_metal=-6.5,
-    #         delta_hor_ver_wvg=-6.5,
-    #     )
+        # Function to generate dummy
+        dummy_adder = gf.partial(
+            T1_dummy_adder,
+            distance_metal=12,
+            distane_wvg=12,
+            delta_hor_ver_metal=-6.5,
+            delta_hor_ver_wvg=-6.5,
+        )
 
-    #     # Generate test structure
-    #     t = die << ipr.test_serpentines_from_calculation(
-    #         bend=routing_bend_Si,
-    #         blocks_distance=(50, 35),
-    #         block_gc_distance=30,
-    #         dummy_adder=dummy_adder,
-    #         gc_array=gc_array,
-    #         max_height=1150,
-    #         straight=straights_cross_tp,
-    #         lengths=fcs,
-    #         n_bbs=n_bbs,
-    #         separations=18,
-    #         straight_route=routing_strt_large,
-    #         structure_4_blocks="2x2",
-    #         n_rows_pitch=7,
-    #         separations_pitch=60,
-    #     )
+        # Generate test structure
+        t = die << ipr.test_serpentines_from_calculation(
+            bend=routing_bend_Si,
+            blocks_distance=(50, 25),
+            block_gc_distance=30,
+            dummy_adder=dummy_adder,
+            gc_array=gc_array,
+            max_height=1250,
+            straight=straights_cross_tp,
+            lengths=fcs,
+            n_bbs=n_bbs,
+            separations=18,
+            straight_route=routing_strt_large,
+            structure_4_blocks="2x2",
+            n_rows_pitch=6,
+            separations_pitch=58,
+        )
 
-    #     # Assign to the dictionary
-    #     structures[ts] = t
-    #     structures_text[ts] = f"{ts} POLARIS_60 IL"
+        # Assign to the dictionary
+        structures[ts] = t
+        structures_text[ts] = f"{ts} POLARIS_60 IL"
 
-    #     # Json Part
-    #     if create_json:
-    #         json_writer.structure_json(
-    #             component=crossing_2D_,
-    #             component_IO=gc_array,
-    #             structure_title=f"TS0{ts}",
-    #             structure=t.cell,
-    #             extra_dict={"analysis": ["ilte_db"]},
-    #         )
+        # Json Part
+        if create_json:
+            json_writer.structure_json(
+                component=crossing_2D_,
+                component_IO=gc_array,
+                structure_title=f"TS0{ts}",
+                structure=t.cell,
+                extra_dict={"analysis": ["ilte_db"]},
+            )
+    current_ts += 1
 
-    # # #########################################################
-    # # # N.7 Insertion Loss Vertical Transition Test Structure #
-    # # #########################################################
-    # if len(structure_only) == 0 or 7 in structure_only:
-    #     print("\nCreation of N.7 Vertical Transition Test Structure")
+    #########################################################
+    # N.10 Insertion Loss Vertical Transition Test Structure #
+    #########################################################
+    if len(structure_only) == 0 or 10 in structure_only:
+        print(f"\nCreation of N.{current_ts} Vertical Transition Test Structure")
 
-    #     # Create the test structure 7.1
-    #     ts = "7.1"
+        # Create the test structure
+        ts = f"{current_ts}.1"
 
-    #     n_bbs = [180, 180 * 2, 180 * 3, 180 * 4]
+        n_bbs = [180, 180 * 2, 180 * 3, 180 * 4]
 
-    #     # N Vertical Transition
-    #     feature_vt = {
-    #         "2_bb": vt_pi,
-    #         "1_bb1": vt_pi,
-    #         "1_bb2": vt_pi,
-    #         "1_bb2_rev": True,
-    #         "1_straight": straight_700_anwg,
-    #         "bb": ipr.bb_straight_bb,
-    #         "sep_distance": 1.0 + bb_variation + 0.002,
-    #         "sep_variation": bb_variation,
-    #         "bb_extra_length": 1.0 + bb_variation + 0.002,
-    #         "bb_extra_variation": bb_variation,
-    #         "straight": straight_410_swg,
-    #     }
-    #     straight_vt = gf.partial(ipr.nbb_straight, **feature_vt)
+        # N Vertical Transition
+        feature_vt = {
+            "2_bb": vt_pi,
+            "1_bb1": vt_pi,
+            "1_bb2": vt_pi,
+            "1_bb2_rev": True,
+            "1_straight": straight_700_anwg,
+            "bb": ipr.bb_straight_bb,
+            "sep_distance": 1.0 + bb_variation + 0.002,
+            "sep_variation": bb_variation,
+            "bb_extra_length": 1.0 + bb_variation + 0.002,
+            "bb_extra_variation": bb_variation,
+            "straight": straight_410_swg,
+        }
+        straight_vt = gf.partial(ipr.nbb_straight, **feature_vt)
 
-    #     # Function to generate dummy
-    #     dummy_adder = gf.partial(
-    #         T1_dummy_adder,
-    #         distance_metal=10.5,
-    #         distane_wvg=10,
-    #         delta_hor_ver_metal=-4.5,
-    #         delta_hor_ver_wvg=-4.5,
-    #     )
-    #     t = die << ipr.test_serpentines_from_calculation(
-    #         bend=routing_bend_Si,
-    #         blocks_distance=(15, 10),
-    #         block_gc_distance=30,
-    #         dummy_adder=dummy_adder,
-    #         gc_array=gc_array,
-    #         max_height=1140,
-    #         straight=straight_vt,
-    #         lengths=feature_vt,
-    #         n_bbs=n_bbs,
-    #         separations=10,
-    #         straight_route=routing_strt,
-    #         structure_4_blocks="2x2",
-    #         n_rows_pitch=12,
-    #         separations_pitch=45,
-    #     )
+        # Function to generate dummy
+        dummy_adder = gf.partial(
+            T1_dummy_adder,
+            distance_metal=10.5,
+            distane_wvg=10,
+            delta_hor_ver_metal=-4.5,
+            delta_hor_ver_wvg=-4.5,
+        )
+        t = die << ipr.test_serpentines_from_calculation(
+            bend=routing_bend_Si,
+            blocks_distance=(15, 10),
+            block_gc_distance=30,
+            dummy_adder=dummy_adder,
+            gc_array=gc_array,
+            max_height=1140,
+            straight=straight_vt,
+            lengths=feature_vt,
+            n_bbs=n_bbs,
+            separations=10,
+            straight_route=routing_strt,
+            structure_4_blocks="2x2",
+            n_rows_pitch=12,
+            separations_pitch=45,
+        )
 
-    #     # Assign to the dictionary
-    #     structures[ts] = t
-    #     structures_text[ts] = f"{ts} VT12_PI_D0 IL TE"
+        # Assign to the dictionary
+        structures[ts] = t
+        structures_text[ts] = f"{ts} VT12_PI_D0 IL TE"
 
-    #     # Json Part
-    #     if create_json:
-    #         json_writer.structure_json(
-    #             component=vt_pi,
-    #             component_IO=gc_array,
-    #             structure_title=f"TS0{ts}",
-    #             structure=t.cell,
-    #             extra_dict={"analysis": ["ilte_db"]},
-    #         )
+        # Json Part
+        if create_json:
+            json_writer.structure_json(
+                component=vt_pi,
+                component_IO=gc_array,
+                structure_title=f"TS0{ts}",
+                structure=t.cell,
+                extra_dict={"analysis": ["ilte_db"]},
+            )
 
-    #     # Create the test structure 7.2
-    #     ts = "7.2"
+        # Create the test structure
+        ts = f"{current_ts}.2"
 
-    #     n_bbs = [20, 40, 60, 80]
+        n_bbs = [20, 40, 60, 80]
 
-    #     # N Vertical Transition
-    #     feature_vt = {
-    #         "2_bb": vt_pi,
-    #         "1_bb1": vt_pi,
-    #         "1_bb2": vt_pi,
-    #         "1_bb2_rev": True,
-    #         "1_straight": straight_700_anwg,
-    #         "bb": ipr.bb_straight_bb,
-    #         "sep_distance": 1.0 + bb_variation + 0.002,
-    #         "sep_variation": bb_variation,
-    #         "bb_extra_length": 1.0 + bb_variation + 0.002,
-    #         "bb_extra_variation": bb_variation,
-    #         "straight": straight_410_swg,
-    #     }
-    #     straight_vt = gf.partial(ipr.nbb_straight, **feature_vt)
+        # N Vertical Transition
+        feature_vt = {
+            "2_bb": vt_pi,
+            "1_bb1": vt_pi,
+            "1_bb2": vt_pi,
+            "1_bb2_rev": True,
+            "1_straight": straight_700_anwg,
+            "bb": ipr.bb_straight_bb,
+            "sep_distance": 1.0 + bb_variation + 0.002,
+            "sep_variation": bb_variation,
+            "bb_extra_length": 1.0 + bb_variation + 0.002,
+            "bb_extra_variation": bb_variation,
+            "straight": straight_410_swg,
+        }
+        straight_vt = gf.partial(ipr.nbb_straight, **feature_vt)
 
-    #     t = die << ipr.test_serpentines_from_calculation(
-    #         bend=routing_bend_Si_TM,
-    #         blocks_distance=(15, 30),
-    #         block_gc_distance=40,
-    #         dummy_adder=dummy_adder,
-    #         gc_array=gc_array_tm,
-    #         max_height=950,
-    #         straight=straight_vt,
-    #         lengths=feature_vt,
-    #         n_bbs=n_bbs,
-    #         separations=20,
-    #         straight_route=routing_strt,
-    #         structure_4_blocks="2x2",
-    #         n_rows_pitch=4,
-    #         separations_pitch=100,
-    #     )
+        t = die << ipr.test_serpentines_from_calculation(
+            bend=routing_bend_Si_TM,
+            blocks_distance=(15, 30),
+            block_gc_distance=40,
+            dummy_adder=dummy_adder,
+            gc_array=gc_array_tm,
+            max_height=950,
+            straight=straight_vt,
+            lengths=feature_vt,
+            n_bbs=n_bbs,
+            separations=20,
+            straight_route=routing_strt,
+            structure_4_blocks="2x2",
+            n_rows_pitch=4,
+            separations_pitch=100,
+        )
 
-    #     # Assign to the dictionary
-    #     structures[ts] = t
-    #     structures_text[ts] = f"{ts} VT12_PI_D0 IL TM"
+        # Assign to the dictionary
+        structures[ts] = t
+        structures_text[ts] = f"{ts} VT12_PI_D0 IL TM"
 
-    #     # Json Part
-    #     if create_json:
-    #         json_writer.structure_json(
-    #             component=vt_pi,
-    #             component_IO=gc_array_tm,
-    #             structure_title=f"TS0{ts}",
-    #             structure=t.cell,
-    #             propagation_mode=["tm"],
-    #             extra_dict={"analysis": ["iltm_db"]},
-    #         )
+        # Json Part
+        if create_json:
+            json_writer.structure_json(
+                component=vt_pi,
+                component_IO=gc_array_tm,
+                structure_title=f"TS0{ts}",
+                structure=t.cell,
+                propagation_mode=["tm"],
+                extra_dict={"analysis": ["iltm_db"]},
+            )
 
-    #     # Create the test structure 7.3
-    #     ts = "7.3"
+        # Create the test structure
+        ts = f"{current_ts}.3"
 
-    #     n_bbs = [85, 85 * 2, 85 * 3, 85 * 4]
+        n_bbs = [180, 180 * 2, 180 * 3, 180 * 4]
 
-    #     # N Vertical Transition
-    #     feature_vt = {
-    #         "2_bb": vt_opt_te,
-    #         "1_bb1": vt_opt_te,
-    #         "1_bb2": vt_opt_te,
-    #         "1_bb2_rev": True,
-    #         "1_straight": straight_2000_anwg,
-    #         "bb": ipr.bb_straight_bb,
-    #         "sep_distance": 1.0 + bb_variation + 0.002,
-    #         "sep_variation": bb_variation,
-    #         "bb_extra_length": 1.0 + bb_variation + 0.002,
-    #         "bb_extra_variation": bb_variation,
-    #         "straight": straight_410_swg,
-    #     }
-    #     straight_vt = gf.partial(ipr.nbb_straight, **feature_vt)
+        # N Vertical Transition
+        feature_vt = {
+            "2_bb": vt_opt_te,
+            "1_bb1": vt_opt_te,
+            "1_bb2": vt_opt_te,
+            "1_bb2_rev": True,
+            "1_straight": straight_2000_anwg,
+            "bb": ipr.bb_straight_bb,
+            "sep_distance": 1.0 + bb_variation + 0.002,
+            "sep_variation": bb_variation,
+            "bb_extra_length": 1.0 + bb_variation + 0.002,
+            "bb_extra_variation": bb_variation,
+            "straight": straight_410_swg,
+        }
+        straight_vt = gf.partial(ipr.nbb_straight, **feature_vt)
 
-    #     t = die << ipr.test_serpentines_from_calculation(
-    #         bend=routing_bend_Si,
-    #         blocks_distance=(15, 10),
-    #         block_gc_distance=30,
-    #         dummy_adder=dummy_adder,
-    #         gc_array=gc_array,
-    #         max_height=1100,
-    #         straight=straight_vt,
-    #         lengths=feature_vt,
-    #         n_bbs=n_bbs,
-    #         separations=10,
-    #         straight_route=routing_strt,
-    #         structure_4_blocks="2x2",
-    #         n_rows_pitch=12,
-    #         separations_pitch=45,
-    #     )
+        t = die << ipr.test_serpentines_from_calculation(
+            bend=routing_bend_Si,
+            blocks_distance=(15, 10),
+            block_gc_distance=30,
+            dummy_adder=dummy_adder,
+            gc_array=gc_array,
+            max_height=1100,
+            straight=straight_vt,
+            lengths=feature_vt,
+            n_bbs=n_bbs,
+            separations=10,
+            straight_route=routing_strt,
+            structure_4_blocks="2x2",
+            n_rows_pitch=12,
+            separations_pitch=45,
+        )
 
-    #     # Assign to the dictionary
-    #     structures[ts] = t
-    #     structures_text[ts] = f"{ts} VT12_TE_D0 IL"
+        # Assign to the dictionary
+        structures[ts] = t
+        structures_text[ts] = f"{ts} VT12_TE_D0 IL"
 
-    #     # Json Part
-    #     if create_json:
-    #         json_writer.structure_json(
-    #             component=vt_opt_te,
-    #             component_IO=gc_array,
-    #             structure_title=f"TS0{ts}",
-    #             structure=t.cell,
-    #             extra_dict={"analysis": ["ilte_db"]},
-    #         )
+        # Json Part
+        if create_json:
+            json_writer.structure_json(
+                component=vt_opt_te,
+                component_IO=gc_array,
+                structure_title=f"TS0{ts}",
+                structure=t.cell,
+                extra_dict={"analysis": ["ilte_db"]},
+            )
+    current_ts += 1
 
-    # # #############################################
-    # # # N.8 Group Index Transition Test Structure #
-    # # #############################################
-    # if len(structure_only) == 0 or 8 in structure_only:
-    #     print("\nCreation of N.8 Group Index Test Structure")
+    ##############################################
+    # N.11 Group Index Transition Test Structure #
+    ##############################################
+    if len(structure_only) == 0 or 11 in structure_only:
+        print(f"\nCreation of N.{current_ts} Group Index Test Structure")
 
-    #     for idx in range(5):
-    #         # Create the test structure 8.{idx+1}
-    #         ts = f"8.{idx + 1}"
+        for idx in range(12):
+            # Create the test structure 8.{idx+1}
+            ts = f"{current_ts}.{idx + 1}"
 
-    #         if idx == 0:  # Si 0.41
-    #             low_order_mzi_length = 9.5054
-    #             high_order_mzi_length = 95.0535
-    #             m_neff = 18
-    #             m_ng = 180
-    #             cross_section2 = xs_swg_410
-    #             text = "Si 0.41"
-    #             extra_component = None
-    #         elif idx == 1:  # Si 0.93
-    #             low_order_mzi_length = 22.222
-    #             high_order_mzi_length = 80
-    #             m_neff = 50
-    #             m_ng = 180
-    #             cross_section2 = xs_swg_930
-    #             text = "Si 0.93"
-    #             extra_component = taper_410_930
-    #         elif idx == 2:  # SiN2 2.00
-    #             low_order_mzi_length = 33.123
-    #             high_order_mzi_length = 115.932
-    #             m_neff = 40
-    #             m_ng = 140
-    #             cross_section2 = xs_awng_2000
-    #             text = "SiN2 2.00"
-    #             extra_component = vt_opt_te
-    #         elif idx == 3:  # SiN2 1.50
-    #             low_order_mzi_length = 33.408
-    #             high_order_mzi_length = 116.927
-    #             m_neff = 40
-    #             m_ng = 140
-    #             cross_section2 = xs_awng_1500
-    #             text = "SiN2 1.50"
-    #             extra_component = vt_opt_te_group_index
-    #         else:  # SiN 1.00
-    #             low_order_mzi_length = 30.846
-    #             high_order_mzi_length = 61.693
-    #             m_neff = 40
-    #             m_ng = 80
-    #             cross_section2 = xs_nwg_1000
-    #             text = "SiN 1.00"
-    #             extra_component = vt1_te_group_index
+            if idx == 0:  # Si 0.41
+                low_order_mzi_length = 9.5054
+                high_order_mzi_length = 95.0535
+                m_neff = 18
+                m_ng = 180
+                cross_section2 = xs_swg_410
+                text = "Si 0.41"
+                extra_component = None
+            elif idx == 1:  # Si 0.93
+                low_order_mzi_length = 22.222
+                high_order_mzi_length = 80
+                m_neff = 50
+                m_ng = 180
+                cross_section2 = xs_swg_930
+                text = "Si 0.93"
+                extra_component = taper_410_930
+            elif idx == 2:  # SiN2 2.00
+                low_order_mzi_length = 33.123
+                high_order_mzi_length = 115.932
+                m_neff = 40
+                m_ng = 140
+                cross_section2 = xs_awng_2000
+                text = "SiN2 2.00"
+                extra_component = vt_opt_te
+            elif idx == 3:  # SiN2 1.50
+                low_order_mzi_length = 33.408
+                high_order_mzi_length = 116.927
+                m_neff = 40
+                m_ng = 140
+                cross_section2 = xs_awng_1500
+                text = "SiN2 1.50"
+                extra_component = vt_opt_te_group_index
+            else:  # SiN 1.00
+                low_order_mzi_length = 30.846
+                high_order_mzi_length = 61.693
+                m_neff = 40
+                m_ng = 80
+                cross_section2 = xs_nwg_1000
+                text = "SiN 1.00"
+                extra_component = vt1_te_group_index
 
-    #         # Create the mzi test structure
-    #         t = die << mzis_test_group_and_effective_index(
-    #             low_order_mzi_length=low_order_mzi_length,
-    #             high_order_mzi_length=high_order_mzi_length,
-    #             grating_coupler=ipr.tower_gc,
-    #             bend=routing_bend_Si,
-    #             cross_section=xs_swg_410,
-    #             cross_section2=cross_section2,
-    #             extra_component=extra_component,
-    #         )
+            # Create the mzi test structure
+            t = die << mzis_test_group_and_effective_index(
+                low_order_mzi_length=low_order_mzi_length,
+                high_order_mzi_length=high_order_mzi_length,
+                grating_coupler=ipr.tower_gc,
+                bend=routing_bend_Si,
+                cross_section=xs_swg_410,
+                cross_section2=cross_section2,
+                extra_component=extra_component,
+            )
 
-    #         # Rotate it
-    #         t.rotate(90)
+            # Rotate it
+            t.rotate(90)
 
-    #         # Assign to the dictionary
-    #         structures[ts] = t
-    #         structures_text[ts] = f"R{ts} EFF IDX \n{text}"
+            # Assign to the dictionary
+            structures[ts] = t
+            structures_text[ts] = f"R{ts} EFF IDX \n{text}"
 
-    #         # Json Part
-    #         if create_json:
-    #             json_writer.structure_json(
-    #                 component=t.cell,
-    #                 component_IO=gc_array,
-    #                 structure_title=f"TS0{ts}",
-    #                 structure=t.cell,
-    #                 extra_dict={
-    #                     "analysis": ["neff_au", "ng_au"],
-    #                     "cutback": {
-    #                         "num_components": 1,
-    #                         "low_order_mzi_length": low_order_mzi_length,
-    #                         "high_order_mzi_length": high_order_mzi_length,
-    #                         "m_neff": m_neff,
-    #                         "m_ng": m_ng,
-    #                     },
-    #                 },
-    #             )
+            # Json Part
+            if create_json:
+                json_writer.structure_json(
+                    component=t.cell,
+                    component_IO=gc_array,
+                    structure_title=f"TS0{ts}",
+                    structure=t.cell,
+                    extra_dict={
+                        "analysis": ["neff_au", "ng_au"],
+                        "cutback": {
+                            "num_components": 1,
+                            "low_order_mzi_length": low_order_mzi_length,
+                            "high_order_mzi_length": high_order_mzi_length,
+                            "m_neff": m_neff,
+                            "m_ng": m_ng,
+                        },
+                    },
+                )
+    current_ts += 1
 
     # # ##################################
     # # # N.9 3D Crossing Test Structure #
@@ -1228,14 +1298,11 @@ def component_placement(die: gf.Component) -> gf.Component:
     #########################################################
     #########################################################
     #########################################################
-    left_top_structure = [
-        "1.1",
-        "3.1",
-        "3.2",
-        "1.2",
-    ]
-    left_cen_structure = ["4.1", "4.2", "6.1"]
-    left_bot_structure = ["1.3", "5.1", "2.1", "1.4"]
+    left_top_structure = ["1.1", "3.1", "3.2", "8.1", "8.2",
+                          "11.1", "11.2", "11.3", "11.4", "11.5", "11.6", "11.7", "11.8", "11.9", "11.10", "11.11", "11.12",
+                          "1.2"]
+    left_cen_structure = ["4.1", "4.2", "6.1", "7.1",  "9.1"]
+    left_bot_structure = ["1.3", "5.1", "10.1", "10.2", "10.3", "2.1", "1.4"]
     right_structure = []
 
     # Place only structure complain with structure_only
@@ -1271,8 +1338,12 @@ def component_placement(die: gf.Component) -> gf.Component:
 
         # Write the text for those
         text_to_write = structures_text[structure_idx]
-        text = die << all_metal_text(text_to_write, size=25, justify="center")
-        text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin - 35)))
+        if "R" == text_to_write[0]:
+            text = die << all_metal_text(text_to_write[1:], size=25, justify="center")
+            text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin + 40)))
+        else:
+            text = die << all_metal_text(text_to_write, size=25, justify="center")
+            text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin - 35)))
         bbox = die << gf.components.rectangle(
             size=(text.xmax - text.xmin + 2, text.ymax - text.ymin + 2),
             layer=bbox_layer,
@@ -1293,8 +1364,12 @@ def component_placement(die: gf.Component) -> gf.Component:
 
         # Write the text for those
         text_to_write = structures_text[structure_idx]
-        text = die << all_metal_text(text_to_write, size=25, justify="center")
-        text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin - 35)))
+        if "R" == text_to_write[0]:
+            text = die << all_metal_text(text_to_write[1:], size=25, justify="center")
+            text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin + 40)))
+        else:
+            text = die << all_metal_text(text_to_write, size=25, justify="center")
+            text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin - 35)))
 
         bbox = die << gf.components.rectangle(
             size=(text.xmax - text.xmin + 2, text.ymax - text.ymin + 2),
@@ -1317,8 +1392,12 @@ def component_placement(die: gf.Component) -> gf.Component:
 
         # Write the text for those
         text_to_write = structures_text[structure_idx]
-        text = die << all_metal_text(text_to_write, size=25, justify="center")
-        text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin - 30)))
+        if "R" == text_to_write[0]:
+            text = die << all_metal_text(text_to_write[1:], size=25, justify="center")
+            text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin + 40)))
+        else:
+            text = die << all_metal_text(text_to_write, size=25, justify="center")
+            text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin - 35)))
 
         bbox = die << gf.components.rectangle(
             size=(text.xmax - text.xmin + 2, text.ymax - text.ymin + 2),
@@ -1347,6 +1426,24 @@ def component_placement(die: gf.Component) -> gf.Component:
             layer=bbox_layer,
         )
         bbox.move((bbox.xmin, bbox.ymin), ((text.xmin - 1, text.ymin - 1)))
+
+    # Additional text
+    for s_idx in [left_top_structure, left_cen_structure, left_bot_structure]:
+        if '5.1' in s_idx:
+            s = structures['5.1']
+
+            # Write the text for the right part
+            text = die << all_metal_text(
+                    '5.2 PROP LOSS XT AWNG 2.00', size=25, justify="center"
+                )
+
+            text.move((text.xmax, text.ymin), ((s.xmax - 35), (s.ymin - 30)))
+
+            bbox = die << gf.components.rectangle(
+                size=(text.xmax - text.xmin + 2, text.ymax - text.ymin + 2),
+                layer=bbox_layer,
+            )
+            bbox.move((bbox.xmin, bbox.ymin), ((text.xmin - 1, text.ymin - 1)))
 
     # MARKERS
     radius = 25
@@ -1386,7 +1483,7 @@ def component_placement(die: gf.Component) -> gf.Component:
         rec.xmin = o1.xmin - 5
         rec.ymin = o1.ymin - 5
 
-        # # Top right
+        # Top right
         o2 = die << gf.components.circle(radius=radius, layer=layer)
         o2.xmax = die.xmax - radius * 2
         o2.ymax = die_y_max - radius * 2
