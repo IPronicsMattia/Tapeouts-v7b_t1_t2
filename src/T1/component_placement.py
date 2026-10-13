@@ -13,6 +13,7 @@ from T1.pdk import (
     grating_array_test_structure,
     mmi_splitter_il_extractor,
     mzis_test_group_and_effective_index,
+    sem_array,
     straight_410_swg,
     straight_700_anwg,
     straight_930_swg,
@@ -1206,6 +1207,21 @@ def component_placement(die: gf.Component) -> gf.Component:
                     structure=t.cell,
                     extra_dict={"analysis": ["ilte_db"]},
                 )
+    current_ts += 1
+
+    ###########################
+    # N.13 SEM Test Structure #
+    ###########################
+    if len(structure_only) == 0 or 13 in structure_only:
+        print(f"\nCreation of N.{current_ts} SEM Test Structure")
+
+        # Place the sem
+        t = die << sem_array(structure_index=current_ts)
+
+        # Assign to the dictionary
+        ts = f'{current_ts}.1'
+        structures[ts] = t
+        structures_text[ts] = "NO"
 
     current_ts += 1
 
@@ -1368,6 +1384,7 @@ def component_placement(die: gf.Component) -> gf.Component:
     #########################################################
     left_top_structure = ["1.1", "3.1", "3.2", "8.1", "8.2",
                           "11.1", "11.2", "11.3", "11.4", "11.5", "11.6", "11.7", "11.8", "11.9", "11.10", "11.11", "11.12",
+                          "13.1",
                           "1.2"]
     left_cen_structure = ["4.1", "4.2", "6.1", "7.1", "9.1", "12.1", "12.2", "12.3"]
     left_bot_structure = ["1.3", "5.1", "10.1", "10.2", "10.3", "2.1", "1.4"]
@@ -1406,17 +1423,18 @@ def component_placement(die: gf.Component) -> gf.Component:
 
         # Write the text for those
         text_to_write = structures_text[structure_idx]
-        if "R" == text_to_write[0]:
-            text = die << all_metal_text(text_to_write[1:], size=25, justify="center")
-            text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin + 40)))
-        else:
-            text = die << all_metal_text(text_to_write, size=25, justify="center")
-            text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin - 35)))
-        bbox = die << gf.components.rectangle(
-            size=(text.xmax - text.xmin + 2, text.ymax - text.ymin + 2),
-            layer=bbox_layer,
-        )
-        bbox.move((bbox.xmin, bbox.ymin), ((text.xmin - 1, text.ymin - 1)))
+        if text_to_write != "NO":
+            if "R" == text_to_write[0]:
+                text = die << all_metal_text(text_to_write[1:], size=25, justify="center")
+                text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin + 40)))
+            else:
+                text = die << all_metal_text(text_to_write, size=25, justify="center")
+                text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin - 35)))
+            bbox = die << gf.components.rectangle(
+                size=(text.xmax - text.xmin + 2, text.ymax - text.ymin + 2),
+                layer=bbox_layer,
+            )
+            bbox.move((bbox.xmin, bbox.ymin), ((text.xmin - 1, text.ymin - 1)))
 
     # Move left cen structures
     previous_x_max = die_x_min + edge_margin
@@ -1432,18 +1450,19 @@ def component_placement(die: gf.Component) -> gf.Component:
 
         # Write the text for those
         text_to_write = structures_text[structure_idx]
-        if "R" == text_to_write[0]:
-            text = die << all_metal_text(text_to_write[1:], size=25, justify="center")
-            text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin + 40)))
-        else:
-            text = die << all_metal_text(text_to_write, size=25, justify="center")
-            text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin - 35)))
+        if text_to_write != "NO":
+            if "R" == text_to_write[0]:
+                text = die << all_metal_text(text_to_write[1:], size=25, justify="center")
+                text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin + 40)))
+            else:
+                text = die << all_metal_text(text_to_write, size=25, justify="center")
+                text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin - 35)))
 
-        bbox = die << gf.components.rectangle(
-            size=(text.xmax - text.xmin + 2, text.ymax - text.ymin + 2),
-            layer=bbox_layer,
-        )
-        bbox.move((bbox.xmin, bbox.ymin), ((text.xmin - 1, text.ymin - 1)))
+            bbox = die << gf.components.rectangle(
+                size=(text.xmax - text.xmin + 2, text.ymax - text.ymin + 2),
+                layer=bbox_layer,
+            )
+            bbox.move((bbox.xmin, bbox.ymin), ((text.xmin - 1, text.ymin - 1)))
 
     # Move left bot structures
     previous_x_max = die_x_min + edge_margin
@@ -1460,18 +1479,19 @@ def component_placement(die: gf.Component) -> gf.Component:
 
         # Write the text for those
         text_to_write = structures_text[structure_idx]
-        if "R" == text_to_write[0]:
-            text = die << all_metal_text(text_to_write[1:], size=25, justify="center")
-            text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin + 40)))
-        else:
-            text = die << all_metal_text(text_to_write, size=25, justify="center")
-            text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin - 35)))
+        if text_to_write != "NO":
+            if "R" == text_to_write[0]:
+                text = die << all_metal_text(text_to_write[1:], size=25, justify="center")
+                text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin + 40)))
+            else:
+                text = die << all_metal_text(text_to_write, size=25, justify="center")
+                text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin - 35)))
 
-        bbox = die << gf.components.rectangle(
-            size=(text.xmax - text.xmin + 2, text.ymax - text.ymin + 2),
-            layer=bbox_layer,
-        )
-        bbox.move((bbox.xmin, bbox.ymin), ((text.xmin - 1, text.ymin - 1)))
+            bbox = die << gf.components.rectangle(
+                size=(text.xmax - text.xmin + 2, text.ymax - text.ymin + 2),
+                layer=bbox_layer,
+            )
+            bbox.move((bbox.xmin, bbox.ymin), ((text.xmin - 1, text.ymin - 1)))
 
     # Move right structures
     previous_x_max = die.xmax - edge_margin_right

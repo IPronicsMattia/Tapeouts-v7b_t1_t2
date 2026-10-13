@@ -1843,6 +1843,273 @@ def mmi_splitter_il_extractor(
     c.mirror_y()
     return c
 
+
+@gf.cell
+def sem(
+    gap: float = 0.0,
+    layer: LayerSpec = LAYER.swg,
+    length: float = 100,
+    length_additional: float = 100,
+    n: int = 11,
+    width: float = 0.14,
+) -> gf.Component:
+    """
+    Creates a SEM target structure consisting of `n` vertically stacked straight
+    waveguides. All waveguides have the same width and are separated by
+    `width + gap_extra`. The central waveguide (middle one) is made longer
+    by `length_additional` to serve as a visual reference for SEM inspection.
+
+    Args:
+        gap_extra (float): Additional spacing added between adjacent waveguides (µm).
+            Defaults to 0.0.
+        layer (LayerSpec): Layer specification for the waveguides.
+            Defaults to LAYER.swg.
+        length (float): Length of the standard straight waveguides (µm).
+            Defaults to 500.
+        length_additional (float): Extra length added to the middle waveguide (µm).
+            Defaults to 100.
+        n (int): Number of waveguides. Adjusted to be odd if an even value is given.
+            Defaults to 49.
+        width (float): Width of each waveguide (µm).
+            Defaults to 0.14.
+    """
+
+    # Ensure n is odd
+    if n % 2 == 0:
+        n += 1
+
+    # Components initialization
+    c = gf.Component()
+    xs = gf.get_cross_section("strip", width=width, layer=layer)
+    waveguides = []
+
+    # Create and place the first waveguide
+    wg0 = c << gf.components.straight(length=length, cross_section=xs)
+    waveguides.append(wg0)
+
+    # Vertical spacing between waveguides
+    spacing = gap
+
+    # Add the remaining waveguides
+    for i in range(1, n):
+
+        # Understand if we are at the middle
+        is_middle = i == n // 2
+
+        # Place a waveguide
+        wg_length = length + length_additional if is_middle else length
+        wg = c << gf.components.straight(length=wg_length, cross_section=xs)
+
+        # Position the new waveguide below the previous one
+        wg.ymax = waveguides[-1].ymin - spacing
+        waveguides.append(wg)
+
+    return c
+
+@gf.cell
+def sem_array(structure_index: int = 0):
+    """
+    Function used for placing sequence of sem of different material
+
+    Args:
+    structure_index(int): value used for text.
+        Defaults to 0.
+    """
+    c = gf.Component()
+
+    # ==========================================================
+    # SEM configuration list
+    # ==========================================================
+    sem_specs = [
+        # widths,               gap,    layers,                                 titles
+         # Bool difference operation, Bridge
+        ([0.410],               0.20,   [LAYER.swg],                            f"{structure_index}.1: SI 0.41 G.2",
+         False, False),
+        ([0.410],               0.30,   [LAYER.swg],                            f"{structure_index}.2: SI 0.41 G.3",
+         False, False),
+        ([0.930],               0.30,   [LAYER.swg],                            f"{structure_index}.3: SI 0.93 G.3",
+         False, False),
+        ([1.500],               0.30,   [LAYER.swg],                            f"{structure_index}.4: SI 1.50 G.3",
+         False, False),
+        ([0.650, 1.92],         1.87,   [LAYER.swg, LAYER.rwg],                 f"{structure_index}.5: SISH 0.65 G.6",
+         False, False),
+        ([0.268, 0.35],         0.682,  [LAYER.swg, LAYER.rwg],                 f"{structure_index}.6: SISH 0.268 G.6",
+         False, False),
+        ([0.410, 20.00, 21.00], 0.30,   [LAYER.swg, LAYER.rwg, LAYER.gwg],      f"{structure_index}.7: SISH 0.41 G.3",
+         False, False),
+        ([0.700],               0.30,   [LAYER.nwg],                            f"{structure_index}.8: SIN 0.70 G.3",
+         False, False),
+        ([1.000],               0.20,   [LAYER.nwg],                            f"{structure_index}.9: SIN 1.00 G.2",
+         False, False),
+        ([1.000],               0.30,   [LAYER.nwg],                            f"{structure_index}.10: SIN 1.00 G.3",
+         False, False),
+        ([5.000, 5.40, 1.00],   0.00,   [LAYER.nwg, LAYER.rwn, LAYER.nwg],      f"{structure_index}.11: SINSH 1.00 G4",
+         True, False),
+        ([0.700],               0.35,   [LAYER.anwg],                           f"{structure_index}.12: A 0.70 G.35",
+         False, False),
+        ([1.000],               0.25,   [LAYER.anwg],                           f"{structure_index}.13: A 1.00 G.25",
+         False, False),
+        ([1.000],               0.35,   [LAYER.anwg],                           f"{structure_index}.14: A 1.00 G.35",
+         False, False),
+        ([2.000],               0.35,   [LAYER.anwg],                           f"{structure_index}.15: A 2.00 G.35",
+         False, False),
+        ([5.500, 5.90, 1.50],   0.00,   [LAYER.anwg, LAYER.ranwg, LAYER.anwg],  f"{structure_index}.16: ASH 1.50 G4",
+         True, False),
+        ([0.150, 0.41, 20.00],  0.56,   [LAYER.nwg, LAYER.swg],                 f"{structure_index}.17: SISIN 0.41 G.3",
+         False, False),
+        ([0.310, 1.30],         1.34,   [LAYER.nwg, LAYER.anwg],                f"{structure_index}.18: SINA 0.31 G.35",
+         False, False),
+        ([0.72, 1.000],         0.58,   [LAYER.anwg, LAYER.nwg],                f"{structure_index}.19: SINA 1.00 G.3",
+         False, False)
+    ]
+
+
+    # ==========================================================
+    # Layout configuration
+    # ==========================================================
+    col_count = 1                          # two columns
+    x_spacing = 620                        # horizontal distance between columns
+    y_spacing = 60                         # vertical spacing between rows
+    label_text_size = 21                   # font size
+
+    # Standardized label box width + height
+    label_width = 305                      # fixed width for all labels
+    label_height = 40                      # fixed height (text will be centered)
+    bridge_width = 2
+
+    # Cross section for marking
+    xs_marking = gf.cross_section.strip(
+        width=bridge_width,
+        layer=LAYER.m_wgcnct
+    )
+
+    for idx, (widths, gap, layers, label, bool_diff, bridge) in enumerate(sem_specs):
+
+        # Determine column and row
+        row = idx // col_count
+        col = idx % col_count
+
+        x_offset = col * x_spacing
+        y_offset = -row * y_spacing
+
+        # ==========================================================
+        # Place SEM cell (centered vertically)
+        # ==========================================================
+        sm_max_height = 0
+
+        # Regular sem structure
+        if not bool_diff:
+            for width, layer in zip(widths[::-1], layers[::-1]):
+                delta_gap = abs(widths[0] - width)
+
+                sm = c << sem(width=width,
+                              length=delta_gap+100,
+                              layer=layer,
+                              gap=gap - delta_gap)
+
+                sm.movex(delta_gap/2, x_offset)
+                sm.movey(sm.y, y_offset)
+
+                if sm.ysize > sm_max_height:
+                    sm_max_height = sm.ysize
+
+        # Difference between sem structures
+        else:
+            # Unchanged layer 1
+            sm1 = sem(width=widths[0],
+                      length=100,
+                      layer=layers[0],
+                      gap=gap)
+
+            # Unchanged layer 2
+            delta_gap = abs(widths[1] - widths[0])
+            sm2 = sem(width=widths[1],
+                      length=100 + delta_gap,
+                      layer=layers[1],
+                      gap=gap - delta_gap)
+            sm2 = sm2.copy()
+            sm2.movex(delta_gap / 2, x_offset)
+
+            # Layer boolean operation
+            delta_gap = abs(widths[2] - widths[0])
+            sm3 = sem(width=widths[2],
+                      length=100 - delta_gap,
+                      layer=layers[2],
+                      gap=gap + delta_gap)
+            sm3 = sm3.copy()
+            sm3.movex(- delta_gap / 2, x_offset)
+
+            # Perform Boolean difference
+            sm = c << gf.boolean(
+                A=sm2,
+                B=sm3,
+                operation="A-B",
+                layer=layers[1],
+                layer1=layers[1],
+                layer2=layers[2],
+            )
+
+            # Move unchanged layers
+            sm1 = c << sm1
+            sm1.movex(delta_gap / 2, x_offset)
+            sm1.movey(sm1.y, y_offset)
+
+            # Move the result of the boolean operation
+            sm.movex(delta_gap / 2, x_offset)
+            sm.movey(sm.y, y_offset)
+
+            sm_max_height = sm.ysize
+
+        # If width is too small, we need to add a bridge
+        if bridge:
+            sm_height = sm_max_height
+            delta_height = (sm_height - sm.ysize) / 2
+
+            for idx in range(4):
+                # Place bridge
+                bridge_inst = c << gf.c.rectangle(size=(bridge_width, sm_height), layer=layers[0])
+
+                bridge_inst.xmin = sm.xmin + 0.5 + 98 * (idx) / 3
+                bridge_inst.ymin = sm.ymin - delta_height
+
+                # Place transition layer on both ends to avoid error
+                m1 = c << gf.components.straight(length = 1, cross_section=xs_marking)
+                m1.rotate(90)
+                m1.x = bridge_inst.x
+                m1.y = bridge_inst.ymax
+
+                m2 = c << gf.components.straight(length = 1, cross_section=xs_marking)
+                m2.rotate(90)
+                m2.x = bridge_inst.x
+                m2.y = bridge_inst.ymin
+
+        # ==========================================================
+        # Create standardized rectangle background FIRST
+        # ==========================================================
+        rec = c << gf.c.rectangle(
+            size=(label_width, label_height),
+            layer=(118, 40)
+        )
+
+        # Place rectangle at fixed offset from SEM
+        rec.xmin = x_offset + 70 + label_width / 2
+        rec.y = y_offset
+
+        # ==========================================================
+        # Create text INSIDE the rectangle
+        # ==========================================================
+        txt = c << ipr.text(
+            label,
+            size=label_text_size,
+            layer=LAYER.metal3
+        )
+
+        # Center text inside rectangle
+        txt.move((rec.center[0] - txt.center[0],
+                  rec.center[1] - txt.center[1]))
+
+    return c
+
 @gf.cell
 def taper_doe(bend: ComponentSpec,
               gc_array: ComponentSpec,
