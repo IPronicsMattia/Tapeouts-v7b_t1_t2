@@ -82,7 +82,12 @@ else:
 if "netlist" in generate:
     print("\n###############\nNETLIST FLAT EXTRACTION\n###############\n")
     nl_file = path / "v7b_netlist.json"
-    nl = v7b.get_netlist_flat(component=die, recursive_netlist=None)
+
+    nl_recursive = path / "v7b_recursive_netlist.json"
+    with nl_recursive.open() as f:
+        recursive_netlist = json.load(f)
+    # nl = v7b.get_netlist_flat(component=die, recursive_netlist=None)
+    nl = v7b.get_netlist_flat(component=die, recursive_netlist=recursive_netlist)
     nl_file.write_text(json.dumps(nl, indent=2))
 
     print(f"\nelapsed time:{math.ceil(time.time() - start)} seconds\n")

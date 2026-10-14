@@ -114,15 +114,15 @@ def get_netlist_flat(
 
                 recursive_netlist[k]["nets"] = nets
 
+        # Transform the recursive netlist into the correct one
+        path = Path(__file__).parent.parent.parent.resolve() / "output"
+        gdspath = path / f"{component.name}_recursive_netlist"
+        nl_file = gdspath.with_suffix(".json")
+        nl_file.write_text(json.dumps(recursive_netlist, indent=2))
+        print(f"Wrote raw netlist to '{nl_file}'")
+
     else:
         print("Netlist as a parameter")
-
-    # Transform the recursive netlist into the correct one
-    path = Path(__file__).parent.parent.parent.resolve() / "output"
-    gdspath = path / f"{component.name}_recursive_netlist"
-    nl_file = gdspath.with_suffix(".json")
-    nl_file.write_text(json.dumps(recursive_netlist, indent=2))
-    print(f"Wrote raw netlist to '{nl_file}'")
 
     top_level_name = component.name
     nets_index = _build_nets_index(recursive_netlist)
@@ -178,9 +178,10 @@ def get_netlist_flat(
     )
     netlist["__internal_connections__"] = internal_connections
 
-    generate_states(
-        netlist, print_errors=False, reverse_inputs=True, reverse_outputs=True
+    states = generate_states(
+        netlist, sorted_topolux_id
     )
+    netlist["__states__"] = states
 
     return netlist
 
