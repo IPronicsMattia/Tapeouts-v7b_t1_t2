@@ -1061,10 +1061,111 @@ def component_placement(die: gf.Component) -> gf.Component:
             )
     current_ts += 1
 
-    ##############################################
-    # N.11 Group Index Transition Test Structure #
-    ##############################################
+    ###################################
+    # N.11 3D Crossing Test Structure #
+    ###################################
     if len(structure_only) == 0 or 11 in structure_only:
+        print(f"\nCreation of N.{current_ts} 3D crossing test structure")
+
+        # 3D crossing_swg_930_anwg_2000 -> BELOW
+        for idx, angle in enumerate([90]):
+            # Passing signal below the nitride
+            cross_straight, cross_kwargs, cross_3d = straigth_with_3d_cross_strip(
+                angle=angle, separation=3.0 / np.sin(angle / 180 * np.pi), below=True
+            )
+
+            nbb_diff = int(4000 * np.sin(angle / 180 * np.pi))
+
+            # Function to generate dummy
+            dummy_adder = gf.partial(
+                T1_dummy_adder, distance_metal=5, distane_wvg=10, delta_hor_ver_wvg=-4.5
+            )
+
+            # Create test structure
+            ts = f"{current_ts}.{idx + 1}"
+            t = die << ipr.test_serpentines_from_calculation(
+                bend=routing_bend_Si,
+                blocks_distance=(85, 10),
+                block_gc_distance=20,
+                dummy_adder=dummy_adder,
+                gc_array=gc_array,
+                straight=cross_straight,
+                separations=10.2,
+                lengths=cross_kwargs,
+                n_bbs=[nbb_diff, nbb_diff * 2, nbb_diff * 3, nbb_diff * 4],
+                structure_4_blocks="2x2",
+                max_height=1120,
+                n_rows_pitch=11,
+                separations_pitch=40,
+                straight_route=routing_strt,
+            )
+
+            # Assign to the dictionary
+            name = f"CROSS_3D_ANGLE_STRIP_{angle}_BELOW"
+            structures[ts] = t
+            structures_text[ts] = f"{ts} {name}"
+
+            # Add the structures to the json file
+            if create_json:
+                json_writer.structure_json(
+                    component=cross_3d,
+                    component_IO=gc_array,
+                    structure_title=f"TS{ts}",
+                    structure=t.cell,
+                )
+
+        # 3D crossing_swg_930_anwg_2000 -> ABOVE
+        for idx, angle in enumerate([90]):
+            # Passing signal above the nitride
+            cross_straight, cross_kwargs, cross_3d = straigth_with_3d_cross_strip(
+                angle=angle, separation=3.0 / np.sin(angle / 180 * np.pi), below=False
+            )
+
+            nbb_diff = int(4000 * np.sin(angle / 180 * np.pi))
+
+            # Function to generate dummy
+            dummy_adder = gf.partial(
+                T1_dummy_adder, distance_metal=10, distane_wvg=10, delta_hor_ver_wvg=-5
+            )
+
+            # Create test structure
+            ts = f"{current_ts}.{idx + 2}"
+            t = die << ipr.test_serpentines_from_calculation(
+                bend=routing_bend_Si,
+                blocks_distance=(85, 10),
+                block_gc_distance=20,
+                dummy_adder=dummy_adder,
+                gc_array=gc_array,
+                straight=cross_straight,
+                separations=10.2,
+                lengths=cross_kwargs,
+                n_bbs=[nbb_diff, nbb_diff * 2, nbb_diff * 3, nbb_diff * 4],
+                structure_4_blocks="2x2",
+                max_height=1120,
+                n_rows_pitch=11,
+                separations_pitch=45,
+                straight_route=routing_strt,
+            )
+
+            # Assign to the dictionary
+            name = f"CROSS_3D_ANGLE_STRIP_{angle}_ABOVE"
+            structures[ts] = t
+            structures_text[ts] = f"{ts} {name}"
+
+            # Add the structures to the json file
+            if create_json:
+                json_writer.structure_json(
+                    component=cross_3d,
+                    component_IO=gc_array,
+                    structure_title=f"TS{ts}",
+                    structure=t.cell,
+                )
+    current_ts += 1
+
+    ##############################################
+    # N.12 Group Index Transition Test Structure #
+    ##############################################
+    if len(structure_only) == 0 or 12 in structure_only:
         print(f"\nCreation of N.{current_ts} Group Index Test Structure")
 
         for idx in range(12):
@@ -1150,10 +1251,10 @@ def component_placement(die: gf.Component) -> gf.Component:
                 )
     current_ts += 1
 
-    ################################################
-    # N.12 Insertion Loss DoE Taper Test Structure #
-    ################################################
-    if len(structure_only) == 0 or 12 in structure_only:
+    #################################
+    # N.13 DoE Taper Test Structure #
+    #################################
+    if len(structure_only) == 0 or 13 in structure_only:
         print(f"\nCreation of N.{current_ts} Insertion Loss Rib Taper Test Structure")
 
         # Divide the wanted tapers in group of 4
@@ -1199,20 +1300,20 @@ def component_placement(die: gf.Component) -> gf.Component:
             structures_text[ts] = f"R{ts} \nTAPER DOE"
 
             # Json Part
-            if create_json:
-                json_writer.structure_json(
-                    component=taper_list.tolist(),
-                    component_IO=gc_array_tp,
-                    structure_title=f"TS{ts}",
-                    structure=t.cell,
-                    extra_dict={"analysis": ["ilte_db"]},
-                )
+            # if create_json:
+            #     json_writer.structure_json(
+            #         component=taper_list.tolist(),
+            #         component_IO=gc_array_tp,
+            #         structure_title=f"TS{ts}",
+            #         structure=t.cell,
+            #         extra_dict={"analysis": ["ilte_db"]},
+            #     )
     current_ts += 1
 
     ###########################
-    # N.13 SEM Test Structure #
+    # N.14 SEM Test Structure #
     ###########################
-    if len(structure_only) == 0 or 13 in structure_only:
+    if len(structure_only) == 0 or 14 in structure_only:
         print(f"\nCreation of N.{current_ts} SEM Test Structure")
 
         # Place the sem
@@ -1222,108 +1323,8 @@ def component_placement(die: gf.Component) -> gf.Component:
         ts = f'{current_ts}.1'
         structures[ts] = t
         structures_text[ts] = "NO"
-
     current_ts += 1
 
-    # # ##################################
-    # # # N.9 3D Crossing Test Structure #
-    # # ##################################
-    # if len(structure_only) == 0 or 9 in structure_only:
-    #     print("\nCreation of N.9 3D crossing test structure")
-
-    #     # 3D crossing_swg_930_anwg_2000 -> BELOW
-    #     for idx, angle in enumerate([90]):
-    #         # Passing signal below the nitride
-    #         cross_straight, cross_kwargs, cross_3d = straigth_with_3d_cross_strip(
-    #             angle=angle, separation=3.0 / np.sin(angle / 180 * np.pi), below=True
-    #         )
-
-    #         nbb_diff = int(4000 * np.sin(angle / 180 * np.pi))
-
-    #         # Function to generate dummy
-    #         dummy_adder = gf.partial(
-    #             T1_dummy_adder, distance_metal=5, distane_wvg=10, delta_hor_ver_wvg=-4.5
-    #         )
-
-    #         # Create test structure
-    #         ts = f"9.{idx + 1}"
-    #         t = die << ipr.test_serpentines_from_calculation(
-    #             bend=routing_bend_Si,
-    #             blocks_distance=(85, 10),
-    #             block_gc_distance=20,
-    #             dummy_adder=dummy_adder,
-    #             gc_array=gc_array,
-    #             straight=cross_straight,
-    #             separations=10.2,
-    #             lengths=cross_kwargs,
-    #             n_bbs=[nbb_diff, nbb_diff * 2, nbb_diff * 3, nbb_diff * 4],
-    #             structure_4_blocks="2x2",
-    #             max_height=1120,
-    #             n_rows_pitch=11,
-    #             separations_pitch=40,
-    #             straight_route=routing_strt,
-    #         )
-
-    #         # Assign to the dictionary
-    #         name = f"CROSS_3D_ANGLE_STRIP_{angle}_BELOW"
-    #         structures[ts] = t
-    #         structures_text[ts] = f"{ts} {name}"
-
-    #         # Add the structures to the json file
-    #         if create_json:
-    #             json_writer.structure_json(
-    #                 component=cross_3d,
-    #                 component_IO=gc_array,
-    #                 structure_title=f"TS0{ts}",
-    #                 structure=t.cell,
-    #             )
-
-    #     # 3D crossing_swg_930_anwg_2000 -> ABOVE
-    #     for idx, angle in enumerate([90]):
-    #         # Passing signal above the nitride
-    #         cross_straight, cross_kwargs, cross_3d = straigth_with_3d_cross_strip(
-    #             angle=angle, separation=3.0 / np.sin(angle / 180 * np.pi), below=False
-    #         )
-
-    #         nbb_diff = int(4000 * np.sin(angle / 180 * np.pi))
-
-    #         # Function to generate dummy
-    #         dummy_adder = gf.partial(
-    #             T1_dummy_adder, distance_metal=10, distane_wvg=10, delta_hor_ver_wvg=-5
-    #         )
-
-    #         # Create test structure
-    #         ts = f"9.{idx + 2}"
-    #         t = die << ipr.test_serpentines_from_calculation(
-    #             bend=routing_bend_Si,
-    #             blocks_distance=(85, 10),
-    #             block_gc_distance=20,
-    #             dummy_adder=dummy_adder,
-    #             gc_array=gc_array,
-    #             straight=cross_straight,
-    #             separations=10.2,
-    #             lengths=cross_kwargs,
-    #             n_bbs=[nbb_diff, nbb_diff * 2, nbb_diff * 3, nbb_diff * 4],
-    #             structure_4_blocks="2x2",
-    #             max_height=1120,
-    #             n_rows_pitch=11,
-    #             separations_pitch=45,
-    #             straight_route=routing_strt,
-    #         )
-
-    #         # Assign to the dictionary
-    #         name = f"CROSS_3D_ANGLE_STRIP_{angle}_ABOVE"
-    #         structures[ts] = t
-    #         structures_text[ts] = f"{ts} {name}"
-
-    #         # Add the structures to the json file
-    #         if create_json:
-    #             json_writer.structure_json(
-    #                 component=cross_3d,
-    #                 component_IO=gc_array,
-    #                 structure_title=f"TS0{ts}",
-    #                 structure=t.cell,
-    #             )
 
     # # #################
     # # # 10.0 CROSSING #
@@ -1382,12 +1383,13 @@ def component_placement(die: gf.Component) -> gf.Component:
     #########################################################
     #########################################################
     #########################################################
-    left_top_structure = ["1.1", "3.1", "3.2", "8.1", "8.2",
-                          "11.1", "11.2", "11.3", "11.4", "11.5", "11.6", "11.7", "11.8", "11.9", "11.10", "11.11", "11.12",
-                          "13.1",
+    left_top_structure = ["1.1", "2.1", "3.1", "3.2", "4.1", "4.2",
                           "1.2"]
-    left_cen_structure = ["4.1", "4.2", "6.1", "7.1", "9.1", "12.1", "12.2", "12.3"]
-    left_bot_structure = ["1.3", "5.1", "10.1", "10.2", "10.3", "2.1", "1.4"]
+    left_cen_structure = ["5.1", "6.1", "7.1", "8.1", "8.2", "9.1"]
+    left_bot_structure = ["1.3", "10.1", "10.2", "10.3", "11.1", "11.2",
+                          "12.1", "12.2", "12.3", "12.4", "12.5", "12.6",
+                          "12.7", "12.8", "12.9", "12.10", "12.11", "12.12",
+                          "13.1", "13.2", "13.3", "14.1", "1.4"]
     right_structure = []
 
     # Place only structure complain with structure_only
@@ -1426,7 +1428,7 @@ def component_placement(die: gf.Component) -> gf.Component:
         if text_to_write != "NO":
             if "R" == text_to_write[0]:
                 text = die << all_metal_text(text_to_write[1:], size=25, justify="center")
-                text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin + 40)))
+                text.move((text.xmin, text.ymin), ((s.xmin + 15), (s.ymin + 40)))
             else:
                 text = die << all_metal_text(text_to_write, size=25, justify="center")
                 text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin - 35)))
@@ -1453,7 +1455,7 @@ def component_placement(die: gf.Component) -> gf.Component:
         if text_to_write != "NO":
             if "R" == text_to_write[0]:
                 text = die << all_metal_text(text_to_write[1:], size=25, justify="center")
-                text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin + 40)))
+                text.move((text.xmin, text.ymin), ((s.xmin + 15), (s.ymin + 40)))
             else:
                 text = die << all_metal_text(text_to_write, size=25, justify="center")
                 text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin - 35)))
@@ -1482,7 +1484,7 @@ def component_placement(die: gf.Component) -> gf.Component:
         if text_to_write != "NO":
             if "R" == text_to_write[0]:
                 text = die << all_metal_text(text_to_write[1:], size=25, justify="center")
-                text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin + 40)))
+                text.move((text.xmin, text.ymin), ((s.xmin + 15), (s.ymin + 40)))
             else:
                 text = die << all_metal_text(text_to_write, size=25, justify="center")
                 text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin - 35)))
