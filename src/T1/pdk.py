@@ -439,6 +439,9 @@ def straight_410_gwg(length: float, **kwargs):  # Level 0
     kwargs["additional_name"] = "gwg"
     return gf.partial(ipr.fast_straight, length=length, **kwargs)()
 
+def straight_100_swg(length: float, **kwargs):  # Level 0
+    kwargs["cross_section"] = gf.get_cross_section("strip", layer=LAYER.swg, width=0.1)
+    return gf.partial(ipr.fast_straight, length=length, **kwargs)()
 
 def straight_410_swg(length: float, **kwargs):  # Level 0
     kwargs["cross_section"] = gf.get_cross_section("strip", layer=LAYER.swg, width=0.41)
@@ -461,20 +464,29 @@ def straight_700_anwg(length: float, **kwargs):  # Level 0
     )
     return gf.partial(ipr.fast_straight, length=length, **kwargs)()
 
-
-def straight_1000_nwg(length: float, **kwargs):  # Level 0
+def straight_100_nwg(length: float, **kwargs):  # Level 0
     kwargs["cross_section"] = gf.get_cross_section(
-        "nitride", layer=LAYER.anwg, width=1.00
+        "nitride", layer=LAYER.nwg, width=0.10
     )
     return gf.partial(ipr.fast_straight, length=length, **kwargs)()
 
+def straight_1000_nwg(length: float, **kwargs):  # Level 0
+    kwargs["cross_section"] = gf.get_cross_section(
+        "nitride", layer=LAYER.nwg, width=1.00
+    )
+    return gf.partial(ipr.fast_straight, length=length, **kwargs)()
+
+def straight_100_anwg(length: float, **kwargs):  # Level 0
+    kwargs["cross_section"] = gf.get_cross_section(
+        "nitride2", layer=LAYER.anwg, width=0.10
+    )
+    return gf.partial(ipr.fast_straight, length=length, **kwargs)()
 
 def straight_1500_anwg(length: float, **kwargs):  # Level 0
     kwargs["cross_section"] = gf.get_cross_section(
         "nitride2", layer=LAYER.anwg, width=1.50
     )
     return gf.partial(ipr.fast_straight, length=length, **kwargs)()
-
 
 def straight_2000_anwg(length: float, **kwargs):  # Level 0
     kwargs["cross_section"] = gf.get_cross_section(
@@ -2113,7 +2125,28 @@ def sem_array(structure_index: int = 0):
 @gf.cell
 def taper_doe(bend: ComponentSpec,
               gc_array: ComponentSpec,
-              straight_list:list[ComponentSpec]):
+              straight: ComponentSpec,
+              taper_start: ComponentSpec,
+              taper_list:list[ComponentSpec],
+              vertical_transition=ComponentSpec):
+    """
+    Create a test structure to detect the maximum taper length before fabrication problem.
+
+    Args:
+        bend[ComponentSpec]: silicon 90 bend to be used in curves.
+        gc_array[ComponentSpec]: grating coupler to be used. Normali GC with 0.41 silicon input.
+        straight[ComponentSpec]: straight to be used between taper_list output.
+        taper_start[ComponentSpec]: taper to be used between vt out and taper_list input.
+        taper_list[list[ComponentSpec]]: list of taper to be used.
+        vertical_transition[ComponentSpec]: vertical transition to be used.
+    """
+
+    # Initialize the dictionary with cutback info
+    block1_dict = {}
+    block2_dict = {}
+    block3_dict = {}
+    block4_dict = {}
+
     # Generate component
     c = gf.Component()
 
@@ -2123,55 +2156,98 @@ def taper_doe(bend: ComponentSpec,
 
     # Geometrical parameter definition
     radius = bend["o2"].x - bend["o1"].x
-    dx = radius # Distance between lines is 2*dx
-    Dx = 60     # Distance of going back for top GC
-    dy = 510    # Should be enough to place a taper
+    Dx = 20
+    Dy = 25
+    for idx, taper in enumerate(taper_list):
+        # Place a straight to be reached
+        xs = gf.get_cross_section("strip", width=0.41)
+        strt1 = c << straight_410_swg(length=1)
 
-    # Initialize the dictionary with cutback info
-    block1_dict = {}
-    block2_dict = {}
-    block3_dict = {}
-    block4_dict = {}
-
-    for idx, straight in enumerate(straight_list):
-        # Place a straight to get info
-        sr = straight(length=0)
-        xs = sr["o1"].cross_section
-
-        if idx != 3:
-            steps = [
-                {"x": gc_ref[idx*2+1].x+dx*(13 - idx * 4)},
-                {"dy": dy+2*dx},
-                {"dx":-2*dx},
-                {"y":gc_ref[idx*2+2].y}
-            ]
-
+        if idx < 2:
+            strt1.rotate(90)
+            strt1.x = gc_ref[f"o{2*idx+1}"].x + radius * (9 - 4 * idx)
+            strt1.y = gc_ref[f"o{2*idx+1}"].y + radius * 2
         else:
-            steps = [
-                {"x": gc_ref[idx*2+1].x+dx},
-                {"y": gc_ref[idx*2+1].y+3*dx},
-                {"dx":-Dx},
-                {"dy": -dy-2*dx},
-                {"dx":-2*dx},
-                {"y":gc_ref[idx*2+2].y+3*dx},
-                {"dx":Dx+2*dx},
-                {"y":gc_ref[idx*2+2].y}
-            ]
+            strt1.rotate(-90)
+            strt1.x = gc_ref[f"o{2*idx+1}"].x - Dx - radius * (4 * idx - 2)
+            strt1.y = gc_ref[f"o{2*idx+1}"].y + Dy
 
-         # Place a route
-        route = gf.routing.route_single(
+        route1 = gf.routing.route_single(
             c,
-            port1=gc_ref[idx*2+1],
-            port2=gc_ref[idx*2+2],
+            strt1["o1"],
+            gc_ref[f"o{2*idx+1}"],
             cross_section=xs,
-            straight=straight,
-            bend=bend,
-            auto_taper=False,
-            steps=steps)
+            bend=bend)
 
-        # Update the dictionary
-        for inst in route.instances:
-            temp_dict = ipr.measure_component(inst.cell, scale=1 / 1000)
+        # Place a vt
+        vt1 = c << vertical_transition
+        vt1.connect("o1", strt1["o2"])
+
+        # Place a taper start
+        tp_start = c << taper_start
+        tp_start.connect("o1", vt1["o2"])
+
+        # Place a taper from list
+        tp1 = c << taper
+        tp1.connect("o1", tp_start["o2"])
+
+        # Place a small straight
+        strt2 = c << straight(length=1)
+        strt2.connect("o1", tp1["o2"])
+
+        # Place taper inverse from list
+        tp2 = c << taper
+        tp2.connect("o2", strt2["o2"])
+
+        # Place a taper start inverse
+        tp_end = c << taper_start
+        tp_end.connect("o2", tp2["o1"])
+
+        # Place a vt inverse
+        vt2 = c << vertical_transition
+        vt2.connect("o2", tp_end["o1"])
+
+        strt2 = c << straight_410_swg(length=1)
+
+        if idx < 2:
+            strt2.x = gc_ref[f"o{2*idx+2}"].x + radius
+            strt2.y = gc_ref[f"o{2*idx+2}"].y
+        else:
+            strt2.rotate(180)
+            strt2.x = gc_ref[f"o{2*idx+2}"].x - Dx - radius * (4 * idx - 1)
+            strt2.y = gc_ref[f"o{2*idx+2}"].y + Dy - radius
+
+        # Connect to GC
+        route2 = gf.routing.route_single(
+            c,
+            vt2["o1"],
+            strt2["o2"],
+            cross_section=xs,
+            bend=bend)
+
+        route3 = gf.routing.route_single(
+            c,
+            gc_ref[f"o{2*idx+2}"],
+            strt2["o1"],
+            cross_section=xs,
+            bend=bend)
+
+        # Update the dictionary with routing
+        for route in [route1, route2, route3]:
+            for inst in route.instances:
+                temp_dict = ipr.measure_component(inst.cell, scale = 1 / 1000)
+                if idx == 0:
+                    block1_dict = ipr.combine_component_dict(block1_dict, temp_dict)
+                elif idx == 1:
+                    block2_dict = ipr.combine_component_dict(block2_dict, temp_dict)
+                elif idx == 2:
+                    block3_dict = ipr.combine_component_dict(block3_dict, temp_dict)
+                else:
+                    block4_dict = ipr.combine_component_dict(block4_dict, temp_dict)
+
+        # Update the dictionary with components
+        for comp in [strt1, strt2, vt1, vt2, tp_start, tp_end, tp1, tp2]:
+            temp_dict = ipr.measure_component(comp.cell)
             if idx == 0:
                 block1_dict = ipr.combine_component_dict(block1_dict, temp_dict)
             elif idx == 1:
@@ -2181,10 +2257,10 @@ def taper_doe(bend: ComponentSpec,
             else:
                 block4_dict = ipr.combine_component_dict(block4_dict, temp_dict)
 
-        c.info["Block 1"] = block1_dict
-        c.info["Block 2"] = block2_dict
-        c.info["Block 3"] = block3_dict
-        c.info["Block 4"] = block4_dict
+    c.info["Block 4"] = block1_dict
+    c.info["Block 3"] = block2_dict
+    c.info["Block 2"] = block3_dict
+    c.info["Block 1"] = block4_dict
 
     return c
 

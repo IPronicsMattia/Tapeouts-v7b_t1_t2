@@ -2,20 +2,26 @@
     "T1": {
         "13.0":
         {
-            "comp":["rib_taper_MR1p95_WRI0p4_ec53feca",
-                    "rib_taper_MR1p95_WRI0p4_9dca5112",
-                    "rib_taper_MR1p95_WRI0p4_ec53feca",
-                    "rib_taper_MR1p95_WRI0p4_ec53feca",
+            "comp":["taper_gdsfactorypcompon_de8fd7de",
+                    "taper_gdsfactorypcompon_d8ea9954",
+                    "taper_gdsfactorypcompon_58cc5f2e",
+                    "taper_gdsfactorypcompon_1495cb36", 
 
-                    "rib_taper_MR1p95_WRI0p4_ec53feca",
-                    "rib_taper_MR1p95_WRI0p4_ec53feca",
-                    "rib_taper_MR1p95_WRI0p4_9dca5112",
-                    "rib_taper_MR1p95_WRI0p4_ec53feca",
+                    "taper_gdsfactorypcompon_8faba2bb",
+                    "taper_gdsfactorypcompon_75927a4a",
+                    "taper_gdsfactorypcompon_1ed63d62",
+                    "taper_gdsfactorypcompon_cea55e12",
 
-                    "rib_taper_MR1p95_WRI0p4_ec53feca",
-                    "rib_taper_MR1p95_WRI0p4_ec53feca",
-                    "rib_taper_MR1p95_WRI0p4_ec53feca",
-                    "rib_taper_MR1p95_WRI0p4_9dca5112"]
+                    "taper_gdsfactorypcompon_f1aef861",
+                    "taper_gdsfactorypcompon_4cd12405",
+                    "taper_gdsfactorypcompon_7ccdf3ae",
+                    "taper_gdsfactorypcompon_0177f387"],
+
+            "taper":["taper_gdsfactorypcompon_da75caee",
+
+                    "taper_gdsfactorypcompon_2579c6d0",
+
+                    "taper_gdsfactorypcompon_cd0f0b9a"]
         }
     },
     

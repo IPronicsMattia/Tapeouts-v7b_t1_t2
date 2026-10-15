@@ -3048,6 +3048,248 @@
             "loss": null
         }
     },
+
+    "taper_gdsfactorypcompon_da75caee":{
+        "design_id": "swg_taper_410_200_L20",
+        "dut_type": "taper",
+        "function": "taper",
+        "settings":{
+            "length": 20, 
+            "width1": 0.41, 
+            "width2": 0.2, 
+            "layer": [171, 0], 
+            "port": null, 
+            "with_two_ports": true, 
+            "cross_section": "strip", 
+            "port_names": ["o1", "o2"], 
+            "port_types": ["optical", "optical"], 
+            "with_bbox": "true"}
+    },
+    "taper_gdsfactorypcompon_1495cb36":{
+        "design_id": "swg_taper_100_200_L50",
+        "dut_type": "taper",
+        "function": "taper",
+        "settings":{
+            "length": 50, 
+            "width1": 0.2, 
+            "width2": 0.1, 
+            "layer": [171, 0], 
+            "port": null, 
+            "with_two_ports": true, 
+            "cross_section": "strip", 
+            "port_names": ["o1", "o2"], 
+            "port_types": ["optical", "optical"], 
+            "with_bbox": "true"}
+    },
+    "taper_gdsfactorypcompon_58cc5f2e":{
+        "design_id": "swg_taper_100_200_L75",
+        "dut_type": "taper",
+        "function": "taper",
+        "settings":{
+            "length": 75, 
+            "width1": 0.2, 
+            "width2": 0.1, 
+            "layer": [171, 0], 
+            "port": null, 
+            "with_two_ports": true, 
+            "cross_section": "strip",
+            "port_names": ["o1", "o2"], 
+            "port_types": ["optical", "optical"], 
+            "with_bbox": "true"}
+    },
+    "taper_gdsfactorypcompon_d8ea9954":{
+        "design_id": "swg_taper_100_200_L100",
+        "dut_type": "taper",
+        "function": "taper",
+        "settings":{
+            "length": 100, 
+            "width1": 0.2, 
+            "width2": 0.1, 
+            "layer": [171, 0], 
+            "port": null, 
+            "with_two_ports": true, 
+            "cross_section": "strip", 
+            "port_names": ["o1", "o2"], 
+            "port_types": ["optical", "optical"], 
+            "with_bbox": "true"}
+    },
+    "taper_gdsfactorypcompon_de8fd7de":{
+        "design_id": "swg_taper_100_200_L200",
+        "dut_type": "taper",
+        "function": "taper",
+        "settings":{
+            "length": 200, 
+            "width1": 0.2, 
+            "width2": 0.1, 
+            "layer": [171, 0], 
+            "port": null, 
+            "with_two_ports": true, 
+            "cross_section": "strip",
+            "port_names": ["o1", "o2"], 
+            "port_types": ["optical", "optical"], 
+            "with_bbox": "true"}
+    },
+    "taper_gdsfactorypcompon_2579c6d0":{
+        "design_id": "nwg_taper_1000_250_L20",
+        "dut_type": "taper",
+        "function": "taper",
+        "settings":{
+            "length": 20, 
+            "width1": 1.0, 
+            "width2": 0.25, 
+            "layer": [174, 0], 
+            "port": null, 
+            "with_two_ports": true, 
+            "cross_section": "nitride", 
+            "port_names": ["o1", "o2"], 
+            "port_types": ["optical", "optical"], 
+            "with_bbox": "true"}
+    },
+    "taper_gdsfactorypcompon_cea55e12":{
+        "design_id": "nwg_taper_100_250_L100",
+        "dut_type": "taper",
+        "function": "taper",
+        "settings":{
+            "length": 100, 
+            "width1": 0.25, 
+            "width2": 0.1, 
+            "layer": [174, 0], 
+            "port": null, 
+            "with_two_ports": true, 
+            "cross_section": "nitride", 
+            "port_names": ["o1", "o2"], 
+            "port_types": ["optical", "optical"], 
+            "with_bbox": "true"}
+    },
+    "taper_gdsfactorypcompon_1ed63d62":{
+        "design_id": "nwg_taper_100_250_L125",
+        "dut_type": "taper",
+        "function": "taper",
+        "settings":{
+            "length": 125, 
+            "width1": 0.25, 
+            "width2": 0.1, 
+            "layer": [174, 0], 
+            "port": null, 
+            "with_two_ports": true, 
+            "cross_section": "nitride", 
+            "port_names": ["o1", "o2"], 
+            "port_types": ["optical", "optical"], 
+            "with_bbox": "true"}
+    },
+    "taper_gdsfactorypcompon_75927a4a":{
+        "design_id": "nwg_taper_100_250_L150",
+        "dut_type": "taper",
+        "function": "taper",
+        "settings":{
+            "length": 150, 
+            "width1": 0.25, 
+            "width2": 0.1, 
+            "layer": [174, 0], 
+            "port": null, 
+            "with_two_ports": true, 
+            "cross_section": "nitride", 
+            "port_names": ["o1", "o2"], 
+            "port_types": ["optical", "optical"], 
+            "with_bbox": "true"}
+    },
+    "taper_gdsfactorypcompon_8faba2bb":{
+        "design_id": "nwg_taper_100_250_L200",
+        "dut_type": "taper",
+        "function": "taper",
+        "settings":{
+            "length": 200, 
+            "width1": 0.25, 
+            "width2": 0.1, 
+            "layer": [174, 0], 
+            "port": null, 
+            "with_two_ports": true, 
+            "cross_section": "nitride", 
+            "port_names": ["o1", "o2"], 
+            "port_types": ["optical", "optical"], 
+            "with_bbox": "true"}
+    },
+    "taper_gdsfactorypcompon_cd0f0b9a":{
+        "design_id": "anwg_taper_2000_250_L20",
+        "dut_type": "taper",
+        "function": "taper",
+        "settings":{
+            "length": 20, 
+            "width1": 2.0, 
+            "width2": 0.25, 
+            "layer": [259, 0], 
+            "port": null, 
+            "with_two_ports": true, 
+            "cross_section": "nitride2", 
+            "port_names": ["o1", "o2"], 
+            "port_types": ["optical", "optical"], 
+            "with_bbox": "true"}
+    },
+    "taper_gdsfactorypcompon_0177f387":{
+        "design_id": "anwg_taper_100_250_L100",
+        "dut_type": "taper",
+        "function": "taper",
+        "settings":{
+            "length": 100, 
+            "width1": 0.25, 
+            "width2": 0.1, 
+            "layer": [259, 0], 
+            "port": null, 
+            "with_two_ports": true, 
+            "cross_section": "nitride2", 
+            "port_names": ["o1", "o2"], 
+            "port_types": ["optical", "optical"], 
+            "with_bbox": "true"}
+    },
+    "taper_gdsfactorypcompon_7ccdf3ae":{
+        "design_id": "anwg_taper_100_250_L125",
+        "dut_type": "taper",
+        "function": "taper",
+        "settings":{
+            "length": 125, 
+            "width1": 0.25, 
+            "width2": 0.1, 
+            "layer": [259, 0], 
+            "port": null, 
+            "with_two_ports": true, 
+            "cross_section": "nitride2", 
+            "port_names": ["o1", "o2"], 
+            "port_types": ["optical", "optical"], 
+            "with_bbox": "true"}
+    },
+    "taper_gdsfactorypcompon_4cd12405":{
+        "design_id": "anwg_taper_100_250_L150",
+        "dut_type": "taper",
+        "function": "taper",
+        "settings":{
+            "length": 150, 
+            "width1": 0.25, 
+            "width2": 0.1, 
+            "layer": [259, 0], 
+            "port": null, 
+            "with_two_ports": true, 
+            "cross_section": "nitride2", 
+            "port_names": ["o1", "o2"], 
+            "port_types": ["optical", "optical"], 
+            "with_bbox": "true"}
+    },
+    "taper_gdsfactorypcompon_f1aef861":{
+        "design_id": "anwg_taper_100_250_L200",
+        "dut_type": "taper",
+        "function": "taper",
+        "settings":{
+            "length": 200, 
+            "width1": 0.25, 
+            "width2": 0.1, 
+            "layer": [259, 0], 
+            "port": null, 
+            "with_two_ports": true, 
+            "cross_section": "nitride2", 
+            "port_names": ["o1", "o2"], 
+            "port_types": ["optical", "optical"], 
+            "with_bbox": "true"}
+    },
+
     "rib_taper_MR1p3_WRI0p41_2f4bda11": {
     "design_id": "anwg_taper_1280_2000", 
     "dut_type": "taper", 

@@ -1,3 +1,4 @@
+import copy
 import json
 
 import gdsfactory as gf
@@ -11,15 +12,16 @@ from T1.pdk import (
     change_port,
     component_with_transition,
     grating_array_test_structure,
-    mmi_splitter_il_extractor,
     mzis_test_group_and_effective_index,
     sem_array,
+    straight_100_anwg,
+    straight_100_nwg,
+    straight_100_swg,
     straight_410_swg,
     straight_700_anwg,
     straight_930_swg,
     straight_1560_swg,
     straight_2000_anwg,
-    straigth_with_3d_cross_shallow,
     straigth_with_3d_cross_strip,
     taper_doe,
     tps_410_swg_930_swg_lim,
@@ -53,7 +55,7 @@ def component_placement(die: gf.Component) -> gf.Component:
     edge_margin_right = 50
     structure_to_structure_margin_top = 50
     structure_to_structure_margin_middle = 50
-    structure_to_structure_margin_bot = 140
+    structure_to_structure_margin_bot = 50
     min_gc_gc_distance = 200
     bb_variation = 0.141
 
@@ -147,16 +149,19 @@ def component_placement(die: gf.Component) -> gf.Component:
         dx=5,
     )
     gc_array_tp = ipr.grating_coupler_array(
-            grating_coupler=ipr.tower_gc,
-            n=10,
-            with_loopback=True,
-            cross_section=xs_swg,
-            dx=35,
-        )
+        grating_coupler=ipr.tower_gc,
+        n=10,
+        with_loopback=True,
+        cross_section=xs_swg,
+        dx=40,
+    )
 
     # Grating coupler array without loopback
     gc_array_noloopbak = ipr.grating_coupler_array(
-        grating_coupler=ipr.tower_gc, n=10, with_loopback=False, cross_section=xs_swg
+        grating_coupler=ipr.tower_gc,
+        n=10,
+        with_loopback=False,
+        cross_section=xs_swg
     )
 
     # Grating coupler for TM is formed by rot + 3 si_ps_tw
@@ -1257,7 +1262,7 @@ def component_placement(die: gf.Component) -> gf.Component:
     if len(structure_only) == 0 or 13 in structure_only:
         print(f"\nCreation of N.{current_ts} Insertion Loss Rib Taper Test Structure")
 
-        # Divide the wanted tapers in group of 4
+        # Take the tapers from DoE JSON FILE
         tapers = []
         for idx, name in enumerate(doe_json_dict[f"{current_ts}.0"]["comp"]):
             comp = sim_filename_json[doe_json_dict[f"{current_ts}.0"]["comp"][idx]]
@@ -1266,48 +1271,82 @@ def component_placement(die: gf.Component) -> gf.Component:
             taper = func(**comp["settings"])
             tapers.append(taper)
 
+        # Take the starting tapers from the DoE JSON FILE
+        tapers_start = []
+        for idx, name in enumerate(doe_json_dict[f"{current_ts}.0"]["taper"]):
+            comp = sim_filename_json[doe_json_dict[f"{current_ts}.0"]["taper"][idx]]
+            name = comp["function"].split(".")[-1].rstrip("()")
+            func = getattr(ipr, name)
+            taper = func(**comp["settings"])
+            tapers_start.append(taper)
+
+        # Divided in group of four
         tapers = np.array(tapers).reshape(-1, 4)
 
         # Create a test structure for each group
         for ts_idx, taper_list in enumerate(tapers):
             # Repeat for all wanted taper
-            ts = f"{current_ts}.{ts_idx+1}"
+            ts = f"{current_ts}.{ts_idx*4+1}"
+            ts_end = f"{current_ts}.{ts_idx*4+4}"
 
             # Prepare the straight dict
             feature_rib_taper = {}
             rib_taper_strts = []
-            for idx in range(4):
-                ft = {
-                    "bb": taper_list[idx],
-                    "straight": straight_930_swg,
-                    "straight_btw": straight_410_swg,
-                    "sep_variation": bb_variation,
-                    "bb_extra_variation": bb_variation,
-                    "sep_distance": 1.00,
-                    "bb_extra_length": 1.00}
 
-                rib_taper_strt = gf.partial(ipr.n_tps_tps, **ft)
-                rib_taper_strts.append(rib_taper_strt)
+            # Selection of input taper
+            tp_start = tapers_start[ts_idx]
 
+            # Selection of vt and middle straight
+            if ts_idx == 0:
+                strt = straight_100_swg
+                vt = straight_410_swg(length=1)
+            elif ts_idx == 1:
+                strt = straight_100_nwg
+                vt = vt1_te_group_index
+            else:
+                strt = straight_100_anwg
+                vt = vt_opt_te
+
+            # Create the test structure
             t = die << taper_doe(
                 bend=routing_bend_Si,
-                straight_list=rib_taper_strts,
-                gc_array=gc_array_tp
+                gc_array=gc_array_tp,
+                straight=strt,
+                taper_start=tp_start,
+                taper_list=taper_list.tolist(),
+                vertical_transition=vt,
             )
 
             # Assign to the dictionary
             structures[ts] = t
-            structures_text[ts] = f"R{ts} \nTAPER DOE"
+            structures_text[ts] = f"R{ts}-{ts_end} \nTAPER DOE"
 
             # Json Part
-            # if create_json:
-            #     json_writer.structure_json(
-            #         component=taper_list.tolist(),
-            #         component_IO=gc_array_tp,
-            #         structure_title=f"TS{ts}",
-            #         structure=t.cell,
-            #         extra_dict={"analysis": ["ilte_db"]},
-            #     )
+            if create_json:
+
+                # Copy the cell and save all info
+                t_jdx = gf.kcl[t.cell_index]
+                info = t_jdx.info
+                block_keys = [f"Block {i+1}" for i in range(4)]
+                saved = {k: info[k] for k in block_keys}
+
+                # Create a json structure for each taper
+                for jdx, block_key in enumerate(block_keys):
+
+                    # Remove not needed info
+                    for k in block_keys:
+                        if k in info:
+                            delattr(info, k)
+                    info[block_key] = saved[block_key]
+
+                    # Write the json
+                    json_writer.structure_json(
+                        component=taper_list[3-jdx],
+                        component_IO=gc_array_tp,
+                        structure_title=f"TS{current_ts}_{ts_idx*4+1+jdx}",
+                        structure=t.cell,
+                        extra_dict={"analysis": ["ilte_db"]},
+                    )
     current_ts += 1
 
     ###########################
@@ -1389,7 +1428,7 @@ def component_placement(die: gf.Component) -> gf.Component:
     left_bot_structure = ["1.3", "10.1", "10.2", "10.3", "11.1", "11.2",
                           "12.1", "12.2", "12.3", "12.4", "12.5", "12.6",
                           "12.7", "12.8", "12.9", "12.10", "12.11", "12.12",
-                          "13.1", "13.2", "13.3", "14.1", "1.4"]
+                          "13.1", "13.5", "13.9", "14.1", "1.4"]
     right_structure = []
 
     # Place only structure complain with structure_only

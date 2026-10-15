@@ -1824,6 +1824,762 @@
                 "tower_gc",
                 "tower_gc"
             ]
+        },
+        "TS13_1": {
+            "design_id": "swg_taper_100_200_L50",
+            "dut_type": "taper",
+            "analysis": [
+                "ilte_db"
+            ],
+            "pol": [
+                "te"
+            ],
+            "propagation_mode": [
+                "te"
+            ],
+            "cutback": {
+                "num_components": [
+                    2
+                ],
+                "wg_swg_410": [
+                    435
+                ],
+                "swg_custom_bend_euler_r5": [
+                    8
+                ],
+                "swg_taper_410_200_L20": [
+                    2
+                ]
+            },
+            "gdsfactory": {
+                "function": "taper",
+                "settings": {
+                    "length": 50,
+                    "width1": 0.2,
+                    "width2": 0.1,
+                    "layer": [
+                        171,
+                        0
+                    ],
+                    "port": null,
+                    "with_two_ports": true,
+                    "cross_section": "strip",
+                    "port_names": [
+                        "o1",
+                        "o2"
+                    ],
+                    "port_types": [
+                        "optical",
+                        "optical"
+                    ],
+                    "with_bbox": "true"
+                }
+            },
+            "gc": [
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc"
+            ]
+        },
+        "TS13_2": {
+            "design_id": "swg_taper_100_200_L75",
+            "dut_type": "taper",
+            "analysis": [
+                "ilte_db"
+            ],
+            "pol": [
+                "te"
+            ],
+            "propagation_mode": [
+                "te"
+            ],
+            "cutback": {
+                "num_components": [
+                    2
+                ],
+                "wg_swg_410": [
+                    445
+                ],
+                "swg_custom_bend_euler_r5": [
+                    8
+                ],
+                "swg_taper_410_200_L20": [
+                    2
+                ]
+            },
+            "gdsfactory": {
+                "function": "taper",
+                "settings": {
+                    "length": 75,
+                    "width1": 0.2,
+                    "width2": 0.1,
+                    "layer": [
+                        171,
+                        0
+                    ],
+                    "port": null,
+                    "with_two_ports": true,
+                    "cross_section": "strip",
+                    "port_names": [
+                        "o1",
+                        "o2"
+                    ],
+                    "port_types": [
+                        "optical",
+                        "optical"
+                    ],
+                    "with_bbox": "true"
+                }
+            },
+            "gc": [
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc"
+            ]
+        },
+        "TS13_3": {
+            "design_id": "swg_taper_100_200_L100",
+            "dut_type": "taper",
+            "analysis": [
+                "ilte_db"
+            ],
+            "pol": [
+                "te"
+            ],
+            "propagation_mode": [
+                "te"
+            ],
+            "cutback": {
+                "num_components": [
+                    2
+                ],
+                "wg_swg_410": [
+                    159
+                ],
+                "swg_custom_bend_euler_r5": [
+                    4
+                ],
+                "swg_taper_410_200_L20": [
+                    2
+                ]
+            },
+            "gdsfactory": {
+                "function": "taper",
+                "settings": {
+                    "length": 100,
+                    "width1": 0.2,
+                    "width2": 0.1,
+                    "layer": [
+                        171,
+                        0
+                    ],
+                    "port": null,
+                    "with_two_ports": true,
+                    "cross_section": "strip",
+                    "port_names": [
+                        "o1",
+                        "o2"
+                    ],
+                    "port_types": [
+                        "optical",
+                        "optical"
+                    ],
+                    "with_bbox": "true"
+                }
+            },
+            "gc": [
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc"
+            ]
+        },
+        "TS13_4": {
+            "design_id": "swg_taper_100_200_L200",
+            "dut_type": "taper",
+            "analysis": [
+                "ilte_db"
+            ],
+            "pol": [
+                "te"
+            ],
+            "propagation_mode": [
+                "te"
+            ],
+            "cutback": {
+                "num_components": [
+                    2
+                ],
+                "wg_swg_410": [
+                    399
+                ],
+                "swg_custom_bend_euler_r5": [
+                    4
+                ],
+                "swg_taper_410_200_L20": [
+                    2
+                ]
+            },
+            "gdsfactory": {
+                "function": "taper",
+                "settings": {
+                    "length": 200,
+                    "width1": 0.2,
+                    "width2": 0.1,
+                    "layer": [
+                        171,
+                        0
+                    ],
+                    "port": null,
+                    "with_two_ports": true,
+                    "cross_section": "strip",
+                    "port_names": [
+                        "o1",
+                        "o2"
+                    ],
+                    "port_types": [
+                        "optical",
+                        "optical"
+                    ],
+                    "with_bbox": "true"
+                }
+            },
+            "gc": [
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc"
+            ]
+        },
+        "TS13_5": {
+            "design_id": "nwg_taper_100_250_L100",
+            "dut_type": "taper",
+            "analysis": [
+                "ilte_db"
+            ],
+            "pol": [
+                "te"
+            ],
+            "propagation_mode": [
+                "te"
+            ],
+            "cutback": {
+                "num_components": [
+                    2
+                ],
+                "wg_swg_410": [
+                    611
+                ],
+                "nwg_taper_1000_250_L20": [
+                    2
+                ],
+                "swg_custom_bend_euler_r5": [
+                    8
+                ],
+                "INT_si_nwg_transition_NVT_1": [
+                    2
+                ]
+            },
+            "gdsfactory": {
+                "function": "taper",
+                "settings": {
+                    "length": 100,
+                    "width1": 0.25,
+                    "width2": 0.1,
+                    "layer": [
+                        174,
+                        0
+                    ],
+                    "port": null,
+                    "with_two_ports": true,
+                    "cross_section": "nitride",
+                    "port_names": [
+                        "o1",
+                        "o2"
+                    ],
+                    "port_types": [
+                        "optical",
+                        "optical"
+                    ],
+                    "with_bbox": "true"
+                }
+            },
+            "gc": [
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc"
+            ]
+        },
+        "TS13_6": {
+            "design_id": "nwg_taper_100_250_L125",
+            "dut_type": "taper",
+            "analysis": [
+                "ilte_db"
+            ],
+            "pol": [
+                "te"
+            ],
+            "propagation_mode": [
+                "te"
+            ],
+            "cutback": {
+                "num_components": [
+                    2
+                ],
+                "wg_swg_410": [
+                    621
+                ],
+                "nwg_taper_1000_250_L20": [
+                    2
+                ],
+                "swg_custom_bend_euler_r5": [
+                    8
+                ],
+                "INT_si_nwg_transition_NVT_1": [
+                    2
+                ]
+            },
+            "gdsfactory": {
+                "function": "taper",
+                "settings": {
+                    "length": 125,
+                    "width1": 0.25,
+                    "width2": 0.1,
+                    "layer": [
+                        174,
+                        0
+                    ],
+                    "port": null,
+                    "with_two_ports": true,
+                    "cross_section": "nitride",
+                    "port_names": [
+                        "o1",
+                        "o2"
+                    ],
+                    "port_types": [
+                        "optical",
+                        "optical"
+                    ],
+                    "with_bbox": "true"
+                }
+            },
+            "gc": [
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc"
+            ]
+        },
+        "TS13_7": {
+            "design_id": "nwg_taper_100_250_L150",
+            "dut_type": "taper",
+            "analysis": [
+                "ilte_db"
+            ],
+            "pol": [
+                "te"
+            ],
+            "propagation_mode": [
+                "te"
+            ],
+            "cutback": {
+                "num_components": [
+                    2
+                ],
+                "wg_swg_410": [
+                    335
+                ],
+                "nwg_taper_1000_250_L20": [
+                    2
+                ],
+                "swg_custom_bend_euler_r5": [
+                    4
+                ],
+                "INT_si_nwg_transition_NVT_1": [
+                    2
+                ]
+            },
+            "gdsfactory": {
+                "function": "taper",
+                "settings": {
+                    "length": 150,
+                    "width1": 0.25,
+                    "width2": 0.1,
+                    "layer": [
+                        174,
+                        0
+                    ],
+                    "port": null,
+                    "with_two_ports": true,
+                    "cross_section": "nitride",
+                    "port_names": [
+                        "o1",
+                        "o2"
+                    ],
+                    "port_types": [
+                        "optical",
+                        "optical"
+                    ],
+                    "with_bbox": "true"
+                }
+            },
+            "gc": [
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc"
+            ]
+        },
+        "TS13_8": {
+            "design_id": "nwg_taper_100_250_L200",
+            "dut_type": "taper",
+            "analysis": [
+                "ilte_db"
+            ],
+            "pol": [
+                "te"
+            ],
+            "propagation_mode": [
+                "te"
+            ],
+            "cutback": {
+                "num_components": [
+                    2
+                ],
+                "wg_swg_410": [
+                    475
+                ],
+                "nwg_taper_1000_250_L20": [
+                    2
+                ],
+                "swg_custom_bend_euler_r5": [
+                    4
+                ],
+                "INT_si_nwg_transition_NVT_1": [
+                    2
+                ]
+            },
+            "gdsfactory": {
+                "function": "taper",
+                "settings": {
+                    "length": 200,
+                    "width1": 0.25,
+                    "width2": 0.1,
+                    "layer": [
+                        174,
+                        0
+                    ],
+                    "port": null,
+                    "with_two_ports": true,
+                    "cross_section": "nitride",
+                    "port_names": [
+                        "o1",
+                        "o2"
+                    ],
+                    "port_types": [
+                        "optical",
+                        "optical"
+                    ],
+                    "with_bbox": "true"
+                }
+            },
+            "gc": [
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc"
+            ]
+        },
+        "TS13_9": {
+            "design_id": "anwg_taper_100_250_L100",
+            "dut_type": "taper",
+            "analysis": [
+                "ilte_db"
+            ],
+            "pol": [
+                "te"
+            ],
+            "propagation_mode": [
+                "te"
+            ],
+            "cutback": {
+                "num_components": [
+                    2
+                ],
+                "wg_swg_410": [
+                    795
+                ],
+                "VT_1_2_TE": [
+                    2
+                ],
+                "anwg_taper_2000_250_L20": [
+                    2
+                ],
+                "swg_custom_bend_euler_r5": [
+                    8
+                ]
+            },
+            "gdsfactory": {
+                "function": "taper",
+                "settings": {
+                    "length": 100,
+                    "width1": 0.25,
+                    "width2": 0.1,
+                    "layer": [
+                        259,
+                        0
+                    ],
+                    "port": null,
+                    "with_two_ports": true,
+                    "cross_section": "nitride2",
+                    "port_names": [
+                        "o1",
+                        "o2"
+                    ],
+                    "port_types": [
+                        "optical",
+                        "optical"
+                    ],
+                    "with_bbox": "true"
+                }
+            },
+            "gc": [
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc"
+            ]
+        },
+        "TS13_10": {
+            "design_id": "anwg_taper_100_250_L125",
+            "dut_type": "taper",
+            "analysis": [
+                "ilte_db"
+            ],
+            "pol": [
+                "te"
+            ],
+            "propagation_mode": [
+                "te"
+            ],
+            "cutback": {
+                "num_components": [
+                    2
+                ],
+                "wg_swg_410": [
+                    805
+                ],
+                "VT_1_2_TE": [
+                    2
+                ],
+                "anwg_taper_2000_250_L20": [
+                    2
+                ],
+                "swg_custom_bend_euler_r5": [
+                    8
+                ]
+            },
+            "gdsfactory": {
+                "function": "taper",
+                "settings": {
+                    "length": 125,
+                    "width1": 0.25,
+                    "width2": 0.1,
+                    "layer": [
+                        259,
+                        0
+                    ],
+                    "port": null,
+                    "with_two_ports": true,
+                    "cross_section": "nitride2",
+                    "port_names": [
+                        "o1",
+                        "o2"
+                    ],
+                    "port_types": [
+                        "optical",
+                        "optical"
+                    ],
+                    "with_bbox": "true"
+                }
+            },
+            "gc": [
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc"
+            ]
+        },
+        "TS13_11": {
+            "design_id": "anwg_taper_100_250_L150",
+            "dut_type": "taper",
+            "analysis": [
+                "ilte_db"
+            ],
+            "pol": [
+                "te"
+            ],
+            "propagation_mode": [
+                "te"
+            ],
+            "cutback": {
+                "num_components": [
+                    2
+                ],
+                "wg_swg_410": [
+                    519
+                ],
+                "VT_1_2_TE": [
+                    2
+                ],
+                "anwg_taper_2000_250_L20": [
+                    2
+                ],
+                "swg_custom_bend_euler_r5": [
+                    4
+                ]
+            },
+            "gdsfactory": {
+                "function": "taper",
+                "settings": {
+                    "length": 150,
+                    "width1": 0.25,
+                    "width2": 0.1,
+                    "layer": [
+                        259,
+                        0
+                    ],
+                    "port": null,
+                    "with_two_ports": true,
+                    "cross_section": "nitride2",
+                    "port_names": [
+                        "o1",
+                        "o2"
+                    ],
+                    "port_types": [
+                        "optical",
+                        "optical"
+                    ],
+                    "with_bbox": "true"
+                }
+            },
+            "gc": [
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc"
+            ]
+        },
+        "TS13_12": {
+            "design_id": "anwg_taper_100_250_L200",
+            "dut_type": "taper",
+            "analysis": [
+                "ilte_db"
+            ],
+            "pol": [
+                "te"
+            ],
+            "propagation_mode": [
+                "te"
+            ],
+            "cutback": {
+                "num_components": [
+                    2
+                ],
+                "wg_swg_410": [
+                    659
+                ],
+                "VT_1_2_TE": [
+                    2
+                ],
+                "anwg_taper_2000_250_L20": [
+                    2
+                ],
+                "swg_custom_bend_euler_r5": [
+                    4
+                ]
+            },
+            "gdsfactory": {
+                "function": "taper",
+                "settings": {
+                    "length": 200,
+                    "width1": 0.25,
+                    "width2": 0.1,
+                    "layer": [
+                        259,
+                        0
+                    ],
+                    "port": null,
+                    "with_two_ports": true,
+                    "cross_section": "nitride2",
+                    "port_names": [
+                        "o1",
+                        "o2"
+                    ],
+                    "port_types": [
+                        "optical",
+                        "optical"
+                    ],
+                    "with_bbox": "true"
+                }
+            },
+            "gc": [
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc",
+                "tower_gc"
+            ]
         }
     }
 }
