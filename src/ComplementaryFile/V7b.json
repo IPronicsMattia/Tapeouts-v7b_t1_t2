@@ -1286,8 +1286,8 @@
             ]
         },
         "TS012.1": {
-            "design_id": "wg_swg_410_mzi",
-            "dut_type": "mzi",
+            "design_id": "INT_mzis_test_group_and_eff",
+            "dut_type": null,
             "analysis": [
                 "neff_au",
                 "ng_au"
@@ -1310,8 +1310,8 @@
                 "settings": {
                     "low_order_mzi_length": 9.5054,
                     "high_order_mzi_length": 95.0535,
-                    "splitter": "rib_mmi",
-                    "bend": "bend_euler_custom_width_a5f814d8",
+                    "splitter": "BBMULBB_5_6_o1o2o3o4",
+                    "bend": "BBMULBB_0_1_o1o2",
                     "grating_coupler": "tower_gc",
                     "pitch_um": 127.0,
                     "cross_section": null,
@@ -1331,8 +1331,8 @@
             ]
         },
         "TS012.2": {
-            "design_id": "wg_rib_930_mzi",
-            "dut_type": "mzi",
+            "design_id": "INT_mzis_test_group_and_eff",
+            "dut_type": null,
             "analysis": [
                 "neff_au",
                 "ng_au"
@@ -1355,8 +1355,8 @@
                 "settings": {
                     "low_order_mzi_length": 22.222,
                     "high_order_mzi_length": 80,
-                    "splitter": "rib_mmi",
-                    "bend": "bend_euler_custom_width_a5f814d8",
+                    "splitter": "BBMULBB_5_6_o1o2o3o4",
+                    "bend": "BBMULBB_0_1_o1o2",
                     "grating_coupler": "tower_gc",
                     "pitch_um": 127.0,
                     "cross_section": null,
@@ -1400,8 +1400,8 @@
                 "settings": {
                     "low_order_mzi_length": 33.123,
                     "high_order_mzi_length": 115.932,
-                    "splitter": "rib_mmi",
-                    "bend": "bend_euler_custom_width_a5f814d8",
+                    "splitter": "BBMULBB_5_6_o1o2o3o4",
+                    "bend": "BBMULBB_0_1_o1o2",
                     "grating_coupler": "tower_gc",
                     "pitch_um": 127.0,
                     "cross_section": null,
@@ -1445,8 +1445,8 @@
                 "settings": {
                     "low_order_mzi_length": 33.408,
                     "high_order_mzi_length": 116.927,
-                    "splitter": "rib_mmi",
-                    "bend": "bend_euler_custom_width_a5f814d8",
+                    "splitter": "BBMULBB_5_6_o1o2o3o4",
+                    "bend": "BBMULBB_0_1_o1o2",
                     "grating_coupler": "tower_gc",
                     "pitch_um": 127.0,
                     "cross_section": null,
@@ -1490,8 +1490,8 @@
                 "settings": {
                     "low_order_mzi_length": 30.846,
                     "high_order_mzi_length": 61.693,
-                    "splitter": "rib_mmi",
-                    "bend": "bend_euler_custom_width_a5f814d8",
+                    "splitter": "BBMULBB_5_6_o1o2o3o4",
+                    "bend": "BBMULBB_0_1_o1o2",
                     "grating_coupler": "tower_gc",
                     "pitch_um": 127.0,
                     "cross_section": null,
@@ -1535,13 +1535,13 @@
                 "settings": {
                     "low_order_mzi_length": 30.846,
                     "high_order_mzi_length": 61.693,
-                    "splitter": "rib_mmi",
-                    "bend": "bend_euler_custom_width_a5f814d8",
+                    "splitter": "BBMULBB_7_8_o3o4",
+                    "bend": "BBMULBB_2_1_o1o2",
                     "grating_coupler": "tower_gc",
                     "pitch_um": 127.0,
                     "cross_section": null,
                     "cross_section2": "xs_d37503c9",
-                    "extra_component": "si_nwg_transition_NVT1__6dde78a4"
+                    "extra_component": "si_nwg_transition_NVT1__20f79cda"
                 }
             },
             "gc": [
@@ -1580,13 +1580,13 @@
                 "settings": {
                     "low_order_mzi_length": 30.846,
                     "high_order_mzi_length": 61.693,
-                    "splitter": "rib_mmi",
-                    "bend": "bend_euler_custom_width_a5f814d8",
+                    "splitter": "BBMULBB_7_8_o3o4",
+                    "bend": "BBMULBB_2_1_o1o2",
                     "grating_coupler": "tower_gc",
                     "pitch_um": 127.0,
                     "cross_section": null,
                     "cross_section2": "xs_d37503c9",
-                    "extra_component": "si_nwg_transition_NVT1__6dde78a4"
+                    "extra_component": "si_nwg_transition_NVT1__20f79cda"
                 }
             },
             "gc": [
@@ -1625,13 +1625,13 @@
                 "settings": {
                     "low_order_mzi_length": 30.846,
                     "high_order_mzi_length": 61.693,
-                    "splitter": "rib_mmi",
-                    "bend": "bend_euler_custom_width_a5f814d8",
+                    "splitter": "BBMULBB_7_8_o3o4",
+                    "bend": "BBMULBB_2_1_o1o2",
                     "grating_coupler": "tower_gc",
                     "pitch_um": 127.0,
                     "cross_section": null,
                     "cross_section2": "xs_d37503c9",
-                    "extra_component": "si_nwg_transition_NVT1__6dde78a4"
+                    "extra_component": "si_nwg_transition_NVT1__20f79cda"
                 }
             },
             "gc": [
@@ -1670,13 +1670,13 @@
                 "settings": {
                     "low_order_mzi_length": 30.846,
                     "high_order_mzi_length": 61.693,
-                    "splitter": "rib_mmi",
-                    "bend": "bend_euler_custom_width_a5f814d8",
+                    "splitter": "BBMULBB_7_8_o3o4",
+                    "bend": "BBMULBB_2_1_o1o2",
                     "grating_coupler": "tower_gc",
                     "pitch_um": 127.0,
                     "cross_section": null,
                     "cross_section2": "xs_d37503c9",
-                    "extra_component": "si_nwg_transition_NVT1__6dde78a4"
+                    "extra_component": "si_nwg_transition_NVT1__20f79cda"
                 }
             },
             "gc": [
@@ -1715,13 +1715,13 @@
                 "settings": {
                     "low_order_mzi_length": 30.846,
                     "high_order_mzi_length": 61.693,
-                    "splitter": "rib_mmi",
-                    "bend": "bend_euler_custom_width_a5f814d8",
+                    "splitter": "BBMULBB_7_8_o3o4",
+                    "bend": "BBMULBB_2_1_o1o2",
                     "grating_coupler": "tower_gc",
                     "pitch_um": 127.0,
                     "cross_section": null,
                     "cross_section2": "xs_d37503c9",
-                    "extra_component": "si_nwg_transition_NVT1__6dde78a4"
+                    "extra_component": "si_nwg_transition_NVT1__20f79cda"
                 }
             },
             "gc": [
@@ -1760,13 +1760,13 @@
                 "settings": {
                     "low_order_mzi_length": 30.846,
                     "high_order_mzi_length": 61.693,
-                    "splitter": "rib_mmi",
-                    "bend": "bend_euler_custom_width_a5f814d8",
+                    "splitter": "BBMULBB_7_8_o3o4",
+                    "bend": "BBMULBB_2_1_o1o2",
                     "grating_coupler": "tower_gc",
                     "pitch_um": 127.0,
                     "cross_section": null,
                     "cross_section2": "xs_d37503c9",
-                    "extra_component": "si_nwg_transition_NVT1__6dde78a4"
+                    "extra_component": "si_nwg_transition_NVT1__20f79cda"
                 }
             },
             "gc": [
@@ -1805,13 +1805,13 @@
                 "settings": {
                     "low_order_mzi_length": 30.846,
                     "high_order_mzi_length": 61.693,
-                    "splitter": "rib_mmi",
-                    "bend": "bend_euler_custom_width_a5f814d8",
+                    "splitter": "BBMULBB_7_8_o3o4",
+                    "bend": "BBMULBB_2_1_o1o2",
                     "grating_coupler": "tower_gc",
                     "pitch_um": 127.0,
                     "cross_section": null,
                     "cross_section2": "xs_d37503c9",
-                    "extra_component": "si_nwg_transition_NVT1__6dde78a4"
+                    "extra_component": "si_nwg_transition_NVT1__20f79cda"
                 }
             },
             "gc": [

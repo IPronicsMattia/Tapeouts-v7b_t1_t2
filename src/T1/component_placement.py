@@ -79,6 +79,16 @@ def component_placement(die: gf.Component) -> gf.Component:
     routing_bend_Si = ipr.bend_euler_custom_width(cross_section="strip")
     routing_half_bend_Si = ipr.bend_euler_custom_width(cross_section="strip", angle=-45)
     routing_bend_Si_TM = ipr.bend_euler_custom_width(cross_section="strip", radius=10)
+    bend_Si_strt = ipr.bb_mul_bb(**{
+        "bbmul": routing_bend_Si,
+        "bbadd": straight_410_swg(length=0.5),
+        "bbmul_list": ["o1", "o2"],
+    })
+    bend_Si_strt_TM = ipr.bb_mul_bb(**{
+            "bbmul": routing_bend_Si_TM,
+            "bbadd": straight_410_swg(length=0.5),
+            "bbmul_list": ["o1", "o2"],
+        })
 
     # Si tapers
     taper_410_930 = ipr.rib_taper(cross_section=xs_swg, width_RIB_out=0.93)
@@ -137,9 +147,34 @@ def component_placement(die: gf.Component) -> gf.Component:
         width_out=1.5,
     )
     vt1_te_group_index = ipr.si_nwg_transition(name="VT1_0_mesh", width_out=1.0)
+    vt1_tm_group_index = ipr.si_nwg_transition(name="VT1_0_Ey", width_out=1.0)
 
     # Si Rotator
     rotator = ipr.rotator()
+    rotator_inverted = change_port(component = rotator,
+                              ports_i = ["o1", "o2"],
+                              ports_o = ["o2", "o1"])
+
+    # Si s-bend
+    s_bend = ipr.bend_bezier_s_custom_width()
+
+    # Si MMI
+    mmi = ipr.rib_mmi()
+    kwargs = {
+        "bbmul": mmi,
+        "bbadd": s_bend,
+        "bbmul_list": ["o1", "o2", "o3", "o4"],
+        "bbadd_mirror": [False, True, False, True],
+    }
+    mmi_s_bends = ipr.bb_mul_bb(**kwargs)
+
+    kwargs = {
+        "bbmul": mmi_s_bends,
+        "bbadd": rotator_inverted,
+        "bbmul_list": ["o3", "o4"],
+        "bbadd_mirror": [True, False],
+    }
+    mmi_tm = ipr.bb_mul_bb(**kwargs)
 
     # Grating coupler array for regular structure
     gc_array = ipr.grating_coupler_array(
@@ -175,7 +210,6 @@ def component_placement(die: gf.Component) -> gf.Component:
     # Grating coupler for TM is formed by rot + 3 si_ps_tw
     # --- Add absorber to pol split
     split = ipr.si_ps_tw()
-    rotator = ipr.rotator()
     absorber = ipr.rib_absorber()
     kwargs = {
         "bbmul": split,
@@ -187,7 +221,6 @@ def component_placement(die: gf.Component) -> gf.Component:
     split_with_abs = change_port(split_with_abs, ["o1", "o3"], ["o1", "o2"])
 
     # --- Add rotator to every port of the gc array first
-    rotator_inverted = change_port(rotator, ["o1", "o2"], ["o2", "o1"])
     kwargs = {
         "bbmul": gc_array,
         "bbadd": rotator_inverted,
@@ -1182,7 +1215,7 @@ def component_placement(die: gf.Component) -> gf.Component:
         print(f"\nCreation of N.{current_ts} Group Index Test Structure")
 
         for idx in range(12):
-            # Create the test structure 8.{idx+1}
+            # Create the test structure
             ts = f"{current_ts}.{idx + 1}"
 
             if idx == 0:  # Si 0.41
@@ -1193,6 +1226,8 @@ def component_placement(die: gf.Component) -> gf.Component:
                 cross_section2 = xs_swg_410
                 text = "Si 0.41"
                 extra_component = None
+                mmi_ref = mmi_s_bends
+                bend_ref = bend_Si_strt
             elif idx == 1:  # Si 0.93
                 low_order_mzi_length = 22.222
                 high_order_mzi_length = 80
@@ -1201,6 +1236,8 @@ def component_placement(die: gf.Component) -> gf.Component:
                 cross_section2 = xs_swg_930
                 text = "Si 0.93"
                 extra_component = taper_410_930
+                mmi_ref = mmi_s_bends
+                bend_ref = bend_Si_strt
             elif idx == 2:  # SiN2 2.00
                 low_order_mzi_length = 33.123
                 high_order_mzi_length = 115.932
@@ -1209,6 +1246,8 @@ def component_placement(die: gf.Component) -> gf.Component:
                 cross_section2 = xs_awng_2000
                 text = "SiN2 2.00"
                 extra_component = vt_opt_te
+                mmi_ref = mmi_s_bends
+                bend_ref = bend_Si_strt
             elif idx == 3:  # SiN2 1.50
                 low_order_mzi_length = 33.408
                 high_order_mzi_length = 116.927
@@ -1217,7 +1256,9 @@ def component_placement(die: gf.Component) -> gf.Component:
                 cross_section2 = xs_awng_1500
                 text = "SiN2 1.50"
                 extra_component = vt_opt_te_group_index
-            else:  # SiN 1.00
+                mmi_ref = mmi_s_bends
+                bend_ref = bend_Si_strt
+            elif idx == 4:  # SiN 1.00
                 low_order_mzi_length = 30.846
                 high_order_mzi_length = 61.693
                 m_neff = 40
@@ -1225,16 +1266,29 @@ def component_placement(die: gf.Component) -> gf.Component:
                 cross_section2 = xs_nwg_1000
                 text = "SiN 1.00"
                 extra_component = vt1_te_group_index
+                mmi_ref = mmi_s_bends
+                bend_ref = bend_Si_strt
+            else:  # SiN 1.00 TM
+                low_order_mzi_length = 30.846
+                high_order_mzi_length = 61.693
+                m_neff = 40
+                m_ng = 80
+                cross_section2 = xs_nwg_1000
+                text = "SiN 1.00 TM"
+                extra_component = vt1_tm_group_index
+                mmi_ref = mmi_tm
+                bend_ref = bend_Si_strt_TM
 
             # Create the mzi test structure
             t = die << mzis_test_group_and_effective_index(
                 low_order_mzi_length=low_order_mzi_length,
                 high_order_mzi_length=high_order_mzi_length,
                 grating_coupler=ipr.tower_gc,
-                bend=routing_bend_Si,
+                bend=bend_ref,
                 cross_section=xs_swg_410,
                 cross_section2=cross_section2,
                 extra_component=extra_component,
+                splitter=mmi_ref
             )
 
             # Rotate it
