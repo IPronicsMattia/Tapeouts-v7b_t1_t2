@@ -52,10 +52,11 @@ def component_placement(die: gf.Component) -> gf.Component:
     die_y_min = die.ymin
     die_x_min = die.xmin
     edge_margin = 120
-    edge_margin_right = 50
+    edge_margin_right = 75
     structure_to_structure_margin_top = 50
     structure_to_structure_margin_middle = 50
     structure_to_structure_margin_bot = 50
+    structure_to_structure_margin_right = 50
     min_gc_gc_distance = 200
     bb_variation = 0.141
 
@@ -1507,9 +1508,9 @@ def component_placement(die: gf.Component) -> gf.Component:
                           "12.1", "12.2", "12.3", "12.4", "12.5", "12.6",
                           "12.7", "12.8", "12.9", "12.10", "12.11", "12.12",
                           "13.1", "13.5", "13.9", "16.1", "1.4"]
-    right_structure = ["14.1", "14.2", "14.3", "14.4", "14.5", "14.6",
+    right_structure = ["15.1", "14.1", "14.2", "14.3", "14.4", "14.5", "14.6",
                        "14.7", "14.8", "14.9", "14.10", "14.11", "14.12",
-                       "14.13", "14.14", "15.1"]
+                       "14.13", "14.14"]
 
     # Place only structure complain with structure_only
     if len(structure_only) != 0:
@@ -1614,13 +1615,24 @@ def component_placement(die: gf.Component) -> gf.Component:
             )
             bbox.move((bbox.xmin, bbox.ymin), ((text.xmin - 1, text.ymin - 1)))
 
-    # Move right structures
-    previous_x_max = die.xmax - edge_margin_right
+    # Move right structures from right to left
+    previous_x_min = die.xmax - edge_margin_right
+    previous_x_max = die_x_min + min_gc_gc_distance
 
     for structure_idx in right_structure:
         s = structures[structure_idx]
-        s.xmax = previous_x_max - min_gc_gc_distance
+
+        # Place current structure to the left of the previous structure
+        s.xmax = previous_x_min
+
+        # Enforce minimum GC-GC distance
+        if s.xmin - previous_x_min < min_gc_gc_distance - structure_to_structure_margin_right:
+            s.xmin = previous_x_min - min_gc_gc_distance + structure_to_structure_margin_right
+
         s.y = die_y_center + 600
+
+        # Constraints for the next structure to the left
+        previous_x_min = s.xmin - structure_to_structure_margin_right
         previous_x_max = s.xmax
 
         # Write the text for those
