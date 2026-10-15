@@ -2,20 +2,20 @@
     "T1": {
         "13.0":
         {
-            "comp":["taper_gdsfactorypcompon_de8fd7de",
+            "comp":["taper_gdsfactorypcompon_27516ecb", 
+                    "taper_gdsfactorypcompon_1b57ae0a",
                     "taper_gdsfactorypcompon_d8ea9954",
-                    "taper_gdsfactorypcompon_58cc5f2e",
-                    "taper_gdsfactorypcompon_1495cb36", 
+                    "taper_gdsfactorypcompon_98989d5f",
 
+                    "taper_gdsfactorypcompon_7c5d85c2",
+                    "taper_gdsfactorypcompon_47a07c16",
                     "taper_gdsfactorypcompon_8faba2bb",
-                    "taper_gdsfactorypcompon_75927a4a",
-                    "taper_gdsfactorypcompon_1ed63d62",
-                    "taper_gdsfactorypcompon_cea55e12",
+                    "taper_gdsfactorypcompon_5e10fb89",
 
-                    "taper_gdsfactorypcompon_f1aef861",
-                    "taper_gdsfactorypcompon_4cd12405",
-                    "taper_gdsfactorypcompon_7ccdf3ae",
-                    "taper_gdsfactorypcompon_0177f387"],
+                    "taper_gdsfactorypcompon_88f80560",
+                    "taper_gdsfactorypcompon_f23cb22e",
+                    "taper_gdsfactorypcompon_0455fb2e",
+                    "taper_gdsfactorypcompon_6c950b33"],
 
             "taper":["taper_gdsfactorypcompon_da75caee",
 

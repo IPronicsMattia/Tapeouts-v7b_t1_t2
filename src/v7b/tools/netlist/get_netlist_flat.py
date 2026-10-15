@@ -178,9 +178,7 @@ def get_netlist_flat(
     )
     netlist["__internal_connections__"] = internal_connections
 
-    states = generate_states(
-        netlist, sorted_topolux_id
-    )
+    states = generate_states(netlist, sorted_topolux_id)
     netlist["__states__"] = states
 
     return netlist

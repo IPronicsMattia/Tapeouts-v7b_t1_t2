@@ -223,7 +223,10 @@ def mzi_cell(
     mzis = [0] * 2
     vectorx = [0, splitter_length * 2 + bend_radius * 4 - 11.46]
     vectory = [0, 0]
-    lengths = [order_mzi_length + 2, 2,]
+    lengths = [
+        order_mzi_length + 2,
+        2,
+    ]
     ports1 = []
     ports2 = []
 
@@ -419,21 +422,26 @@ def straight_410_gwg(length: float, **kwargs):  # Level 0
     kwargs["additional_name"] = "gwg"
     return gf.partial(ipr.fast_straight, length=length, **kwargs)()
 
+
 def straight_100_swg(length: float, **kwargs):  # Level 0
     kwargs["cross_section"] = gf.get_cross_section("strip", layer=LAYER.swg, width=0.1)
     return gf.partial(ipr.fast_straight, length=length, **kwargs)()
+
 
 def straight_410_swg(length: float, **kwargs):  # Level 0
     kwargs["cross_section"] = gf.get_cross_section("strip", layer=LAYER.swg, width=0.41)
     return gf.partial(ipr.fast_straight, length=length, **kwargs)()
 
+
 def straight_930_swg(length: float, **kwargs):  # Level 0
     kwargs["cross_section"] = gf.get_cross_section("strip", layer=LAYER.swg, width=0.93)
     return gf.partial(ipr.fast_straight, length=length, **kwargs)()
 
+
 def straight_1560_swg(length: float, **kwargs):  # Level 0
     kwargs["cross_section"] = gf.get_cross_section("strip", layer=LAYER.swg, width=1.56)
     return gf.partial(ipr.fast_straight, length=length, **kwargs)()
+
 
 def straight_700_anwg(length: float, **kwargs):  # Level 0
     kwargs["cross_section"] = gf.get_cross_section(
@@ -441,11 +449,13 @@ def straight_700_anwg(length: float, **kwargs):  # Level 0
     )
     return gf.partial(ipr.fast_straight, length=length, **kwargs)()
 
+
 def straight_100_nwg(length: float, **kwargs):  # Level 0
     kwargs["cross_section"] = gf.get_cross_section(
         "nitride", layer=LAYER.nwg, width=0.10
     )
     return gf.partial(ipr.fast_straight, length=length, **kwargs)()
+
 
 def straight_1000_nwg(length: float, **kwargs):  # Level 0
     kwargs["cross_section"] = gf.get_cross_section(
@@ -453,11 +463,13 @@ def straight_1000_nwg(length: float, **kwargs):  # Level 0
     )
     return gf.partial(ipr.fast_straight, length=length, **kwargs)()
 
-def straight_100_anwg(length: float, **kwargs):  # Level 0
+
+def straight_150_anwg(length: float, **kwargs):  # Level 0
     kwargs["cross_section"] = gf.get_cross_section(
-        "nitride2", layer=LAYER.anwg, width=0.10
+        "nitride2", layer=LAYER.anwg, width=0.15
     )
     return gf.partial(ipr.fast_straight, length=length, **kwargs)()
+
 
 def straight_1500_anwg(length: float, **kwargs):  # Level 0
     kwargs["cross_section"] = gf.get_cross_section(
@@ -465,11 +477,13 @@ def straight_1500_anwg(length: float, **kwargs):  # Level 0
     )
     return gf.partial(ipr.fast_straight, length=length, **kwargs)()
 
+
 def straight_2000_anwg(length: float, **kwargs):  # Level 0
     kwargs["cross_section"] = gf.get_cross_section(
         "nitride2", layer=LAYER.anwg, width=2.00
     )
     return gf.partial(ipr.fast_straight, length=length, **kwargs)()
+
 
 def straigth_with_3d_cross_strip(angle=90, separation=5, below=True):
     """
@@ -567,6 +581,7 @@ def straigth_with_3d_cross_strip(angle=90, separation=5, below=True):
     straight_out = gf.partial(ipr.bb_straight_bb_limited, **kwargs)
 
     return straight_out, kwargs, cross_3d_comp
+
 
 def straigth_with_3d_cross_shallow(angle=90, separation=5, below=True):
     """
@@ -711,6 +726,7 @@ def straigth_with_3d_cross_shallow(angle=90, separation=5, below=True):
 
     return straight_out, kwargs, cross_3d_comp
 
+
 def all_metal_text(text, size, justify):
     """
     Create a text in all 3 metal layer to improve density
@@ -723,6 +739,7 @@ def all_metal_text(text, size, justify):
     c << ipr.text(text_upper, size=size, layer=LAYER.metal3, justify=justify)
 
     return c
+
 
 def tps_410_swg_930_swg_lim(length: float, **kwargs):  # Level 1
     rb_taper = kwargs["bb1"]
@@ -741,6 +758,7 @@ def tps_410_swg_930_swg_lim(length: float, **kwargs):  # Level 1
     kwargs["bb2_rev"] = "True"
     return gf.partial(ipr.bb_straight_bb_limited, length, **kwargs)()
 
+
 def tps_410_swg_1560_swg_lim(length: float, **kwargs):  # Level 1
     rb_taper = kwargs["bb1"]
 
@@ -757,6 +775,7 @@ def tps_410_swg_1560_swg_lim(length: float, **kwargs):  # Level 1
     kwargs["bb2"] = rb_taper_in
     kwargs["bb2_rev"] = "True"
     return gf.partial(ipr.bb_straight_bb_limited, length, **kwargs)()
+
 
 @gf.cell
 def triangle_round(
@@ -869,6 +888,7 @@ def grating_array_test_structure(
         c.info[f"Block {idx + 1}"] = out_dict
 
     return c
+
 
 @gf.cell
 def xt_sin_function(
@@ -1278,7 +1298,10 @@ def xt_sin_function(
 
     return c
 
+
 n_mmi = 0
+
+
 @gf.cell
 def mmi_splitter_il_extractor(
     absorber: ComponentSpec,
@@ -1871,7 +1894,6 @@ def sem(
 
     # Add the remaining waveguides
     for i in range(1, n):
-
         # Understand if we are at the middle
         is_middle = i == n // 2
 
@@ -1884,6 +1906,7 @@ def sem(
         waveguides.append(wg)
 
     return c
+
 
 @gf.cell
 def sem_array(structure_index: int = 0):
@@ -1901,69 +1924,150 @@ def sem_array(structure_index: int = 0):
     # ==========================================================
     sem_specs = [
         # widths,               gap,    layers,                                 titles
-         # Bool difference operation, Bridge
-        ([0.410],               0.20,   [LAYER.swg],                            f"{structure_index}.1: SI 0.41 G.2",
-         False, False),
-        ([0.410],               0.30,   [LAYER.swg],                            f"{structure_index}.2: SI 0.41 G.3",
-         False, False),
-        ([0.930],               0.30,   [LAYER.swg],                            f"{structure_index}.3: SI 0.93 G.3",
-         False, False),
-        ([1.500],               0.30,   [LAYER.swg],                            f"{structure_index}.4: SI 1.50 G.3",
-         False, False),
-        ([0.650, 1.92],         1.87,   [LAYER.swg, LAYER.rwg],                 f"{structure_index}.5: SISH 0.65 G.6",
-         False, False),
-        ([0.268, 0.35],         0.682,  [LAYER.swg, LAYER.rwg],                 f"{structure_index}.6: SISH 0.268 G.6",
-         False, False),
-        ([0.410, 20.00, 21.00], 0.30,   [LAYER.swg, LAYER.rwg, LAYER.gwg],      f"{structure_index}.7: SISH 0.41 G.3",
-         False, False),
-        ([0.700],               0.30,   [LAYER.nwg],                            f"{structure_index}.8: SIN 0.70 G.3",
-         False, False),
-        ([1.000],               0.20,   [LAYER.nwg],                            f"{structure_index}.9: SIN 1.00 G.2",
-         False, False),
-        ([1.000],               0.30,   [LAYER.nwg],                            f"{structure_index}.10: SIN 1.00 G.3",
-         False, False),
-        ([5.000, 5.40, 1.00],   0.00,   [LAYER.nwg, LAYER.rwn, LAYER.nwg],      f"{structure_index}.11: SINSH 1.00 G4",
-         True, False),
-        ([0.700],               0.35,   [LAYER.anwg],                           f"{structure_index}.12: A 0.70 G.35",
-         False, False),
-        ([1.000],               0.25,   [LAYER.anwg],                           f"{structure_index}.13: A 1.00 G.25",
-         False, False),
-        ([1.000],               0.35,   [LAYER.anwg],                           f"{structure_index}.14: A 1.00 G.35",
-         False, False),
-        ([2.000],               0.35,   [LAYER.anwg],                           f"{structure_index}.15: A 2.00 G.35",
-         False, False),
-        ([5.500, 5.90, 1.50],   0.00,   [LAYER.anwg, LAYER.ranwg, LAYER.anwg],  f"{structure_index}.16: ASH 1.50 G4",
-         True, False),
-        ([0.150, 0.41, 20.00],  0.56,   [LAYER.nwg, LAYER.swg],                 f"{structure_index}.17: SISIN 0.41 G.3",
-         False, False),
-        ([0.310, 1.30],         1.34,   [LAYER.nwg, LAYER.anwg],                f"{structure_index}.18: SINA 0.31 G.35",
-         False, False),
-        ([0.72, 1.000],         0.58,   [LAYER.anwg, LAYER.nwg],                f"{structure_index}.19: SINA 1.00 G.3",
-         False, False)
+        # Bool difference operation, Bridge
+        ([0.410], 0.20, [LAYER.swg], f"{structure_index}.1: SI 0.41 G.2", False, False),
+        ([0.410], 0.30, [LAYER.swg], f"{structure_index}.2: SI 0.41 G.3", False, False),
+        ([0.930], 0.30, [LAYER.swg], f"{structure_index}.3: SI 0.93 G.3", False, False),
+        ([1.500], 0.30, [LAYER.swg], f"{structure_index}.4: SI 1.50 G.3", False, False),
+        (
+            [0.650, 1.92],
+            1.87,
+            [LAYER.swg, LAYER.rwg],
+            f"{structure_index}.5: SISH 0.65 G.6",
+            False,
+            False,
+        ),
+        (
+            [0.268, 0.35],
+            0.682,
+            [LAYER.swg, LAYER.rwg],
+            f"{structure_index}.6: SISH 0.268 G.6",
+            False,
+            False,
+        ),
+        (
+            [0.410, 20.00, 21.00],
+            0.30,
+            [LAYER.swg, LAYER.rwg, LAYER.gwg],
+            f"{structure_index}.7: SISH 0.41 G.3",
+            False,
+            False,
+        ),
+        (
+            [0.700],
+            0.30,
+            [LAYER.nwg],
+            f"{structure_index}.8: SIN 0.70 G.3",
+            False,
+            False,
+        ),
+        (
+            [1.000],
+            0.20,
+            [LAYER.nwg],
+            f"{structure_index}.9: SIN 1.00 G.2",
+            False,
+            False,
+        ),
+        (
+            [1.000],
+            0.30,
+            [LAYER.nwg],
+            f"{structure_index}.10: SIN 1.00 G.3",
+            False,
+            False,
+        ),
+        (
+            [5.000, 5.40, 1.00],
+            0.00,
+            [LAYER.nwg, LAYER.rwn, LAYER.nwg],
+            f"{structure_index}.11: SINSH 1.00 G4",
+            True,
+            False,
+        ),
+        (
+            [0.700],
+            0.35,
+            [LAYER.anwg],
+            f"{structure_index}.12: A 0.70 G.35",
+            False,
+            False,
+        ),
+        (
+            [1.000],
+            0.25,
+            [LAYER.anwg],
+            f"{structure_index}.13: A 1.00 G.25",
+            False,
+            False,
+        ),
+        (
+            [1.000],
+            0.35,
+            [LAYER.anwg],
+            f"{structure_index}.14: A 1.00 G.35",
+            False,
+            False,
+        ),
+        (
+            [2.000],
+            0.35,
+            [LAYER.anwg],
+            f"{structure_index}.15: A 2.00 G.35",
+            False,
+            False,
+        ),
+        (
+            [5.500, 5.90, 1.50],
+            0.00,
+            [LAYER.anwg, LAYER.ranwg, LAYER.anwg],
+            f"{structure_index}.16: ASH 1.50 G4",
+            True,
+            False,
+        ),
+        (
+            [0.150, 0.41, 20.00],
+            0.56,
+            [LAYER.nwg, LAYER.swg],
+            f"{structure_index}.17: SISIN 0.41 G.3",
+            False,
+            False,
+        ),
+        (
+            [0.310, 1.30],
+            1.34,
+            [LAYER.nwg, LAYER.anwg],
+            f"{structure_index}.18: SINA 0.31 G.35",
+            False,
+            False,
+        ),
+        (
+            [0.72, 1.000],
+            0.58,
+            [LAYER.anwg, LAYER.nwg],
+            f"{structure_index}.19: SINA 1.00 G.3",
+            False,
+            False,
+        ),
     ]
-
 
     # ==========================================================
     # Layout configuration
     # ==========================================================
-    col_count = 1                          # two columns
-    x_spacing = 620                        # horizontal distance between columns
-    y_spacing = 60                         # vertical spacing between rows
-    label_text_size = 21                   # font size
+    col_count = 1  # two columns
+    x_spacing = 620  # horizontal distance between columns
+    y_spacing = 60  # vertical spacing between rows
+    label_text_size = 21  # font size
 
     # Standardized label box width + height
-    label_width = 305                      # fixed width for all labels
-    label_height = 40                      # fixed height (text will be centered)
+    label_width = 305  # fixed width for all labels
+    label_height = 40  # fixed height (text will be centered)
     bridge_width = 2
 
     # Cross section for marking
-    xs_marking = gf.cross_section.strip(
-        width=bridge_width,
-        layer=LAYER.m_wgcnct
-    )
+    xs_marking = gf.cross_section.strip(width=bridge_width, layer=LAYER.m_wgcnct)
 
     for idx, (widths, gap, layers, label, bool_diff, bridge) in enumerate(sem_specs):
-
         # Determine column and row
         row = idx // col_count
         col = idx % col_count
@@ -1981,12 +2085,14 @@ def sem_array(structure_index: int = 0):
             for width, layer in zip(widths[::-1], layers[::-1]):
                 delta_gap = abs(widths[0] - width)
 
-                sm = c << sem(width=width,
-                              length=delta_gap+100,
-                              layer=layer,
-                              gap=gap - delta_gap)
+                sm = c << sem(
+                    width=width,
+                    length=delta_gap + 100,
+                    layer=layer,
+                    gap=gap - delta_gap,
+                )
 
-                sm.movex(delta_gap/2, x_offset)
+                sm.movex(delta_gap / 2, x_offset)
                 sm.movey(sm.y, y_offset)
 
                 if sm.ysize > sm_max_height:
@@ -1995,28 +2101,29 @@ def sem_array(structure_index: int = 0):
         # Difference between sem structures
         else:
             # Unchanged layer 1
-            sm1 = sem(width=widths[0],
-                      length=100,
-                      layer=layers[0],
-                      gap=gap)
+            sm1 = sem(width=widths[0], length=100, layer=layers[0], gap=gap)
 
             # Unchanged layer 2
             delta_gap = abs(widths[1] - widths[0])
-            sm2 = sem(width=widths[1],
-                      length=100 + delta_gap,
-                      layer=layers[1],
-                      gap=gap - delta_gap)
+            sm2 = sem(
+                width=widths[1],
+                length=100 + delta_gap,
+                layer=layers[1],
+                gap=gap - delta_gap,
+            )
             sm2 = sm2.copy()
             sm2.movex(delta_gap / 2, x_offset)
 
             # Layer boolean operation
             delta_gap = abs(widths[2] - widths[0])
-            sm3 = sem(width=widths[2],
-                      length=100 - delta_gap,
-                      layer=layers[2],
-                      gap=gap + delta_gap)
+            sm3 = sem(
+                width=widths[2],
+                length=100 - delta_gap,
+                layer=layers[2],
+                gap=gap + delta_gap,
+            )
             sm3 = sm3.copy()
-            sm3.movex(- delta_gap / 2, x_offset)
+            sm3.movex(-delta_gap / 2, x_offset)
 
             # Perform Boolean difference
             sm = c << gf.boolean(
@@ -2046,18 +2153,20 @@ def sem_array(structure_index: int = 0):
 
             for idx in range(4):
                 # Place bridge
-                bridge_inst = c << gf.c.rectangle(size=(bridge_width, sm_height), layer=layers[0])
+                bridge_inst = c << gf.c.rectangle(
+                    size=(bridge_width, sm_height), layer=layers[0]
+                )
 
                 bridge_inst.xmin = sm.xmin + 0.5 + 98 * (idx) / 3
                 bridge_inst.ymin = sm.ymin - delta_height
 
                 # Place transition layer on both ends to avoid error
-                m1 = c << gf.components.straight(length = 1, cross_section=xs_marking)
+                m1 = c << gf.components.straight(length=1, cross_section=xs_marking)
                 m1.rotate(90)
                 m1.x = bridge_inst.x
                 m1.y = bridge_inst.ymax
 
-                m2 = c << gf.components.straight(length = 1, cross_section=xs_marking)
+                m2 = c << gf.components.straight(length=1, cross_section=xs_marking)
                 m2.rotate(90)
                 m2.x = bridge_inst.x
                 m2.y = bridge_inst.ymin
@@ -2065,10 +2174,7 @@ def sem_array(structure_index: int = 0):
         # ==========================================================
         # Create standardized rectangle background FIRST
         # ==========================================================
-        rec = c << gf.c.rectangle(
-            size=(label_width, label_height),
-            layer=(118, 40)
-        )
+        rec = c << gf.c.rectangle(size=(label_width, label_height), layer=(118, 40))
 
         # Place rectangle at fixed offset from SEM
         rec.xmin = x_offset + 70 + label_width / 2
@@ -2077,25 +2183,23 @@ def sem_array(structure_index: int = 0):
         # ==========================================================
         # Create text INSIDE the rectangle
         # ==========================================================
-        txt = c << ipr.text(
-            label,
-            size=label_text_size,
-            layer=LAYER.metal3
-        )
+        txt = c << ipr.text(label, size=label_text_size, layer=LAYER.metal3)
 
         # Center text inside rectangle
-        txt.move((rec.center[0] - txt.center[0],
-                  rec.center[1] - txt.center[1]))
+        txt.move((rec.center[0] - txt.center[0], rec.center[1] - txt.center[1]))
 
     return c
 
+
 @gf.cell
-def taper_doe(bend: ComponentSpec,
-              gc_array: ComponentSpec,
-              straight: ComponentSpec,
-              taper_start: ComponentSpec,
-              taper_list:list[ComponentSpec],
-              vertical_transition=ComponentSpec):
+def taper_doe(
+    bend: ComponentSpec,
+    gc_array: ComponentSpec,
+    straight: ComponentSpec,
+    taper_start: ComponentSpec,
+    taper_list: list[ComponentSpec],
+    vertical_transition=ComponentSpec,
+):
     """
     Create a test structure to detect the maximum taper length before fabrication problem.
 
@@ -2123,8 +2227,8 @@ def taper_doe(bend: ComponentSpec,
 
     # Geometrical parameter definition
     radius = bend["o2"].x - bend["o1"].x
-    Dx = 20
-    Dy = 25
+    Dx = 25
+    Dy = 45
     for idx, taper in enumerate(taper_list):
         # Place a straight to be reached
         xs = gf.get_cross_section("strip", width=0.41)
@@ -2132,19 +2236,18 @@ def taper_doe(bend: ComponentSpec,
 
         if idx < 2:
             strt1.rotate(90)
-            strt1.x = gc_ref[f"o{2*idx+1}"].x + radius * (9 - 4 * idx)
-            strt1.y = gc_ref[f"o{2*idx+1}"].y + radius * 2
+            gc = gc_ref[f"o{2 * idx + 1}"]
+            strt1.x = gc.x + radius * (9 - 4 * idx)
+            strt1.y = gc.y + radius * 2
         else:
             strt1.rotate(-90)
-            strt1.x = gc_ref[f"o{2*idx+1}"].x - Dx - radius * (4 * idx - 2)
-            strt1.y = gc_ref[f"o{2*idx+1}"].y + Dy
+            gc = gc_ref[f"o{2 * idx + 2}"]
+            strt1.x = gc.x - Dx - radius * (4 * idx - 1)
+            strt1.y = gc.y + Dy
 
         route1 = gf.routing.route_single(
-            c,
-            strt1["o1"],
-            gc_ref[f"o{2*idx+1}"],
-            cross_section=xs,
-            bend=bend)
+            c, strt1["o1"], gc, cross_section=xs, bend=bend
+        )
 
         # Place a vt
         vt1 = c << vertical_transition
@@ -2177,32 +2280,28 @@ def taper_doe(bend: ComponentSpec,
         strt2 = c << straight_410_swg(length=1)
 
         if idx < 2:
-            strt2.x = gc_ref[f"o{2*idx+2}"].x + radius
-            strt2.y = gc_ref[f"o{2*idx+2}"].y
+            gc = gc_ref[f"o{2 * idx + 2}"]
+            strt2.x = gc.x + radius
+            strt2.y = gc.y
         else:
             strt2.rotate(180)
-            strt2.x = gc_ref[f"o{2*idx+2}"].x - Dx - radius * (4 * idx - 1)
-            strt2.y = gc_ref[f"o{2*idx+2}"].y + Dy - radius
+            gc = gc_ref[f"o{2 * idx + 1}"]
+            strt2.x = gc.x - Dx - radius * (4 * idx - 5)
+            strt2.y = gc.y + Dy - radius
 
         # Connect to GC
         route2 = gf.routing.route_single(
-            c,
-            vt2["o1"],
-            strt2["o2"],
-            cross_section=xs,
-            bend=bend)
+            c, vt2["o1"], strt2["o2"], cross_section=xs, bend=bend
+        )
 
         route3 = gf.routing.route_single(
-            c,
-            gc_ref[f"o{2*idx+2}"],
-            strt2["o1"],
-            cross_section=xs,
-            bend=bend)
+            c, gc, strt2["o1"], cross_section=xs, bend=bend
+        )
 
         # Update the dictionary with routing
         for route in [route1, route2, route3]:
             for inst in route.instances:
-                temp_dict = ipr.measure_component(inst.cell, scale = 1 / 1000)
+                temp_dict = ipr.measure_component(inst.cell, scale=1 / 1000)
                 if idx == 0:
                     block1_dict = ipr.combine_component_dict(block1_dict, temp_dict)
                 elif idx == 1:
@@ -2230,4 +2329,3 @@ def taper_doe(bend: ComponentSpec,
     c.info["Block 1"] = block4_dict
 
     return c
-

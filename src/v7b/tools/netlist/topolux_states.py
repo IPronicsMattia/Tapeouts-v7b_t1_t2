@@ -41,6 +41,7 @@ _MUA = re.compile(r"^pucmua\d+(_|$)")
 State = tuple[tuple[str, float], ...]
 """PUC states along a route, in traversal order: ``((instance, puc_k), ...)``."""
 
+
 def _find_state(graph, source, target, expected):
     """Find a path  from `source` to `target` whose PUCs (without counting MUAs)
     are extacly the `expected` ones , in the same order.
@@ -48,13 +49,13 @@ def _find_state(graph, source, target, expected):
     Returns:
         ``{puc_name: puc_k}`` from the path found (muas included), o None.
     """
-    stack = [(source, 0, {})]          # (nodo, how many exècted PUCs are, states)
+    stack = [(source, 0, {})]  # (nodo, how many exècted PUCs are, states)
     seen = {(source, 0)}
 
     while stack:
         u, i, ret = stack.pop()
         if u == target:
-            if i == len(expected):     # find out
+            if i == len(expected):  # find out
                 return ret
             continue
         for v in graph.neighbors(u):
@@ -64,13 +65,14 @@ def _find_state(graph, source, target, expected):
                 name = u.split(",")[0]
                 if "pucmua" not in name:
                     if j >= len(expected) or name != expected[j]:
-                        continue       # there is a puc no expected
+                        continue  # there is a puc no expected
                     j += 1
                 nuevo = {**ret, name: kk}
             if (v, j) not in seen:
                 seen.add((v, j))
                 stack.append((v, j, nuevo))
     return None
+
 
 def generate_states(netlist, pic_to_top_id):
     g = create_nxgraph(netlist)
@@ -97,7 +99,9 @@ def generate_states(netlist, pic_to_top_id):
     # read paths from topolux
     paths_topolux = json.loads(
         (
-            Path(__file__).parents[0] / "utils" / "log2scaler_72_2_6_2-stage-simple_puc_states.json"
+            Path(__file__).parents[0]
+            / "utils"
+            / "log2scaler_72_2_6_2-stage-simple_puc_states.json"
         ).read_text()
     )
     paths_netlist = []
@@ -105,17 +109,19 @@ def generate_states(netlist, pic_to_top_id):
         # get input and output port
         inn = int(k.split("|")[0].replace("In", ""))
         out = int(k.split("|")[1].replace("Out", ""))
-        input_port = f"In{72-inn}"
-        output_port = f"Out{72-out}"
+        input_port = f"In{72 - inn}"
+        output_port = f"Out{72 - out}"
 
         pp = []
         for vv in v:
             path_te = [pic_to_top_id[puc]["te"] for puc in vv]
             path_tm = [pic_to_top_id[puc]["tm"] for puc in vv]
-            pp.append({
-                "te": _find_state(graph, input_port, output_port, path_te),
-                "tm": _find_state(graph, input_port, output_port, path_tm),
-            })
+            pp.append(
+                {
+                    "te": _find_state(graph, input_port, output_port, path_te),
+                    "tm": _find_state(graph, input_port, output_port, path_tm),
+                }
+            )
 
         paths_netlist.append([[input_port, output_port], pp])
     return paths_netlist

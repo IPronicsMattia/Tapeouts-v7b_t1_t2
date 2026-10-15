@@ -1826,7 +1826,7 @@
             ]
         },
         "TS13_1": {
-            "design_id": "swg_taper_100_200_L50",
+            "design_id": "swg_taper_100_200_L175",
             "dut_type": "taper",
             "analysis": [
                 "ilte_db"
@@ -1842,7 +1842,7 @@
                     2
                 ],
                 "wg_swg_410": [
-                    435
+                    470
                 ],
                 "swg_custom_bend_euler_r5": [
                     8
@@ -1854,7 +1854,7 @@
             "gdsfactory": {
                 "function": "taper",
                 "settings": {
-                    "length": 50,
+                    "length": 175,
                     "width1": 0.2,
                     "width2": 0.1,
                     "layer": [
@@ -1887,7 +1887,7 @@
             ]
         },
         "TS13_2": {
-            "design_id": "swg_taper_100_200_L75",
+            "design_id": "swg_taper_100_200_L100",
             "dut_type": "taper",
             "analysis": [
                 "ilte_db"
@@ -1903,7 +1903,7 @@
                     2
                 ],
                 "wg_swg_410": [
-                    445
+                    280
                 ],
                 "swg_custom_bend_euler_r5": [
                     8
@@ -1915,7 +1915,7 @@
             "gdsfactory": {
                 "function": "taper",
                 "settings": {
-                    "length": 75,
+                    "length": 100,
                     "width1": 0.2,
                     "width2": 0.1,
                     "layer": [
@@ -1948,7 +1948,7 @@
             ]
         },
         "TS13_3": {
-            "design_id": "swg_taper_100_200_L100",
+            "design_id": "swg_taper_100_200_L125",
             "dut_type": "taper",
             "analysis": [
                 "ilte_db"
@@ -1964,7 +1964,7 @@
                     2
                 ],
                 "wg_swg_410": [
-                    159
+                    209
                 ],
                 "swg_custom_bend_euler_r5": [
                     4
@@ -1976,7 +1976,7 @@
             "gdsfactory": {
                 "function": "taper",
                 "settings": {
-                    "length": 100,
+                    "length": 125,
                     "width1": 0.2,
                     "width2": 0.1,
                     "layer": [
@@ -2009,7 +2009,7 @@
             ]
         },
         "TS13_4": {
-            "design_id": "swg_taper_100_200_L200",
+            "design_id": "swg_taper_100_200_L225",
             "dut_type": "taper",
             "analysis": [
                 "ilte_db"
@@ -2025,7 +2025,7 @@
                     2
                 ],
                 "wg_swg_410": [
-                    399
+                    449
                 ],
                 "swg_custom_bend_euler_r5": [
                     4
@@ -2037,7 +2037,7 @@
             "gdsfactory": {
                 "function": "taper",
                 "settings": {
-                    "length": 200,
+                    "length": 225,
                     "width1": 0.2,
                     "width2": 0.1,
                     "layer": [
@@ -2070,7 +2070,7 @@
             ]
         },
         "TS13_5": {
-            "design_id": "nwg_taper_100_250_L100",
+            "design_id": "nwg_taper_100_250_L275",
             "dut_type": "taper",
             "analysis": [
                 "ilte_db"
@@ -2086,7 +2086,7 @@
                     2
                 ],
                 "wg_swg_410": [
-                    611
+                    746
                 ],
                 "nwg_taper_1000_250_L20": [
                     2
@@ -2101,7 +2101,7 @@
             "gdsfactory": {
                 "function": "taper",
                 "settings": {
-                    "length": 100,
+                    "length": 275,
                     "width1": 0.25,
                     "width2": 0.1,
                     "layer": [
@@ -2134,7 +2134,7 @@
             ]
         },
         "TS13_6": {
-            "design_id": "nwg_taper_100_250_L125",
+            "design_id": "nwg_taper_100_250_L200",
             "dut_type": "taper",
             "analysis": [
                 "ilte_db"
@@ -2150,7 +2150,7 @@
                     2
                 ],
                 "wg_swg_410": [
-                    621
+                    556
                 ],
                 "nwg_taper_1000_250_L20": [
                     2
@@ -2165,7 +2165,7 @@
             "gdsfactory": {
                 "function": "taper",
                 "settings": {
-                    "length": 125,
+                    "length": 200,
                     "width1": 0.25,
                     "width2": 0.1,
                     "layer": [
@@ -2198,7 +2198,7 @@
             ]
         },
         "TS13_7": {
-            "design_id": "nwg_taper_100_250_L150",
+            "design_id": "nwg_taper_100_250_L225",
             "dut_type": "taper",
             "analysis": [
                 "ilte_db"
@@ -2214,7 +2214,7 @@
                     2
                 ],
                 "wg_swg_410": [
-                    335
+                    485
                 ],
                 "nwg_taper_1000_250_L20": [
                     2
@@ -2229,7 +2229,7 @@
             "gdsfactory": {
                 "function": "taper",
                 "settings": {
-                    "length": 150,
+                    "length": 225,
                     "width1": 0.25,
                     "width2": 0.1,
                     "layer": [
@@ -2262,7 +2262,7 @@
             ]
         },
         "TS13_8": {
-            "design_id": "nwg_taper_100_250_L200",
+            "design_id": "nwg_taper_100_250_L325",
             "dut_type": "taper",
             "analysis": [
                 "ilte_db"
@@ -2278,7 +2278,7 @@
                     2
                 ],
                 "wg_swg_410": [
-                    475
+                    725
                 ],
                 "nwg_taper_1000_250_L20": [
                     2
@@ -2293,7 +2293,7 @@
             "gdsfactory": {
                 "function": "taper",
                 "settings": {
-                    "length": 200,
+                    "length": 325,
                     "width1": 0.25,
                     "width2": 0.1,
                     "layer": [
@@ -2326,7 +2326,7 @@
             ]
         },
         "TS13_9": {
-            "design_id": "anwg_taper_100_250_L100",
+            "design_id": "anwg_taper_150_250_L275",
             "dut_type": "taper",
             "analysis": [
                 "ilte_db"
@@ -2342,7 +2342,7 @@
                     2
                 ],
                 "wg_swg_410": [
-                    795
+                    930
                 ],
                 "VT1_0_mesh_VT2_0_mesh": [
                     2
@@ -2357,9 +2357,9 @@
             "gdsfactory": {
                 "function": "taper",
                 "settings": {
-                    "length": 100,
+                    "length": 275,
                     "width1": 0.25,
-                    "width2": 0.1,
+                    "width2": 0.15,
                     "layer": [
                         259,
                         0
@@ -2390,7 +2390,7 @@
             ]
         },
         "TS13_10": {
-            "design_id": "anwg_taper_100_250_L125",
+            "design_id": "anwg_taper_150_250_L200",
             "dut_type": "taper",
             "analysis": [
                 "ilte_db"
@@ -2406,7 +2406,7 @@
                     2
                 ],
                 "wg_swg_410": [
-                    805
+                    740
                 ],
                 "VT1_0_mesh_VT2_0_mesh": [
                     2
@@ -2421,9 +2421,9 @@
             "gdsfactory": {
                 "function": "taper",
                 "settings": {
-                    "length": 125,
+                    "length": 200,
                     "width1": 0.25,
-                    "width2": 0.1,
+                    "width2": 0.15,
                     "layer": [
                         259,
                         0
@@ -2454,7 +2454,7 @@
             ]
         },
         "TS13_11": {
-            "design_id": "anwg_taper_100_250_L150",
+            "design_id": "anwg_taper_150_250_L225",
             "dut_type": "taper",
             "analysis": [
                 "ilte_db"
@@ -2470,7 +2470,7 @@
                     2
                 ],
                 "wg_swg_410": [
-                    519
+                    669
                 ],
                 "VT1_0_mesh_VT2_0_mesh": [
                     2
@@ -2485,9 +2485,9 @@
             "gdsfactory": {
                 "function": "taper",
                 "settings": {
-                    "length": 150,
+                    "length": 225,
                     "width1": 0.25,
-                    "width2": 0.1,
+                    "width2": 0.15,
                     "layer": [
                         259,
                         0
@@ -2518,7 +2518,7 @@
             ]
         },
         "TS13_12": {
-            "design_id": "anwg_taper_100_250_L200",
+            "design_id": "anwg_taper_150_250_L325",
             "dut_type": "taper",
             "analysis": [
                 "ilte_db"
@@ -2534,7 +2534,7 @@
                     2
                 ],
                 "wg_swg_410": [
-                    659
+                    909
                 ],
                 "VT1_0_mesh_VT2_0_mesh": [
                     2
@@ -2549,9 +2549,9 @@
             "gdsfactory": {
                 "function": "taper",
                 "settings": {
-                    "length": 200,
+                    "length": 325,
                     "width1": 0.25,
-                    "width2": 0.1,
+                    "width2": 0.15,
                     "layer": [
                         259,
                         0
