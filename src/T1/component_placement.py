@@ -155,6 +155,13 @@ def component_placement(die: gf.Component) -> gf.Component:
         cross_section=xs_swg,
         dx=40,
     )
+    gc_array_long = ipr.grating_coupler_array(
+        grating_coupler=ipr.tower_gc,
+        n=20,
+        with_loopback=True,
+        cross_section=xs_swg,
+        dx=10,
+    )
 
     # Grating coupler array without loopback
     gc_array_noloopbak = ipr.grating_coupler_array(
@@ -1349,10 +1356,136 @@ def component_placement(die: gf.Component) -> gf.Component:
                     )
     current_ts += 1
 
-    ###########################
-    # N.14 SEM Test Structure #
-    ###########################
+    ############
+    # 14.0 MMI #
+    ############
     if len(structure_only) == 0 or 14 in structure_only:
+        print(f"\nCreation of N.{current_ts} MMI Test Structure")
+
+        for idx in range(len(doe_json_dict[f"{current_ts}.0"]["comp"])):
+            ts = f"{current_ts}.{1 + idx}"
+
+            # Select the clothoide bend from the DoE file
+            comp = sim_filename_json[doe_json_dict[f"{current_ts}.0"]["comp"][idx]]
+            name = comp["function"].split(".")[-1].rstrip("()")
+            func = getattr(ipr, name)
+
+            mmi = func(**comp["settings"])
+            design_id = comp["design_id"]
+
+            # Create test structure
+            ts = f"{current_ts}.{2 * idx + 1}"
+            t = die << ipr.test_splitter(
+                bb=mmi,
+                bend=routing_bend_Si,
+                gc_array=gc_array_long,
+                sep_variation=0.141,
+                straight=straight_410_swg,
+                state="bar",
+                absorber=absorber,
+                bb_safe_distance=45 - mmi.xsize,
+            )
+
+            # Assign to the dictionary
+            structures[ts] = t
+            structures_text[ts] = f"{ts} {design_id}_BAR"
+
+            # Add the structures to the json file
+            if create_json:
+                json_writer.structure_json(
+                    component=mmi,
+                    component_IO=gc_array_long,
+                    structure_title=f"TS{ts}",
+                    structure=t.cell,
+                )
+
+            # Create test structure
+            ts = f"{current_ts}.{2 * idx + 2}"
+            t = die << ipr.test_splitter(
+                bb=mmi,
+                bend=routing_bend_Si,
+                gc_array=gc_array_long,
+                sep_variation=0.141,
+                straight=straight_410_swg,
+                state="cross",
+                absorber=absorber,
+                bb_safe_distance=45 - mmi.xsize,
+            )
+
+            # Assign to the dictionary
+            structures[ts] = t
+            structures_text[ts] = f"{ts} {design_id}_CROSS"
+
+            # Add the structures to the json file
+            if create_json:
+                json_writer.structure_json(
+                    component=mmi,
+                    component_IO=gc_array_long,
+                    structure_title=f"TS{ts}",
+                    structure=t.cell,
+                )
+
+    current_ts += 1
+
+    #################
+    # 15.0 CROSSING #
+    #################
+    if len(structure_only) == 0 or 15 in structure_only:
+        print(f"\nCreation of N.{current_ts} Crossing XT Test Structure")
+        cross_kwargs = {
+            "bbmul": crossing_2D,
+            "bbadd": taper_1560_410,
+            "bbmul_list": ["o2"],
+        }  # Add taper for absober
+
+        cross_tp = ipr.bb_mul_bb(**cross_kwargs)
+
+        taper_410_1560_inv = change_port(taper_410_1560, ["o1", "o2"], ["o2", "o1"])
+        cross_kwargs = {
+            "bbmul": cross_tp,
+            "bbadd": taper_410_1560_inv,
+            "bbmul_list": ["o1", "o3", "o4"],
+        }  # Add taper for remaining part
+
+        cross_tp = ipr.bb_mul_bb(**cross_kwargs)
+
+        cross_kwargs = {
+            "bbmul": cross_tp,
+            "bbadd": absorber,
+            "bbmul_list": ["o2"],
+        }  # Add absorber
+        cross_with_abs = ipr.bb_mul_bb(**cross_kwargs)
+
+        # Create test structure
+        ts = f"{current_ts}.1"
+        t = die << ipr.test_crossing_xt(
+            bb=cross_with_abs,
+            bend=routing_bend_Si,
+            gc_array=gc_array_long,
+            sep_variation=0.141,
+            straight=straight_410_swg,
+            bb_safe_distance=5,
+        )
+
+        # Assign to the dictionary
+        structures[ts] = t
+        structures_text[ts] = f"{ts} POLARIS_60 XT"
+
+        # Add the structures to the json file
+        if create_json:
+            json_writer.structure_json(
+                component=crossing_2D_,
+                component_IO=gc_array_long,
+                structure_title=f"TS{ts}",
+                structure=t.cell,
+                extra_dict={"analysis": ["xtte_db"]},
+            )
+    current_ts += 1
+
+    ###########################
+    # N.16 SEM Test Structure #
+    ###########################
+    if len(structure_only) == 0 or 16 in structure_only:
         print(f"\nCreation of N.{current_ts} SEM Test Structure")
 
         # Place the sem
@@ -1364,72 +1497,19 @@ def component_placement(die: gf.Component) -> gf.Component:
         structures_text[ts] = "NO"
     current_ts += 1
 
-
-    # # #################
-    # # # 10.0 CROSSING #
-    # # #################
-    # if len(structure_only) == 0 or 10 in structure_only:
-    #     print("\nCreation of N.10 Crossing XT Test Structure")
-    #     cross_kwargs = {
-    #         "bbmul": crossing_2D,
-    #         "bbadd": taper_1560_410,
-    #         "bbmul_list": ["o2"],
-    #     }  # Add taper for absober
-
-    #     cross_tp = ipr.bb_mul_bb(**cross_kwargs)
-
-    #     taper_410_1560_inv = change_port(taper_410_1560, ["o1", "o2"], ["o2", "o1"])
-    #     cross_kwargs = {
-    #         "bbmul": cross_tp,
-    #         "bbadd": taper_410_1560_inv,
-    #         "bbmul_list": ["o1", "o3", "o4"],
-    #     }  # Add taper for remaining part
-
-    #     cross_tp = ipr.bb_mul_bb(**cross_kwargs)
-
-    #     cross_kwargs = {
-    #         "bbmul": cross_tp,
-    #         "bbadd": absorber,
-    #         "bbmul_list": ["o2"],
-    #     }  # Add absorber
-    #     cross_with_abs = ipr.bb_mul_bb(**cross_kwargs)
-
-    #     # Create test structure
-    #     ts = "10.1"
-    #     t = die << ipr.test_crossing_xt(
-    #         bb=cross_with_abs,
-    #         bend=routing_bend_Si,
-    #         gc_array=gc_array_long,
-    #         sep_variation=0.141,
-    #         straight=straight_410_swg,
-    #         bb_safe_distance=5,
-    #     )
-
-    #     # Assign to the dictionary
-    #     structures[ts] = t
-    #     structures_text[ts] = f"{ts} POLARIS_60 XT"
-
-    #     # Add the structures to the json file
-    #     if create_json:
-    #         json_writer.structure_json(
-    #             component=crossing_2D_,
-    #             component_IO=gc_array_long,
-    #             structure_title=f"TS{ts}",
-    #             structure=t.cell,
-    #             extra_dict={"analysis": ["xtte_db"]},
-    #         )
-
     #########################################################
     #########################################################
     #########################################################
     left_top_structure = ["1.1", "2.1", "3.1", "3.2", "4.1", "4.2",
                           "1.2"]
-    left_cen_structure = ["5.1", "6.1", "7.1", "8.1", "8.2", "9.1"]
-    left_bot_structure = ["1.3", "10.1", "10.2", "10.3", "11.1", "11.2",
+    left_cen_structure = ["5.1", "6.1", "7.1", "8.1", "8.2"]
+    left_bot_structure = ["1.3", "9.1", "10.1", "10.2", "10.3", "11.1", "11.2",
                           "12.1", "12.2", "12.3", "12.4", "12.5", "12.6",
                           "12.7", "12.8", "12.9", "12.10", "12.11", "12.12",
-                          "13.1", "13.5", "13.9", "14.1", "1.4"]
-    right_structure = []
+                          "13.1", "13.5", "13.9", "16.1", "1.4"]
+    right_structure = ["14.1", "14.2", "14.3", "14.4", "14.5", "14.6",
+                       "14.7", "14.8", "14.9", "14.10", "14.11", "14.12",
+                       "14.13", "14.14", "15.1"]
 
     # Place only structure complain with structure_only
     if len(structure_only) != 0:

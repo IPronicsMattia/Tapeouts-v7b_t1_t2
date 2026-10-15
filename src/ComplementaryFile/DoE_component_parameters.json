@@ -22,6 +22,15 @@
                     "taper_gdsfactorypcompon_2579c6d0",
 
                     "taper_gdsfactorypcompon_cd0f0b9a"]
+        },
+        "14.0":{
+            "comp": ["mmi_inv_d1_30",
+                     "mmi_inv_d1_m30",
+                     "mmi_inv_d1_38",
+                     "mmi_inv_d3_30",
+                     "mmi_inv_d3_m30",
+                     "mmi_inv_d3_38",
+                     "mmi_inv_d2"]
         }
     },
     
