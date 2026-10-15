@@ -470,7 +470,7 @@
                     5156.38,
                     249.32
                 ],
-                "VT_1_2_TE": [
+                "VT1_0_mesh_VT2_0_mesh": [
                     2,
                     2,
                     2,
@@ -552,7 +552,7 @@
                     17459.09,
                     279.34
                 ],
-                "VT_1_2_TE": [
+                "VT1_0_mesh_VT2_0_mesh": [
                     2,
                     2,
                     2,
@@ -893,7 +893,7 @@
             ]
         },
         "TS010.1": {
-            "design_id": "VT12_PI_D0",
+            "design_id": "VT1_D0_100_PI_VT2_D2_PI",
             "dut_type": "vertical_transition",
             "analysis": [
                 "ilte_db"
@@ -945,8 +945,8 @@
             "gdsfactory": {
                 "function": "si_anwg_transition",
                 "settings": {
-                    "name_si_nwg_transition": "VT1_PI_D0_100",
-                    "name_nwg_anwg_transition": "VT2_POLINS_D_02",
+                    "name_si_nwg_transition": "VT1_D0_100_PI",
+                    "name_nwg_anwg_transition": "VT2_D2_PI",
                     "length": 1,
                     "width_in": null,
                     "width_out": 0.7
@@ -964,7 +964,7 @@
             ]
         },
         "TS010.2": {
-            "design_id": "VT12_PI_D0",
+            "design_id": "VT1_D0_100_PI_VT2_D2_PI",
             "dut_type": "vertical_transition",
             "analysis": [
                 "iltm_db"
@@ -1016,8 +1016,8 @@
             "gdsfactory": {
                 "function": "si_anwg_transition",
                 "settings": {
-                    "name_si_nwg_transition": "VT1_PI_D0_100",
-                    "name_nwg_anwg_transition": "VT2_POLINS_D_02",
+                    "name_si_nwg_transition": "VT1_D0_100_PI",
+                    "name_nwg_anwg_transition": "VT2_D2_PI",
                     "length": 1,
                     "width_in": null,
                     "width_out": 0.7
@@ -1073,7 +1073,7 @@
             ]
         },
         "TS010.3": {
-            "design_id": "VT_1_2_TE",
+            "design_id": "VT1_0_mesh_VT2_0_mesh",
             "dut_type": "vertical_transition",
             "analysis": [
                 "ilte_db"
@@ -1125,8 +1125,8 @@
             "gdsfactory": {
                 "function": "si_anwg_transition",
                 "settings": {
-                    "name_si_nwg_transition": "VT_1_TE",
-                    "name_nwg_anwg_transition": "VT_2_TE",
+                    "name_si_nwg_transition": "VT1_0_mesh",
+                    "name_nwg_anwg_transition": "VT2_0_mesh",
                     "length": 1,
                     "width_in": null,
                     "width_out": 2.0
@@ -1245,7 +1245,7 @@
                     2489.56,
                     372.6
                 ],
-                "VT_1_2_TE": [
+                "VT1_0_mesh_VT2_0_mesh": [
                     84,
                     84,
                     84,
@@ -1376,8 +1376,8 @@
             ]
         },
         "TS012.3": {
-            "design_id": "wg_anwg_2000_mzi",
-            "dut_type": "mzi",
+            "design_id": "INT_mzis_test_group_and_eff",
+            "dut_type": null,
             "analysis": [
                 "neff_au",
                 "ng_au"
@@ -1406,7 +1406,7 @@
                     "pitch_um": 127.0,
                     "cross_section": null,
                     "cross_section2": "xs_26c47562",
-                    "extra_component": "si_anwg_transition_NSNT_01888caf"
+                    "extra_component": "si_anwg_transition_NSNT_081c4ed8"
                 }
             },
             "gc": [
@@ -1421,8 +1421,8 @@
             ]
         },
         "TS012.4": {
-            "design_id": "wg_anwg_1500_mzi",
-            "dut_type": "mzi",
+            "design_id": "INT_mzis_test_group_and_eff",
+            "dut_type": null,
             "analysis": [
                 "neff_au",
                 "ng_au"
@@ -1451,7 +1451,7 @@
                     "pitch_um": 127.0,
                     "cross_section": null,
                     "cross_section2": "nitride2",
-                    "extra_component": "si_anwg_transition_NSNT_1924cc9d"
+                    "extra_component": "si_anwg_transition_NSNT_9dba6eee"
                 }
             },
             "gc": [
@@ -1466,8 +1466,8 @@
             ]
         },
         "TS012.5": {
-            "design_id": "wg_nwg_1000_mzi",
-            "dut_type": "mzi",
+            "design_id": "INT_mzis_test_group_and_eff",
+            "dut_type": null,
             "analysis": [
                 "neff_au",
                 "ng_au"
@@ -1496,7 +1496,7 @@
                     "pitch_um": 127.0,
                     "cross_section": null,
                     "cross_section2": "xs_d37503c9",
-                    "extra_component": "si_nwg_transition_NVT_1_8ef1e6ad"
+                    "extra_component": "si_nwg_transition_NVT1__6dde78a4"
                 }
             },
             "gc": [
@@ -1511,8 +1511,8 @@
             ]
         },
         "TS012.6": {
-            "design_id": "wg_nwg_1000_mzi",
-            "dut_type": "mzi",
+            "design_id": "INT_mzis_test_group_and_eff",
+            "dut_type": null,
             "analysis": [
                 "neff_au",
                 "ng_au"
@@ -1541,7 +1541,7 @@
                     "pitch_um": 127.0,
                     "cross_section": null,
                     "cross_section2": "xs_d37503c9",
-                    "extra_component": "si_nwg_transition_NVT_1_8ef1e6ad"
+                    "extra_component": "si_nwg_transition_NVT1__6dde78a4"
                 }
             },
             "gc": [
@@ -1556,8 +1556,8 @@
             ]
         },
         "TS012.7": {
-            "design_id": "wg_nwg_1000_mzi",
-            "dut_type": "mzi",
+            "design_id": "INT_mzis_test_group_and_eff",
+            "dut_type": null,
             "analysis": [
                 "neff_au",
                 "ng_au"
@@ -1586,7 +1586,7 @@
                     "pitch_um": 127.0,
                     "cross_section": null,
                     "cross_section2": "xs_d37503c9",
-                    "extra_component": "si_nwg_transition_NVT_1_8ef1e6ad"
+                    "extra_component": "si_nwg_transition_NVT1__6dde78a4"
                 }
             },
             "gc": [
@@ -1601,8 +1601,8 @@
             ]
         },
         "TS012.8": {
-            "design_id": "wg_nwg_1000_mzi",
-            "dut_type": "mzi",
+            "design_id": "INT_mzis_test_group_and_eff",
+            "dut_type": null,
             "analysis": [
                 "neff_au",
                 "ng_au"
@@ -1631,7 +1631,7 @@
                     "pitch_um": 127.0,
                     "cross_section": null,
                     "cross_section2": "xs_d37503c9",
-                    "extra_component": "si_nwg_transition_NVT_1_8ef1e6ad"
+                    "extra_component": "si_nwg_transition_NVT1__6dde78a4"
                 }
             },
             "gc": [
@@ -1646,8 +1646,8 @@
             ]
         },
         "TS012.9": {
-            "design_id": "wg_nwg_1000_mzi",
-            "dut_type": "mzi",
+            "design_id": "INT_mzis_test_group_and_eff",
+            "dut_type": null,
             "analysis": [
                 "neff_au",
                 "ng_au"
@@ -1676,7 +1676,7 @@
                     "pitch_um": 127.0,
                     "cross_section": null,
                     "cross_section2": "xs_d37503c9",
-                    "extra_component": "si_nwg_transition_NVT_1_8ef1e6ad"
+                    "extra_component": "si_nwg_transition_NVT1__6dde78a4"
                 }
             },
             "gc": [
@@ -1691,8 +1691,8 @@
             ]
         },
         "TS012.10": {
-            "design_id": "wg_nwg_1000_mzi",
-            "dut_type": "mzi",
+            "design_id": "INT_mzis_test_group_and_eff",
+            "dut_type": null,
             "analysis": [
                 "neff_au",
                 "ng_au"
@@ -1721,7 +1721,7 @@
                     "pitch_um": 127.0,
                     "cross_section": null,
                     "cross_section2": "xs_d37503c9",
-                    "extra_component": "si_nwg_transition_NVT_1_8ef1e6ad"
+                    "extra_component": "si_nwg_transition_NVT1__6dde78a4"
                 }
             },
             "gc": [
@@ -1736,8 +1736,8 @@
             ]
         },
         "TS012.11": {
-            "design_id": "wg_nwg_1000_mzi",
-            "dut_type": "mzi",
+            "design_id": "INT_mzis_test_group_and_eff",
+            "dut_type": null,
             "analysis": [
                 "neff_au",
                 "ng_au"
@@ -1766,7 +1766,7 @@
                     "pitch_um": 127.0,
                     "cross_section": null,
                     "cross_section2": "xs_d37503c9",
-                    "extra_component": "si_nwg_transition_NVT_1_8ef1e6ad"
+                    "extra_component": "si_nwg_transition_NVT1__6dde78a4"
                 }
             },
             "gc": [
@@ -1781,8 +1781,8 @@
             ]
         },
         "TS012.12": {
-            "design_id": "wg_nwg_1000_mzi",
-            "dut_type": "mzi",
+            "design_id": "INT_mzis_test_group_and_eff",
+            "dut_type": null,
             "analysis": [
                 "neff_au",
                 "ng_au"
@@ -1811,7 +1811,7 @@
                     "pitch_um": 127.0,
                     "cross_section": null,
                     "cross_section2": "xs_d37503c9",
-                    "extra_component": "si_nwg_transition_NVT_1_8ef1e6ad"
+                    "extra_component": "si_nwg_transition_NVT1__6dde78a4"
                 }
             },
             "gc": [
@@ -2094,7 +2094,7 @@
                 "swg_custom_bend_euler_r5": [
                     8
                 ],
-                "INT_si_nwg_transition_NVT_1": [
+                "INT_si_nwg_transition_NVT1_": [
                     2
                 ]
             },
@@ -2158,7 +2158,7 @@
                 "swg_custom_bend_euler_r5": [
                     8
                 ],
-                "INT_si_nwg_transition_NVT_1": [
+                "INT_si_nwg_transition_NVT1_": [
                     2
                 ]
             },
@@ -2222,7 +2222,7 @@
                 "swg_custom_bend_euler_r5": [
                     4
                 ],
-                "INT_si_nwg_transition_NVT_1": [
+                "INT_si_nwg_transition_NVT1_": [
                     2
                 ]
             },
@@ -2286,7 +2286,7 @@
                 "swg_custom_bend_euler_r5": [
                     4
                 ],
-                "INT_si_nwg_transition_NVT_1": [
+                "INT_si_nwg_transition_NVT1_": [
                     2
                 ]
             },
@@ -2344,7 +2344,7 @@
                 "wg_swg_410": [
                     795
                 ],
-                "VT_1_2_TE": [
+                "VT1_0_mesh_VT2_0_mesh": [
                     2
                 ],
                 "anwg_taper_2000_250_L20": [
@@ -2408,7 +2408,7 @@
                 "wg_swg_410": [
                     805
                 ],
-                "VT_1_2_TE": [
+                "VT1_0_mesh_VT2_0_mesh": [
                     2
                 ],
                 "anwg_taper_2000_250_L20": [
@@ -2472,7 +2472,7 @@
                 "wg_swg_410": [
                     519
                 ],
-                "VT_1_2_TE": [
+                "VT1_0_mesh_VT2_0_mesh": [
                     2
                 ],
                 "anwg_taper_2000_250_L20": [
@@ -2536,7 +2536,7 @@
                 "wg_swg_410": [
                     659
                 ],
-                "VT_1_2_TE": [
+                "VT1_0_mesh_VT2_0_mesh": [
                     2
                 ],
                 "anwg_taper_2000_250_L20": [

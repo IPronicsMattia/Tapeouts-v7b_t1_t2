@@ -1465,8 +1465,8 @@ def ec_with_vt(
 
     # Add vertical transition
     vt = c << ipr.si_anwg_transition(
-        name_si_nwg_transition="VT1_PI_D0_100",
-        name_nwg_anwg_transition="VT2_POLINS_D_02",
+        name_si_nwg_transition="VT1_D0_100_PI",
+        name_nwg_anwg_transition="VT2_D2_PI",
         width_out=ec["o1"].width,
     )
     vt.connect("o2", ec_ref["o1"])

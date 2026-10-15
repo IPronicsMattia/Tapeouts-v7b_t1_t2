@@ -56,8 +56,8 @@ def component_placement(
     #############################
     ec_component = ipr.anwg_ec_oband()
     sin_si_transition = ipr.si_anwg_transition(
-        name_si_nwg_transition="VT1_PI_D0_100",
-        name_nwg_anwg_transition="VT2_POLINS_D_02",
+        name_si_nwg_transition="VT1_D0_100_PI",
+        name_nwg_anwg_transition="VT2_D2_PI",
         width_out=0.7,
     )
     psr = ipr.si_psr_tw()

@@ -3364,24 +3364,24 @@
 
 
     "si_anwg_transition_NSNT_b7e7e990":{
-        "design_id": "VT12_PI_D0",
+        "design_id": "VT1_D0_100_PI_VT2_D2_PI",
         "dut_type": "vertical_transition",
         "function": "si_anwg_transition",
         "settings":{
-            "name_si_nwg_transition": "VT1_PI_D0_100",
-            "name_nwg_anwg_transition" : "VT2_POLINS_D_02",
+            "name_si_nwg_transition": "VT1_D0_100_PI",
+            "name_nwg_anwg_transition" : "VT2_D2_PI",
             "length": 1,
             "width_in": null,
             "width_out": 0.7
         }
     },
     "si_anwg_transition_NSNT_01888caf":{
-        "design_id": "VT_1_2_TE",
+        "design_id": "VT1_0_mesh_VT2_0_mesh",
         "dut_type": "vertical_transition",
         "function": "si_anwg_transition",
         "settings":{
-            "name_si_nwg_transition": "VT_1_TE",
-            "name_nwg_anwg_transition" : "VT_2_TE",
+            "name_si_nwg_transition": "VT1_0_mesh",
+            "name_nwg_anwg_transition" : "VT2_0_mesh",
             "length": 1,
             "width_in": null,
             "width_out": 2.0
@@ -3392,8 +3392,8 @@
         "dut_type": "vertical_transition",
         "function": "si_anwg_transition",
         "settings":{
-            "name_si_nwg_transition": "VT_1_TE",
-            "name_nwg_anwg_transition" : "VT_2_TE",
+            "name_si_nwg_transition": "VT1_0_mesh",
+            "name_nwg_anwg_transition" : "VT2_0_mesh",
             "length": 1,
             "width_in": null,
             "width_out": 1.5

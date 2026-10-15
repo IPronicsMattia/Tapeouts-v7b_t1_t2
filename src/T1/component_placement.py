@@ -119,23 +119,23 @@ def component_placement(die: gf.Component) -> gf.Component:
 
     # Vertical transition optimized TE
     vt_opt_te = ipr.si_anwg_transition(
-        name_si_nwg_transition="VT_1_TE",
-        name_nwg_anwg_transition="VT_2_TE",
+        name_si_nwg_transition="VT1_0_mesh",
+        name_nwg_anwg_transition="VT2_0_mesh",
         width_out=2.0,
     )
 
     # Vertical transition polarization insensitive
     vt_pi = ipr.si_anwg_transition(
-        name_si_nwg_transition="VT1_PI_D0_100",
-        name_nwg_anwg_transition="VT2_POLINS_D_02",
+        name_si_nwg_transition="VT1_D0_100_PI",
+        name_nwg_anwg_transition="VT2_D2_PI",
         width_out=0.7,
     )
     vt_opt_te_group_index = ipr.si_anwg_transition(
-        name_si_nwg_transition="VT_1_TE",
-        name_nwg_anwg_transition="VT_2_TE",
+        name_si_nwg_transition="VT1_0_mesh",
+        name_nwg_anwg_transition="VT2_0_mesh",
         width_out=1.5,
     )
-    vt1_te_group_index = ipr.si_nwg_transition(name="VT_1_TE", width_out=1.0)
+    vt1_te_group_index = ipr.si_nwg_transition(name="VT1_0_mesh", width_out=1.0)
 
     # Si Rotator
     rotator = ipr.rotator()
@@ -955,7 +955,7 @@ def component_placement(die: gf.Component) -> gf.Component:
 
         # Assign to the dictionary
         structures[ts] = t
-        structures_text[ts] = f"{ts} VT12_PI_D0 IL TE"
+        structures_text[ts] = f"{ts} VT1_D0_100_PI_VT2_D2_PI IL TE"
 
         # Json Part
         if create_json:
@@ -1007,7 +1007,7 @@ def component_placement(die: gf.Component) -> gf.Component:
 
         # Assign to the dictionary
         structures[ts] = t
-        structures_text[ts] = f"{ts} VT12_PI_D0 IL TM"
+        structures_text[ts] = f"{ts} VT1_D0_100_PI_VT2_D2_PI IL TM"
 
         # Json Part
         if create_json:
