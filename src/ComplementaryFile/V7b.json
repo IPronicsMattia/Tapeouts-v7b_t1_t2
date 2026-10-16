@@ -41,6 +41,9 @@
                 "tower_gc",
                 "tower_gc",
                 "tower_gc"
+            ],
+            "gc_extra": [
+                []
             ]
         },
         "TS01.2": {
@@ -84,6 +87,9 @@
                 "tower_gc",
                 "tower_gc",
                 "tower_gc"
+            ],
+            "gc_extra": [
+                []
             ]
         },
         "TS01.3": {
@@ -127,6 +133,9 @@
                 "tower_gc",
                 "tower_gc",
                 "tower_gc"
+            ],
+            "gc_extra": [
+                []
             ]
         },
         "TS01.4": {
@@ -170,6 +179,193 @@
                 "tower_gc",
                 "tower_gc",
                 "tower_gc"
+            ],
+            "gc_extra": [
+                []
+            ]
+        },
+        "TS01.5": {
+            "design_id": "wg_swg_410",
+            "dut_type": "wg",
+            "analysis": [],
+            "pol": [
+                "te"
+            ],
+            "propagation_mode": [
+                "te"
+            ],
+            "cutback": {
+                "num_components": [
+                    117,
+                    117,
+                    117,
+                    117
+                ],
+                "swg_custom_bend_euler_r5": [
+                    2,
+                    2,
+                    2,
+                    2
+                ]
+            },
+            "gdsfactory": {
+                "function": "straight",
+                "settings": {
+                    "cross_section": "swg",
+                    "length": 0,
+                    "width": 0.41
+                }
+            },
+            "gc": [
+                "d1v1",
+                "d1v1",
+                "d1v1",
+                "d1v1",
+                "d1v1",
+                "d1v1",
+                "d1v1",
+                "d1v1"
+            ],
+            "gc_extra": [
+                []
+            ]
+        },
+        "TS01.6": {
+            "design_id": "wg_swg_410",
+            "dut_type": "wg",
+            "analysis": [],
+            "pol": [
+                "te"
+            ],
+            "propagation_mode": [
+                "te"
+            ],
+            "cutback": {
+                "num_components": [
+                    117,
+                    117,
+                    117,
+                    117
+                ],
+                "swg_custom_bend_euler_r5": [
+                    2,
+                    2,
+                    2,
+                    2
+                ]
+            },
+            "gdsfactory": {
+                "function": "straight",
+                "settings": {
+                    "cross_section": "swg",
+                    "length": 0,
+                    "width": 0.41
+                }
+            },
+            "gc": [
+                "d1v1",
+                "d1v1",
+                "d1v1",
+                "d1v1",
+                "d1v1",
+                "d1v1",
+                "d1v1",
+                "d1v1"
+            ],
+            "gc_extra": [
+                []
+            ]
+        },
+        "TS01.7": {
+            "design_id": "wg_swg_410",
+            "dut_type": "wg",
+            "analysis": [],
+            "pol": [
+                "te"
+            ],
+            "propagation_mode": [
+                "te"
+            ],
+            "cutback": {
+                "num_components": [
+                    117,
+                    117,
+                    117,
+                    117
+                ],
+                "swg_custom_bend_euler_r5": [
+                    2,
+                    2,
+                    2,
+                    2
+                ]
+            },
+            "gdsfactory": {
+                "function": "straight",
+                "settings": {
+                    "cross_section": "swg",
+                    "length": 0,
+                    "width": 0.41
+                }
+            },
+            "gc": [
+                "d2_v5",
+                "d2_v5",
+                "d2_v5",
+                "d2_v5",
+                "d2_v5",
+                "d2_v5",
+                "d2_v5",
+                "d2_v5"
+            ],
+            "gc_extra": [
+                []
+            ]
+        },
+        "TS01.8": {
+            "design_id": "wg_swg_410",
+            "dut_type": "wg",
+            "analysis": [],
+            "pol": [
+                "te"
+            ],
+            "propagation_mode": [
+                "te"
+            ],
+            "cutback": {
+                "num_components": [
+                    117,
+                    117,
+                    117,
+                    117
+                ],
+                "swg_custom_bend_euler_r5": [
+                    2,
+                    2,
+                    2,
+                    2
+                ]
+            },
+            "gdsfactory": {
+                "function": "straight",
+                "settings": {
+                    "cross_section": "swg",
+                    "length": 0,
+                    "width": 0.41
+                }
+            },
+            "gc": [
+                "d2_v5",
+                "d2_v5",
+                "d2_v5",
+                "d2_v5",
+                "d2_v5",
+                "d2_v5",
+                "d2_v5",
+                "d2_v5"
+            ],
+            "gc_extra": [
+                []
             ]
         },
         "TS02.1": {
@@ -210,7 +406,9 @@
                 "d1v1",
                 "d1v1",
                 "d2_v5",
-                "d2_v5"
+                "d2_v5",
+                "tower_gc",
+                "tower_gc"
             ],
             "gc_extra": [
                 [],
@@ -1286,8 +1484,8 @@
             ]
         },
         "TS012.1": {
-            "design_id": "INT_mzis_test_group_and_eff",
-            "dut_type": null,
+            "design_id": "wg_swg_410_mzi",
+            "dut_type": "mzi",
             "analysis": [
                 "neff_au",
                 "ng_au"
@@ -1331,8 +1529,8 @@
             ]
         },
         "TS012.2": {
-            "design_id": "INT_mzis_test_group_and_eff",
-            "dut_type": null,
+            "design_id": "wg_swg_930_mzi",
+            "dut_type": "mzi",
             "analysis": [
                 "neff_au",
                 "ng_au"
@@ -1376,8 +1574,8 @@
             ]
         },
         "TS012.3": {
-            "design_id": "INT_mzis_test_group_and_eff",
-            "dut_type": null,
+            "design_id": "wg_anwg_2000_mzi",
+            "dut_type": "mzi",
             "analysis": [
                 "neff_au",
                 "ng_au"
@@ -1421,8 +1619,8 @@
             ]
         },
         "TS012.4": {
-            "design_id": "INT_mzis_test_group_and_eff",
-            "dut_type": null,
+            "design_id": "wg_anwg_1500_mzi",
+            "dut_type": "mzi",
             "analysis": [
                 "neff_au",
                 "ng_au"
@@ -1466,8 +1664,8 @@
             ]
         },
         "TS012.5": {
-            "design_id": "INT_mzis_test_group_and_eff",
-            "dut_type": null,
+            "design_id": "wg_nwg_1000_mzi",
+            "dut_type": "mzi",
             "analysis": [
                 "neff_au",
                 "ng_au"
@@ -1511,8 +1709,8 @@
             ]
         },
         "TS012.6": {
-            "design_id": "INT_mzis_test_group_and_eff",
-            "dut_type": null,
+            "design_id": "wg_nwg_1000_mzi_tm",
+            "dut_type": "mzi",
             "analysis": [
                 "neff_au",
                 "ng_au"
@@ -1556,8 +1754,8 @@
             ]
         },
         "TS012.7": {
-            "design_id": "INT_mzis_test_group_and_eff",
-            "dut_type": null,
+            "design_id": "wg_nwg_1000_mzi_tm",
+            "dut_type": "mzi",
             "analysis": [
                 "neff_au",
                 "ng_au"
@@ -1601,8 +1799,8 @@
             ]
         },
         "TS012.8": {
-            "design_id": "INT_mzis_test_group_and_eff",
-            "dut_type": null,
+            "design_id": "wg_nwg_1000_mzi_tm",
+            "dut_type": "mzi",
             "analysis": [
                 "neff_au",
                 "ng_au"
@@ -1646,8 +1844,8 @@
             ]
         },
         "TS012.9": {
-            "design_id": "INT_mzis_test_group_and_eff",
-            "dut_type": null,
+            "design_id": "wg_nwg_1000_mzi_tm",
+            "dut_type": "mzi",
             "analysis": [
                 "neff_au",
                 "ng_au"
@@ -1691,8 +1889,8 @@
             ]
         },
         "TS012.10": {
-            "design_id": "INT_mzis_test_group_and_eff",
-            "dut_type": null,
+            "design_id": "wg_nwg_1000_mzi_tm",
+            "dut_type": "mzi",
             "analysis": [
                 "neff_au",
                 "ng_au"
@@ -1736,8 +1934,8 @@
             ]
         },
         "TS012.11": {
-            "design_id": "INT_mzis_test_group_and_eff",
-            "dut_type": null,
+            "design_id": "wg_nwg_1000_mzi_tm",
+            "dut_type": "mzi",
             "analysis": [
                 "neff_au",
                 "ng_au"
@@ -1781,8 +1979,8 @@
             ]
         },
         "TS012.12": {
-            "design_id": "INT_mzis_test_group_and_eff",
-            "dut_type": null,
+            "design_id": "wg_nwg_1000_mzi_tm",
+            "dut_type": "mzi",
             "analysis": [
                 "neff_au",
                 "ng_au"

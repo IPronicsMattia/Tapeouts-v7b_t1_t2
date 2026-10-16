@@ -860,11 +860,11 @@ def grating_array_test_structure(
     radius = abs(bend["o2"].x - bend["o1"].x)
     steps = [
         {"dx": radius},
-        {"dy": -2 * radius - 5},
+        {"y": c.ymin - 2 * radius + 3.363},
         {"dx": -2 * radius - extra_loopback_distance - gc.xsize},
-        {"dy": abs(gratings[-1].y - gratings[0].y) + 2 * (2 * radius + 5)},
+        {"y": c.ymax + 2 * radius - 3.363},
         {"dx": 2 * radius + extra_loopback_distance + gc.xsize},
-        {"dy": -2 * radius - 5},
+        {"y": gratings[-1]["o1"].y},
     ]
     gf.routing.route_single(
         c,

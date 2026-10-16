@@ -180,23 +180,28 @@ def component_placement(die: gf.Component) -> gf.Component:
     }
     mmi_tm = ipr.bb_mul_bb(**kwargs)
 
+    # Grating coupler
+    gc = ipr.tower_gc
+    gc_d1v1 = ipr.custom_grating_coupler("d1v1")
+    gc_d2v5 = ipr.custom_grating_coupler("d2v5")
+
     # Grating coupler array for regular structure
     gc_array = ipr.grating_coupler_array(
-        grating_coupler=ipr.tower_gc,
+        grating_coupler=gc,
         n=10,
         with_loopback=True,
         cross_section=xs_swg,
         dx=5,
     )
     gc_array_tp = ipr.grating_coupler_array(
-        grating_coupler=ipr.tower_gc,
+        grating_coupler=gc,
         n=10,
         with_loopback=True,
         cross_section=xs_swg,
         dx=40,
     )
     gc_array_long = ipr.grating_coupler_array(
-        grating_coupler=ipr.tower_gc,
+        grating_coupler=gc,
         n=20,
         with_loopback=True,
         cross_section=xs_swg,
@@ -205,7 +210,10 @@ def component_placement(die: gf.Component) -> gf.Component:
 
     # Grating coupler array without loopback
     gc_array_noloopbak = ipr.grating_coupler_array(
-        grating_coupler=ipr.tower_gc, n=10, with_loopback=False, cross_section=xs_swg
+        grating_coupler=gc,
+        n=10,
+        with_loopback=False,
+        cross_section=xs_swg
     )
 
     # Grating coupler for TM is formed by rot + 3 si_ps_tw
@@ -302,27 +310,47 @@ def component_placement(die: gf.Component) -> gf.Component:
     if len(structure_only) == 0 or 1 in structure_only:
         print(f"\nCreation of N.{current_ts} Alignment Test Structure")
 
-        for idx in range(4):
+        for idx in range(8):
             # Create the test structure name
             ts = f"{current_ts}.{idx + 1}"
 
+            # Grating coupler selection
+            if idx < 4:
+                gc_ref = gc
+                gc_ref_title = "tower_gc"
+                extra_title = 0
+            elif idx < 6:
+                gc_ref = gc_d1v1
+                extra_title = 7.03
+                gc_ref_title = "d1v1"
+            else:
+                gc_ref = gc_d2v5
+                extra_title = 6.2
+                gc_ref_title = "d2_v5"
+
             t = die << grating_array_test_structure(
-                components_grating_coupler=[ipr.tower_gc] * 10,
+                components_grating_coupler=[gc_ref] * 10,
                 component_bend=routing_bend_Si,
-                component_straight_routing=straight_410_swg,
+                component_straight_routing=straight_410_swg
             )
 
             # Assign to the dictionary
             structures[ts] = t
-            structures_text[ts] = f"{ts} ALIGN"
+            structures_text[ts] = f"R{extra_title}R\n{ts} ALIGN"
 
             # Add the structures to the json file
             if create_json:
                 json_writer.structure_json(
                     component=straight_410_swg(length=0),
-                    component_IO=gc_array,
+                    component_IO=t,
                     structure_title=f"TS0{ts}",
                     structure=t.cell,
+                    extra_dict={
+                        "gc": [gc_ref_title] * 8,
+                        "gc_extra": [
+                            [] * 8,
+                        ],
+                    },
                 )
     current_ts += 1
 
@@ -376,7 +404,10 @@ def component_placement(die: gf.Component) -> gf.Component:
                 structure_title=f"TS0{ts}",
                 structure=t.cell,
                 extra_dict={
-                    "gc": ["tower_gc", "tower_gc", "d1v1", "d1v1", "d2_v5", "d2_v5"],
+                    "gc": ["tower_gc", "tower_gc",
+                           "d1v1", "d1v1",
+                           "d2_v5", "d2_v5",
+                           "tower_gc", "tower_gc"],
                     "gc_extra": [
                         [],
                         [],
@@ -1297,7 +1328,7 @@ def component_placement(die: gf.Component) -> gf.Component:
 
             # Assign to the dictionary
             structures[ts] = t
-            structures_text[ts] = f"R{ts} EFF IDX \n{text}"
+            structures_text[ts] = f"R0R{ts} EFF IDX \n{text}"
 
             # Json Part
             if create_json:
@@ -1382,7 +1413,7 @@ def component_placement(die: gf.Component) -> gf.Component:
 
             # Assign to the dictionary
             structures[ts] = t
-            structures_text[ts] = f"R{ts}-{ts_end} \nTAPER DOE"
+            structures_text[ts] = f"R0R{ts}-{ts_end} \nTAPER DOE"
 
             # Json Part
             if create_json:
@@ -1554,10 +1585,25 @@ def component_placement(die: gf.Component) -> gf.Component:
     #########################################################
     #########################################################
     #########################################################
-    left_top_structure = ["1.1", "2.1", "3.1", "3.2", "4.1", "4.2", "1.2"]
-    left_cen_structure = ["5.1", "6.1", "7.1", "8.1", "8.2"]
+    left_top_structure = [
+        "1.1",
+        "1.5",
+        "2.1",
+        "3.1",
+        "3.2",
+        "4.1",
+        "4.2",
+        "1.2",
+        "1.7"]
+    left_cen_structure = [
+        "5.1",
+        "6.1",
+        "7.1",
+        "8.1",
+        "8.2"]
     left_bot_structure = [
         "1.3",
+        "1.6",
         "9.1",
         "10.1",
         "10.2",
@@ -1581,6 +1627,7 @@ def component_placement(die: gf.Component) -> gf.Component:
         "13.9",
         "16.1",
         "1.4",
+        "1.8",
     ]
     right_structure = [
         "15.1",
@@ -1635,10 +1682,11 @@ def component_placement(die: gf.Component) -> gf.Component:
         text_to_write = structures_text[structure_idx]
         if text_to_write != "NO":
             if "R" == text_to_write[0]:
+                extra_y, real_text = text_to_write[1:].split("R", 1)
                 text = die << all_metal_text(
-                    text_to_write[1:], size=25, justify="center"
+                    real_text, size=25, justify="center"
                 )
-                text.move((text.xmin, text.ymin), ((s.xmin + 15), (s.ymin + 40)))
+                text.move((text.xmin, text.y), ((s.xmin + 15), (s.ymin + 65 + float(extra_y))))
             else:
                 text = die << all_metal_text(text_to_write, size=25, justify="center")
                 text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin - 35)))
@@ -1664,10 +1712,11 @@ def component_placement(die: gf.Component) -> gf.Component:
         text_to_write = structures_text[structure_idx]
         if text_to_write != "NO":
             if "R" == text_to_write[0]:
+                extra_y, real_text = text_to_write[1:].split("R", 1)
                 text = die << all_metal_text(
-                    text_to_write[1:], size=25, justify="center"
+                    real_text, size=25, justify="center"
                 )
-                text.move((text.xmin, text.ymin), ((s.xmin + 15), (s.ymin + 40)))
+                text.move((text.xmin, text.y), ((s.xmin + 15), (s.ymin + 65 + float(extra_y))))
             else:
                 text = die << all_metal_text(text_to_write, size=25, justify="center")
                 text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin - 35)))
@@ -1695,10 +1744,11 @@ def component_placement(die: gf.Component) -> gf.Component:
         text_to_write = structures_text[structure_idx]
         if text_to_write != "NO":
             if "R" == text_to_write[0]:
+                extra_y, real_text = text_to_write[1:].split("R", 1)
                 text = die << all_metal_text(
-                    text_to_write[1:], size=25, justify="center"
+                    real_text, size=25, justify="center"
                 )
-                text.move((text.xmin, text.ymin), ((s.xmin + 15), (s.ymin + 40)))
+                text.move((text.xmin, text.y), ((s.xmin + 15), (s.ymin + 65 + float(extra_y))))
             else:
                 text = die << all_metal_text(text_to_write, size=25, justify="center")
                 text.move((text.xmin, text.ymin), ((s.xmin + 20), (s.ymin - 35)))

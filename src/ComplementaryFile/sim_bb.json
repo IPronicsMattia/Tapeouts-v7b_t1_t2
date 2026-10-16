@@ -3718,84 +3718,102 @@
 
 
 
-    "mzis_test_group_and_eff_943753f4":{
+    "mzis_test_group_and_eff_c7bced97":{
         "design_id": "wg_swg_410_mzi",
         "dut_type": "mzi",
         "function": "mzis_test_group_and_effective_index",
         "settings": {
-            "low_order_mzi_length": 9.5054,
-            "high_order_mzi_length": 95.0535,
-            "splitter": "rib_mmi",
-            "bend": "bend_euler_custom_width_a5f814d8",
-            "grating_coupler": "tower_gc",
-            "pitch_um": 127.0,
-            "cross_section": "xs_7dd44111",
-            "cross_section2": "xs_7dd44111",
+            "low_order_mzi_length": 9.5054, 
+            "high_order_mzi_length": 95.0535, 
+            "splitter": "BBMULBB_5_6_o1o2o3o4", 
+            "bend": "BBMULBB_0_1_o1o2", 
+            "grating_coupler": "tower_gc", 
+            "pitch_um": 127.0, 
+            "cross_section": "xs_7dd44111", 
+            "cross_section2": "xs_7dd44111", 
             "extra_component": null
         }
     },
-    "mzis_test_group_and_eff_c280fd4c":{
-        "design_id": "wg_rib_930_mzi",
+    "mzis_test_group_and_eff_86d9b338":{
+        "design_id": "wg_swg_930_mzi",
         "dut_type": "mzi",
         "function": "mzis_test_group_and_effective_index",
         "settings": {
-            "low_order_mzi_length": 22.222,
-            "high_order_mzi_length": 80,
-            "splitter": "rib_mmi",
-            "bend": "bend_euler_custom_width_a5f814d8",
-            "grating_coupler": "tower_gc",
-            "pitch_um": 127.0,
-            "cross_section": "xs_7dd44111",
-            "cross_section2": "xs_eb275a15",
+            "low_order_mzi_length": 22.222, 
+            "high_order_mzi_length": 80, 
+            "splitter": "BBMULBB_5_6_o1o2o3o4", 
+            "bend": "BBMULBB_0_1_o1o2", 
+            "grating_coupler": "tower_gc", 
+            "pitch_um": 127.0, 
+            "cross_section": "xs_7dd44111", 
+            "cross_section2": "xs_eb275a15", 
             "extra_component": "rib_taper_MR1p95_WRI0p4_9dca5112"
         }
     },
-    "mzis_test_group_and_eff_0ecb174a":{
+    "mzis_test_group_and_eff_f37b5109":{
         "design_id": "wg_anwg_2000_mzi",
         "dut_type": "mzi",
         "function": "mzis_test_group_and_effective_index",
         "settings": {
-            "low_order_mzi_length": 33.123,
-            "high_order_mzi_length": 115.932,
-            "splitter": "rib_mmi",
-            "bend": "bend_euler_custom_width_a5f814d8",
-            "grating_coupler": "tower_gc",
-            "pitch_um": 127.0,
-            "cross_section": "xs_7dd44111",
-            "cross_section2": "xs_26c47562",
-            "extra_component": "si_anwg_transition_NSNT_01888caf"
+            "low_order_mzi_length": 33.123, 
+            "high_order_mzi_length": 115.932, 
+            "splitter": "BBMULBB_5_6_o1o2o3o4", 
+            "bend": "BBMULBB_0_1_o1o2", 
+            "grating_coupler": "tower_gc", 
+            "pitch_um": 127.0, 
+            "cross_section": "xs_7dd44111", 
+            "cross_section2": "xs_26c47562", 
+            "extra_component": "si_anwg_transition_NSNT_081c4ed8"
         }
     },
-    "mzis_test_group_and_eff_87a9b063":{
+    "mzis_test_group_and_eff_d815bb27":{
         "design_id": "wg_anwg_1500_mzi",
         "dut_type": "mzi",
         "function": "mzis_test_group_and_effective_index",
         "settings": {
-            "low_order_mzi_length": 33.408,
-            "high_order_mzi_length": 116.927,
-            "splitter": "rib_mmi",
-            "bend": "bend_euler_custom_width_a5f814d8",
-            "grating_coupler": "tower_gc",
-            "pitch_um": 127.0,
-            "cross_section": null,
-            "cross_section2": "nitride2",
-            "extra_component": "si_anwg_transition_NSNT_1924cc9d"
+            "low_order_mzi_length": 33.408, 
+            "high_order_mzi_length": 116.927, 
+            "splitter": "BBMULBB_5_6_o1o2o3o4", 
+            "bend": "BBMULBB_0_1_o1o2", 
+            "grating_coupler": "tower_gc", 
+            "pitch_um": 127.0, 
+            "cross_section": "xs_7dd44111", 
+            "cross_section2": "nitride2", 
+            "extra_component": "si_anwg_transition_NSNT_9dba6eee"
         }
     },
-    "mzis_test_group_and_eff_2757a7ae":{
+    "mzis_test_group_and_eff_ff9425ad":{
         "design_id": "wg_nwg_1000_mzi",
         "dut_type": "mzi",
         "function": "mzis_test_group_and_effective_index",
         "settings": {
-            "low_order_mzi_length": 30.846,
-            "high_order_mzi_length":  61.693,
-            "splitter": "rib_mmi",
-            "bend": "bend_euler_custom_width_a5f814d8",
-            "grating_coupler": "tower_gc",
-            "pitch_um": 127.0,
-            "cross_section": null,
-            "cross_section2": "xs_d37503c9",
-            "extra_component": "si_nwg_transition_NVT_1_8ef1e6ad"
+            "low_order_mzi_length": 30.846, 
+            "high_order_mzi_length": 61.693, 
+            "splitter": "BBMULBB_5_6_o1o2o3o4", 
+            "bend": "BBMULBB_0_1_o1o2", 
+            "grating_coupler": "tower_gc", 
+            "pitch_um": 127.0, 
+            "cross_section": "xs_7dd44111", 
+            "cross_section2": "xs_d37503c9", 
+            "extra_component": "si_nwg_transition_NVT1__6dde78a4"
+        }
+    },
+    "mzis_test_group_and_eff_261640db":{
+        "design_id": "wg_nwg_1000_mzi_tm",
+        "dut_type": "mzi",
+        "function": "mzis_test_group_and_effective_index",
+        "settings": {
+            "low_order_mzi_length": 30.846, 
+            "high_order_mzi_length": 61.693, 
+            "splitter": "BBMULBB_7_8_o3o4", 
+            "bend": "BBMULBB_2_1_o1o2", 
+            "grating_coupler": "tower_gc", 
+            "pitch_um": 127.0, 
+            "cross_section": "xs_7dd44111", 
+            "cross_section2": "xs_d37503c9", 
+            "extra_component": "si_nwg_transition_NVT1__20f79cda"
         }
     }
+
+    
 }
